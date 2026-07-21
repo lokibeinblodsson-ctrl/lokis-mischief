@@ -48,6 +48,51 @@
     color: #07070a !important;
     padding: 8px 18px; border-radius: 8px; font-weight: 700 !important; font-size: 13px !important;
   }
+  /* Streak & Sound UI */
+  #streak-badge {
+    font-size: 13px; font-weight: 600;
+    padding: 4px 10px; border-radius: 8px;
+    background: #f59e0b15; border: 1px solid #f59e0b33;
+    white-space: nowrap;
+  }
+  #streak-badge .streak-num { color: #f59e0b; font-weight: 800; }
+  #mute-btn {
+    background: none; border: 1px solid #1a1a24; border-radius: 8px;
+    cursor: pointer; font-size: 18px; padding: 4px 8px;
+    transition: all .2s; line-height: 1; color: #94a3b8;
+  }
+  #mute-btn:hover { border-color: #f59e0b44; color: #e4e4e7; }
+  #mute-btn.muted { opacity: 0.5; color: #475569; }
+  /* High score display in games */
+  .gm-highscore {
+    text-align: center; font-size: 13px; color: #f59e0b;
+    margin: 6px 0; font-weight: 600;
+    letter-spacing: .3px;
+  }
+  .gm-highscore .hs-label { color: #94a3b8; font-weight: 400; }
+  .hs-panel {
+    margin: 16px 0; padding: 12px 16px;
+    background: #07070a; border: 1px solid #1a1a24; border-radius: 10px;
+  }
+  .hs-panel h4 { font-size: 13px; font-weight: 700; color: #f59e0b; margin-bottom: 8px; }
+  .hs-panel .hs-tabs { display: flex; gap: 4px; margin-bottom: 8px; }
+  .hs-panel .hs-tab {
+    padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600;
+    cursor: pointer; border: 1px solid #1a1a24; background: transparent;
+    color: #64748b; transition: all .2s; user-select: none;
+  }
+  .hs-panel .hs-tab:hover { border-color: #f59e0b44; color: #e4e4e7; }
+  .hs-panel .hs-tab.active { background: #f59e0b22; border-color: #f59e0b66; color: #f59e0b; }
+  .hs-panel .hs-list { display: flex; flex-direction: column; gap: 4px; }
+  .hs-panel .hs-entry {
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: #94a3b8; padding: 4px 6px;
+    border-radius: 4px;
+  }
+  .hs-panel .hs-entry:nth-child(odd) { background: #0a0a14; }
+  .hs-panel .hs-entry .hs-score { color: #e4e4e7; font-weight: 600; }
+  .hs-panel .hs-entry .hs-date { color: #475569; font-size: 11px; }
+  .hs-panel .hs-empty { font-size: 12px; color: #475569; text-align: center; padding: 12px; }
 
   .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
 
@@ -1327,6 +1372,96 @@
   .sleipnir-milestone.pop { opacity: 1; transform: translate(-50%,-50%) scale(1); }
   .sleipnir-milestone .milestone-sub { font-size: 14px; font-weight: 400; color: #94a3b8; display: block; margin-top: 4px; }
 
+  /* ===== SHARE CARD BUTTON ===== */
+  .share-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 700;
+    background: #1a1a24; border: 1px solid #2a2a3a; color: #e4e4e7;
+    cursor: pointer; transition: all .2s; margin: 8px 4px 0;
+  }
+  .share-btn:hover { border-color: #f59e0b44; background: #f59e0b08; }
+  .share-btn:active { transform: scale(.95); }
+  .share-download-link { display: none; }
+
+  /* ===== LEADERBOARD ===== */
+  .lb-container { margin: 16px 0 0; padding: 12px; background: #07070a; border-radius: 12px; border: 1px solid #1a1a24; }
+  .lb-title { font-size: 13px; font-weight: 700; color: #f59e0b; margin-bottom: 8px; letter-spacing: .5px; text-transform: uppercase; text-align: center; }
+  .lb-tabs { display: flex; gap: 4px; justify-content: center; margin-bottom: 8px; }
+  .lb-tab { padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1px solid transparent; color: #64748b; background: transparent; transition: all .2s; }
+  .lb-tab:hover { color: #e4e4e7; border-color: #2a2a3a; }
+  .lb-tab.active { background: #f59e0b11; border-color: #f59e0b44; color: #f59e0b; }
+  .lb-list { list-style: none; margin: 0; padding: 0; }
+  .lb-entry { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 6px; font-size: 12px; margin-bottom: 2px; }
+  .lb-entry .lb-rank { width: 20px; text-align: center; font-weight: 700; font-size: 11px; }
+  .lb-entry .lb-rank.gold { color: #f59e0b; }
+  .lb-entry .lb-rank.silver { color: #94a3b8; }
+  .lb-entry .lb-rank.bronze { color: #cd7f32; }
+  .lb-entry .lb-name { flex: 1; font-weight: 600; color: #e4e4e7; }
+  .lb-entry .lb-score { font-weight: 700; color: #f59e0b; }
+  .lb-entry.lb-me { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.15); }
+  .lb-empty { text-align: center; font-size: 12px; color: #475569; padding: 12px; }
+
+  /* ===== EASTER EGG TOAST ===== */
+  .ee-toast {
+    position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
+    z-index: 9999; padding: 12px 24px; border-radius: 12px; font-size: 16px; font-weight: 700;
+    background: #1a1a24; border: 1px solid #f59e0b44; color: #f59e0b;
+    opacity: 0; pointer-events: none; transition: all .5s ease;
+    white-space: nowrap; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+  .ee-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .ee-toast.info { border-color: #6366f144; color: #818cf8; }
+  .ee-toast.success { border-color: #22c55e44; color: #4ade80; }
+
+  /* ===== THOR'S HAMMER MINI-GAME ===== */
+  .thor-overlay {
+    display: none; position: fixed; inset: 0; z-index: 9998;
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(4px);
+    justify-content: center; align-items: center; flex-direction: column;
+  }
+  .thor-overlay.active { display: flex; }
+  .thor-game { text-align: center; position: relative; width: 100%; max-width: 500px; height: 400px; }
+  .thor-score { font-size: 20px; font-weight: 800; color: #f59e0b; margin-bottom: 12px; letter-spacing: 1px; }
+  .thor-lightning {
+    position: absolute; font-size: 40px; cursor: pointer;
+    animation: thorFlash 0.8s ease-out forwards;
+    user-select: none; filter: drop-shadow(0 0 15px #fbbf24);
+    transition: transform .1s;
+  }
+  .thor-lightning:active { transform: scale(0.8); }
+  .thor-lightning.caught { animation: thorBurst 0.4s ease-out forwards; pointer-events: none; }
+  @keyframes thorFlash {
+    0% { opacity: 0; transform: scale(0) rotate(0deg); }
+    20% { opacity: 1; transform: scale(1.3) rotate(20deg); }
+    40% { transform: scale(1) rotate(-10deg); }
+    60% { transform: scale(1.1) rotate(5deg); }
+    80% { opacity: 1; }
+    100% { opacity: 0; transform: scale(0.5) rotate(30deg); }
+  }
+  @keyframes thorBurst {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(2); opacity: 0.8; filter: drop-shadow(0 0 40px #fbbf24); }
+    100% { transform: scale(3); opacity: 0; }
+  }
+  .thor-approves {
+    display: none; font-size: 28px; font-weight: 900;
+    color: #f59e0b; text-shadow: 0 0 40px rgba(245,158,11,0.5);
+    animation: thorPulse 1s ease-in-out infinite;
+    margin-top: 12px;
+  }
+  .thor-approves.show { display: block; }
+  @keyframes thorPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+  .thor-close-btn {
+    margin-top: 16px; padding: 10px 24px; border-radius: 8px;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    background: #1a1a24; border: 1px solid #2a2a3a; color: #e4e4e7;
+    transition: all .2s;
+  }
+  .thor-close-btn:hover { border-color: #f59e0b44; color: #f59e0b; }
+
   @media (max-width: 768px) {
     .hero h1 { font-size: 32px; }
     .hero .tagline { font-size: 17px; }
@@ -1345,10 +1480,14 @@
 <body>
 <div class="aurora"></div>
 <div class="aurora-particles"></div>
+<canvas id="particle-bg" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block"></canvas>
 
+<div id="content-wrap" style="position:relative;z-index:1">
 <nav>
-  <a href="#" class="logo">✦ LOKI'S MISCHIEF</a>
+  <a href="#" class="logo" id="logo-easter-egg" onclick="return logoClick()">✦ LOKI'S MISCHIEF</a>
   <div class="links">
+    <span id="streak-badge">🔥 Rune Streak: <span class="streak-num" id="streak-count">0</span> day</span>
+    <button id="mute-btn" onclick="toggleMute()" title="Toggle sound">🔇</button>
     <a href="#games">🐺 Games</a>
     <a href="#entertainment">Fun Stuff</a>
     <a href="#products">Products</a>
@@ -1507,10 +1646,20 @@
     </div>
 
     <div class="fenrir-arena" id="fenrir-arena">
-      <canvas width="140" height="140" id="canvas-fenrir" class="char-canvas" style="border-radius:20px;width:140px;height:140px;display:block;margin:0 auto 14px"></canvas>
+      <canvas id="canvas-fenrir" class="char-canvas" style="border-radius:20px;width:240px;height:240px;display:block;margin:0 auto 14px"></canvas>
       <div class="fenrir-chains" id="fenrir-chains"></div>
       <button class="btn btn-primary start-btn" id="fenrir-start-btn" onclick="fenrirStart()">🐺 Begin Hunt</button>
       <div class="gm-status"><span id="fenrir-combo" class="fenrir-combo"></span> Hits: <strong id="fenrir-hits">0</strong> / 18 — <span id="fenrir-status">Press Begin to start!</span></div>
+      <div class="gm-highscore" id="fenrir-hs"><span class="hs-label">🏆 High Score:</span> <span id="fenrir-hs-val">—</span></div>
+      <div class="hs-panel" id="fenrir-hs-panel" style="display:none">
+        <h4>🏆 High Scores</h4>
+        <div class="hs-tabs">
+          <span class="hs-tab active" data-period="all" onclick="showHighScores('fenrir','all')">All Time</span>
+          <span class="hs-tab" data-period="weekly" onclick="showHighScores('fenrir','weekly')">Weekly</span>
+          <span class="hs-tab" data-period="daily" onclick="showHighScores('fenrir','daily')">Daily</span>
+        </div>
+        <div class="hs-list" id="fenrir-hs-list"><div class="hs-empty">No scores yet. Break some chains!</div></div>
+      </div>
     </div>
     <div class="fenrir-freed" id="fenrir-freed">
       <div class="ff-icon">🐺✨</div>
@@ -1520,6 +1669,12 @@
         <a href="#products" class="btn btn-primary">Ready to Break Free? →</a>
       </div>
     </div>
+
+    <!-- Share + Leaderboard for Fenrir -->
+    <div style="text-align:center;">
+      <button class="share-btn" id="share-btn-fenrir" onclick="shareResult('fenrir')" style="display:none">📤 Share Result</button>
+    </div>
+    <div class="lb-container" id="lb-fenrir"></div>
 
     <div class="gm-saga" id="fenrir-saga"><span class="saga-label">📖 The Saga:</span>
 
@@ -1560,7 +1715,7 @@
     </div>
 
     <div class="jormu-arena" id="jormu-arena">
-      <canvas width="140" height="140" id="canvas-jormu" class="char-canvas" style="border-radius:20px;width:140px;height:140px;display:block;margin:0 auto 14px"></canvas>
+      <canvas id="canvas-jormu" class="char-canvas" style="border-radius:20px;width:240px;height:240px;display:block;margin:0 auto 14px"></canvas>
       <div class="jormu-info">
         <div class="j-round">Round <strong id="jormu-round">1</strong> / 6</div>
         <div class="j-lives">Lives: <span id="jormu-lives"><span class="lives-dot">❤️</span><span class="lives-dot">❤️</span><span class="lives-dot">❤️</span></span></div>
@@ -1577,6 +1732,16 @@
         <div class="jormu-rune" data-rune="7">ᚺ</div>
       </div>
       <div class="gm-status" id="jormu-status">Press <strong>🐍 Begin</strong> when ready...</div>
+      <div class="gm-highscore" id="jormu-hs"><span class="hs-label">🏆 High Score:</span> <span id="jormu-hs-val">—</span></div>
+      <div class="hs-panel" id="jormu-hs-panel" style="display:none">
+        <h4>🏆 High Scores</h4>
+        <div class="hs-tabs">
+          <span class="hs-tab active" data-period="all" onclick="showHighScores('jormungandr','all')">All Time</span>
+          <span class="hs-tab" data-period="weekly" onclick="showHighScores('jormungandr','weekly')">Weekly</span>
+          <span class="hs-tab" data-period="daily" onclick="showHighScores('jormungandr','daily')">Daily</span>
+        </div>
+        <div class="hs-list" id="jormu-hs-list"><div class="hs-empty">No scores yet. Slay the serpent!</div></div>
+      </div>
       <button class="btn btn-primary start-btn" id="jormu-start-btn" onclick="jormuStart()">🐍 Begin</button>
     </div>
     <div class="jormu-done" id="jormu-done">
@@ -1593,6 +1758,12 @@
         <button class="btn btn-secondary">Try Again</button>
       </div>
     </div>
+
+    <!-- Share + Leaderboard for Jörmungandr -->
+    <div style="text-align:center;">
+      <button class="share-btn" id="share-btn-jormu" onclick="shareResult('jormu')" style="display:none">📤 Share Result</button>
+    </div>
+    <div class="lb-container" id="lb-jormu"></div>
 
     <div class="gm-saga" id="jormu-saga"><span class="saga-label">📖 The Saga:</span>
 
@@ -1632,12 +1803,22 @@
     </div>
 
     <div class="hel-arena" id="hel-arena">
-      <canvas width="140" height="140" id="canvas-hel" class="char-canvas" style="border-radius:20px;width:140px;height:140px;display:block;margin:0 auto 14px"></canvas>
+      <canvas id="canvas-hel" class="char-canvas" style="border-radius:20px;width:240px;height:240px;display:block;margin:0 auto 14px"></canvas>
       <div class="hel-info">
         <span>Score: <strong id="hel-score">0</strong></span>
         <span><span id="hel-streak" class="hel-streak"></span></span>
         <span>Souls: <strong id="hel-count">0</strong> / 10</span>
         <span>Lives: <span id="hel-lives"><span class="lives-dot">❤️</span><span class="lives-dot">❤️</span><span class="lives-dot">❤️</span></span></span>
+      </div>
+      <div class="gm-highscore" id="hel-hs"><span class="hs-label">🏆 High Score:</span> <span id="hel-hs-val">—</span></div>
+      <div class="hs-panel" id="hel-hs-panel" style="display:none">
+        <h4>🏆 High Scores</h4>
+        <div class="hs-tabs">
+          <span class="hs-tab active" data-period="all" onclick="showHighScores('hel','all')">All Time</span>
+          <span class="hs-tab" data-period="weekly" onclick="showHighScores('hel','weekly')">Weekly</span>
+          <span class="hs-tab" data-period="daily" onclick="showHighScores('hel','daily')">Daily</span>
+        </div>
+        <div class="hs-list" id="hel-hs-list"><div class="hs-empty">No scores yet. Judge some souls!</div></div>
       </div>
       <div class="hel-timer"><div class="hel-timer-fill" id="hel-timer-fill" style="width:100%"></div></div>
       <div class="hel-feedback" id="hel-feedback"></div>
@@ -1665,6 +1846,12 @@
         <button class="btn btn-secondary">Try Again</button>
       </div>
     </div>
+
+    <!-- Share + Leaderboard for Hel -->
+    <div style="text-align:center;">
+      <button class="share-btn" id="share-btn-hel" onclick="shareResult('hel')" style="display:none">📤 Share Result</button>
+    </div>
+    <div class="lb-container" id="lb-hel"></div>
 
     <div class="gm-saga" id="hel-saga"><span class="saga-label">📖 The Saga:</span>
 
@@ -1704,12 +1891,22 @@
     </div>
 
     <div class="sleipnir-arena" id="sleipnir-arena">
-      <canvas width="140" height="140" id="canvas-sleipnir" class="char-canvas" style="border-radius:20px;width:140px;height:140px;display:block;margin:0 auto 14px"></canvas>
+      <canvas id="canvas-sleipnir" class="char-canvas" style="border-radius:20px;width:240px;height:240px;display:block;margin:0 auto 14px"></canvas>
       <div class="sleipnir-stats">
         <span>Distance: <strong id="sleipnir-distance">0</strong>m</span>
         <span>🪙 <strong id="sleipnir-coins">0</strong></span>
         <span>Speed: <span id="sleipnir-speed"><span class="s-speed-icon">🐢</span></span></span>
         <span>Lives: <span id="sleipnir-lives"><span class="lives-dot">❤️</span><span class="lives-dot">❤️</span><span class="lives-dot">❤️</span></span></span>
+      </div>
+      <div class="gm-highscore" id="sleipnir-hs"><span class="hs-label">🏆 High Score:</span> <span id="sleipnir-hs-val">—</span></div>
+      <div class="hs-panel" id="sleipnir-hs-panel" style="display:none">
+        <h4>🏆 High Scores</h4>
+        <div class="hs-tabs">
+          <span class="hs-tab active" data-period="all" onclick="showHighScores('sleipnir','all')">All Time</span>
+          <span class="hs-tab" data-period="weekly" onclick="showHighScores('sleipnir','weekly')">Weekly</span>
+          <span class="hs-tab" data-period="daily" onclick="showHighScores('sleipnir','daily')">Daily</span>
+        </div>
+        <div class="hs-list" id="sleipnir-hs-list"><div class="hs-empty">No scores yet. Start sprinting!</div></div>
       </div>
       <div class="sleipnir-status" id="sleipnir-status" style="text-align:center;font-size:13px;color:#94a3b8;margin-bottom:8px;">Press Start Sprint!</div>
       <div class="sleipnir-milestone" id="sleipnir-milestone"></div>
@@ -1746,6 +1943,12 @@
       </div>
     </div>
 
+    <!-- Share + Leaderboard for Sleipnir -->
+    <div style="text-align:center;">
+      <button class="share-btn" id="share-btn-sleipnir" onclick="shareResult('sleipnir')" style="display:none">📤 Share Result</button>
+    </div>
+    <div class="lb-container" id="lb-sleipnir"></div>
+
     <div class="gm-saga" id="sleipnir-saga"><span class="saga-label">📖 The Saga:</span>
 
       <strong>The Most Unlikely Birth</strong> — Sleipnir was born of Loki — but not as you might expect. When a giant builder offered to wall Asgard in a single winter, demanding the sun, the moon, and the goddess Freyja as payment, Loki transformed himself into a beautiful mare to lure the builder's stallion Svaðilfari away from his work. Loki (as a mare) succeeded — and from that union came Sleipnir: the eight-legged foal, the most magnificent horse in all the Nine Realms.
@@ -1758,6 +1961,21 @@
     <div class="gm-saga-collapse" onclick="document.getElementById('sleipnir-saga').classList.toggle('collapsed');this.classList.toggle('active');">📖 Toggle Saga</div>
   </div>
 </div>
+
+<!-- ===== THOR'S HAMMER EASTER EGG OVERLAY ===== -->
+<div class="thor-overlay" id="thor-overlay">
+  <div class="thor-score" id="thor-score">⚡ Thor's Lightning — Click 5 bolts! Score: <span id="thor-counter">0</span>/5</div>
+  <div class="thor-game" id="thor-game-area"></div>
+  <div class="thor-approves" id="thor-approves">⚡ THOR APPROVES! ⚡</div>
+  <button class="thor-close-btn" onclick="closeThorGame()">✕ Close</button>
+</div>
+
+<!-- ===== EASTER EGG TOAST ===== -->
+<div class="ee-toast" id="ee-toast"></div>
+
+<!-- ===== HIDDEN SHARE DOWNLOAD LINK ===== -->
+<a class="share-download-link" id="share-download-link" download="lokis-mischief-result.png"></a>
+
 <section id="entertainment" class="section">
   <div class="container">
     <div class="section-header">
@@ -2160,6 +2378,408 @@
 <div class="test-ribbon">⚠ Test Mode — Stripe payment links are in test mode. No real charges processed.</div>
 
 <script>
+// ===== DAILY STREAK TRACKER =====
+const STREAK_KEY = 'lm_streak';
+function updateStreak() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(STREAK_KEY)) || { current: 0, lastVisit: null };
+    const now = Date.now();
+    const ms36h = 36 * 60 * 60 * 1000;
+    if (stored.lastVisit) {
+      const elapsed = now - stored.lastVisit;
+      if (elapsed < ms36h) {
+        // Within 36h — check if it's a new calendar day
+        const lastDate = new Date(stored.lastVisit);
+        const today = new Date();
+        if (lastDate.toDateString() !== today.toDateString()) {
+          stored.current++;
+        }
+      } else {
+        // More than 36h — reset
+        stored.current = 1;
+      }
+    } else {
+      stored.current = 1;
+    }
+    stored.lastVisit = now;
+    localStorage.setItem(STREAK_KEY, JSON.stringify(stored));
+    document.getElementById('streak-count').textContent = stored.current;
+    const badge = document.getElementById('streak-badge');
+    badge.textContent = '🔥 Rune Streak: ' + stored.current + ' day' + (stored.current !== 1 ? 's' : '');
+  } catch(e) { /* localStorage unavailable */ }
+}
+
+// ===== WEB AUDIO API SOUND SYSTEM =====
+let audioCtx = null;
+let soundMuted = true; // start muted, user opts in
+let masterGain = null;
+let ambientNodes = [];
+
+function initAudio() {
+  if (audioCtx) return;
+  try {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    masterGain = audioCtx.createGain();
+    masterGain.gain.value = 0.3;
+    masterGain.connect(audioCtx.destination);
+  } catch(e) { console.warn('Audio not available:', e); }
+}
+
+function setMuted(muted) {
+  soundMuted = muted;
+  const btn = document.getElementById('mute-btn');
+  if (btn) {
+    btn.textContent = soundMuted ? '🔇' : '🔊';
+    btn.classList.toggle('muted', soundMuted);
+  }
+  if (audioCtx && masterGain) {
+    masterGain.gain.value = soundMuted ? 0 : 0.3;
+  }
+  if (!soundMuted && !audioCtx) {
+    initAudio();
+    if (audioCtx) startAmbient();
+  }
+  if (soundMuted) stopAmbient();
+}
+
+function toggleMute() {
+  setMuted(!soundMuted);
+}
+
+// --- Ambient Norse sounds ---
+function startAmbient() {
+  if (!audioCtx || soundMuted) return;
+  stopAmbient();
+
+  // Low drone: 150Hz sawtooth
+  const drone = audioCtx.createOscillator();
+  drone.type = 'sawtooth';
+  drone.frequency.value = 150;
+  const droneGain = audioCtx.createGain();
+  droneGain.gain.value = 0.06;
+  const droneFilter = audioCtx.createBiquadFilter();
+  droneFilter.type = 'lowpass';
+  droneFilter.frequency.value = 300;
+  drone.connect(droneFilter);
+  droneFilter.connect(droneGain);
+  droneGain.connect(masterGain);
+  drone.start();
+  ambientNodes.push({ node: drone, type: 'osc' });
+
+  // Second drone layer: 148Hz sawtooth (slight detune for warmth)
+  const drone2 = audioCtx.createOscillator();
+  drone2.type = 'sawtooth';
+  drone2.frequency.value = 148;
+  const droneGain2 = audioCtx.createGain();
+  droneGain2.gain.value = 0.04;
+  const droneFilter2 = audioCtx.createBiquadFilter();
+  droneFilter2.type = 'lowpass';
+  droneFilter2.frequency.value = 250;
+  drone2.connect(droneFilter2);
+  droneFilter2.connect(droneGain2);
+  droneGain2.connect(masterGain);
+  drone2.start();
+  ambientNodes.push({ node: drone2, type: 'osc' });
+
+  // Wind noise: filtered white noise
+  const bufferSize = audioCtx.sampleRate * 2;
+  const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) {
+    data[i] = (Math.random() * 2 - 1) * 0.5;
+  }
+  const windSource = audioCtx.createBufferSource();
+  windSource.buffer = buffer;
+  windSource.loop = true;
+  const windGain = audioCtx.createGain();
+  windGain.gain.value = 0.025;
+  const windFilter = audioCtx.createBiquadFilter();
+  windFilter.type = 'lowpass';
+  windFilter.frequency.value = 400;
+  windFilter.Q.value = 0.5;
+  windSource.connect(windFilter);
+  windFilter.connect(windGain);
+  windGain.connect(masterGain);
+  windSource.start();
+  ambientNodes.push({ node: windSource, type: 'noise' });
+}
+
+function stopAmbient() {
+  ambientNodes.forEach(n => {
+    try { if (n.type === 'osc') n.node.stop(); else n.node.stop(); } catch(e) {}
+  });
+  ambientNodes = [];
+}
+
+// --- Procedural SFX ---
+function playChainBreak() {
+  if (!audioCtx || soundMuted || !masterGain) return;
+  // Noise burst with pitch sweep
+  const dur = 0.25;
+  const bufSize = audioCtx.sampleRate * dur;
+  const buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < bufSize; i++) {
+    const env = 1 - i / bufSize;
+    d[i] = (Math.random() * 2 - 1) * env * 0.6;
+  }
+  const src = audioCtx.createBufferSource();
+  src.buffer = buf;
+  const gain = audioCtx.createGain();
+  gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+  const filter = audioCtx.createBiquadFilter();
+  filter.type = 'highpass';
+  filter.frequency.setValueAtTime(2000, audioCtx.currentTime);
+  filter.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + dur);
+  src.connect(filter);
+  filter.connect(gain);
+  gain.connect(masterGain);
+  src.start();
+  src.stop(audioCtx.currentTime + dur);
+}
+
+function playRuneMatch() {
+  if (!audioCtx || soundMuted || !masterGain) return;
+  // Bell tone: sine + harmonic
+  const now = audioCtx.currentTime;
+  [523.25, 1046.5, 1568].forEach((freq, i) => {
+    const osc = audioCtx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    const g = audioCtx.createGain();
+    g.gain.setValueAtTime(0.2 - i * 0.05, now);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+    osc.connect(g);
+    g.connect(masterGain);
+    osc.start(now);
+    osc.stop(now + 0.6);
+  });
+}
+
+function playSoulJudgment(correct) {
+  if (!audioCtx || soundMuted || !masterGain) return;
+  const now = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  osc.type = 'sine';
+  osc.frequency.value = correct ? 220 : 110;
+  const g = audioCtx.createGain();
+  g.gain.setValueAtTime(0.2, now);
+  g.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+  const filter = audioCtx.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.value = correct ? 800 : 300;
+  osc.connect(filter);
+  filter.connect(g);
+  g.connect(masterGain);
+  osc.start(now);
+  osc.stop(now + 0.5);
+}
+
+function playGallop() {
+  if (!audioCtx || soundMuted || !masterGain) return;
+  const now = audioCtx.currentTime;
+  for (let i = 0; i < 8; i++) {
+    const osc = audioCtx.createOscillator();
+    osc.type = 'square';
+    osc.frequency.value = 120 + Math.random() * 40;
+    const g = audioCtx.createGain();
+    const t = now + i * 0.08;
+    g.gain.setValueAtTime(0.08, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+    osc.connect(g);
+    g.connect(masterGain);
+    osc.start(t);
+    osc.stop(t + 0.06);
+  }
+}
+
+function playHornBlast() {
+  if (!audioCtx || soundMuted || !masterGain) return;
+  const now = audioCtx.currentTime;
+  [180, 220, 270].forEach((freq, i) => {
+    const osc = audioCtx.createOscillator();
+    osc.type = 'triangle';
+    osc.frequency.value = freq;
+    const g = audioCtx.createGain();
+    g.gain.setValueAtTime(0.15, now + i * 0.12);
+    g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.12 + 0.5);
+    osc.connect(g);
+    g.connect(masterGain);
+    osc.start(now + i * 0.12);
+    osc.stop(now + i * 0.12 + 0.5);
+  });
+}
+
+// ===== HIGH SCORES SYSTEM =====
+const HS_KEY = 'lm_highscores';
+
+function getHighScores() {
+  try {
+    return JSON.parse(localStorage.getItem(HS_KEY)) || {};
+  } catch(e) { return {}; }
+}
+
+function saveHighScore(game, score, detail) {
+  const scores = getHighScores();
+  if (!scores[game]) scores[game] = [];
+  const entry = {
+    score: score,
+    detail: detail || '',
+    date: new Date().toISOString()
+  };
+  scores[game].push(entry);
+  // Keep last 100 entries per game
+  if (scores[game].length > 100) {
+    scores[game] = scores[game].slice(-100);
+  }
+  try {
+    localStorage.setItem(HS_KEY, JSON.stringify(scores));
+  } catch(e) {}
+  updateHighScoreDisplay(game);
+}
+
+function getBestScore(scores, game, period) {
+  const entries = scores[game] || [];
+  const now = new Date();
+  const filtered = entries.filter(e => {
+    const d = new Date(e.date);
+    if (period === 'daily') {
+      return d.toDateString() === now.toDateString();
+    } else if (period === 'weekly') {
+      const weekAgo = new Date(now);
+      weekAgo.setDate(weekAgo.getDate() - 7);
+      return d >= weekAgo;
+    }
+    return true; // all time
+  });
+  if (filtered.length === 0) return null;
+  return Math.max(...filtered.map(e => e.score));
+}
+
+function updateHighScoreDisplay(game) {
+  const scores = getHighScores();
+  const best = getBestScore(scores, game, 'all');
+  const idMap = {
+    fenrir: 'fenrir',
+    jormungandr: 'jormu',
+    hel: 'hel',
+    sleipnir: 'sleipnir'
+  };
+  const prefix = idMap[game] || game;
+  const el = document.getElementById(prefix + '-hs-val');
+  if (el) el.textContent = best !== null ? best : '—';
+}
+
+function showHighScores(game, period) {
+  const idMap = {
+    fenrir: 'fenrir',
+    jormungandr: 'jormu',
+    hel: 'hel',
+    sleipnir: 'sleipnir'
+  };
+  const prefix = idMap[game] || game;
+  const panel = document.getElementById(prefix + '-hs-panel');
+  const list = document.getElementById(prefix + '-hs-list');
+  if (!panel || !list) return;
+
+  // Toggle panel visibility
+  if (panel.style.display !== 'block') {
+    panel.style.display = 'block';
+    // Need to set active tab
+    const tabs = panel.querySelectorAll('.hs-tab');
+    tabs.forEach(t => t.classList.toggle('active', t.dataset.period === period));
+  } else {
+    // If clicking a different tab while open, switch
+    const tabs = panel.querySelectorAll('.hs-tab');
+    tabs.forEach(t => t.classList.toggle('active', t.dataset.period === period));
+  }
+
+  // Build list
+  const scores = getHighScores();
+  const entries = scores[game] || [];
+  const now = new Date();
+  const filtered = entries.filter(e => {
+    const d = new Date(e.date);
+    if (period === 'daily') return d.toDateString() === now.toDateString();
+    if (period === 'weekly') {
+      const weekAgo = new Date(now);
+      weekAgo.setDate(weekAgo.getDate() - 7);
+      return d >= weekAgo;
+    }
+    return true;
+  });
+  // Sort descending by score
+  filtered.sort((a, b) => b.score - a.score);
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="hs-empty">No scores for this period.</div>';
+    return;
+  }
+
+  list.innerHTML = filtered.slice(0, 10).map((e, i) => {
+    const d = new Date(e.date);
+    const dateStr = d.toLocaleDateString();
+    const detail = e.detail ? ' (' + e.detail + ')' : '';
+    return '<div class="hs-entry"><span><strong>#' + (i+1) + '</strong> <span class="hs-score">' + e.score + '</span>' + detail + '</span><span class="hs-date">' + dateStr + '</span></div>';
+  }).join('');
+}
+
+// ===== LEADERBOARD ADAPTERS (called by game end handlers) =====
+const __gameNameMap = { fenrir: 'fenrir', jormu: 'jormungandr', hel: 'hel', sleipnir: 'sleipnir' };
+
+function saveScore(game, score, detail) {
+  const fullName = __gameNameMap[game] || game;
+  saveHighScore(fullName, score, detail);
+  // Play horn blast on game end
+  initAudio();
+  playHornBlast();
+}
+
+function renderLeaderboard(game) {
+  const fullName = __gameNameMap[game] || game;
+  // Show the high score panel
+  const idMap = {
+    fenrir: 'fenrir',
+    jormungandr: 'jormu',
+    hel: 'hel',
+    sleipnir: 'sleipnir'
+  };
+  const prefix = idMap[fullName] || game;
+  
+  // Update the small high score display
+  updateHighScoreDisplay(fullName);
+  
+  // Show the leaderboard container by rendering all-time scores into it
+  const lbEl = document.getElementById('lb-' + game);
+  if (!lbEl) return;
+  
+  const scores = getHighScores();
+  const entries = scores[fullName] || [];
+  if (entries.length === 0) {
+    lbEl.innerHTML = '<div style="text-align:center;color:#475569;padding:8px;font-size:13px;">🏆 No scores yet. Be the first!</div>';
+    return;
+  }
+  
+  // Sort descending
+  const sorted = [...entries].sort((a, b) => b.score - a.score);
+  const top = sorted.slice(0, 10);
+  
+  lbEl.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
+    '<span style="font-size:13px;font-weight:700;color:#f59e0b;">🏆 Top Scores</span>' +
+    '<span style="font-size:11px;color:#475569;">All Time</span></div>' +
+    top.map((e, i) => {
+      const d = new Date(e.date);
+      const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#' + (i+1);
+      return '<div style="display:flex;justify-content:space-between;padding:4px 6px;border-radius:4px;font-size:12px;' +
+        (i % 2 === 0 ? 'background:#0a0a14;' : '') + '">' +
+        '<span><span style="color:#64748b;margin-right:6px;">' + medal + '</span>' +
+        '<span style="color:#e4e4e7;font-weight:600;">' + e.score + '</span>' +
+        (e.detail ? '<span style="color:#64748b;font-size:11px;margin-left:4px;">' + e.detail + '</span>' : '') + '</span>' +
+        '<span style="color:#475569;font-size:11px;">' + d.toLocaleDateString() + '</span></div>';
+    }).join('');
+}
+
 // ===== TAB SWITCHING =====
 const tabs = document.querySelectorAll('.ent-tab');
 const panels = {
@@ -2601,6 +3221,9 @@ function fenrirClick(idx) {
     chain.classList.add('broken');
     chain.classList.remove('active-chain');
     fenrirActive = -1;
+    // Chain break sound
+    initAudio();
+    playChainBreak();
 
     // Update progress bar (each chain = 16.67%)
     const pct = Math.round((fenrirHits / 18) * 100);
@@ -2628,6 +3251,12 @@ function fenrirClick(idx) {
       document.getElementById('fenrir-combo').style.color = '#f59e0b';
       setTimeout(function() {
         document.getElementById('fenrir-freed').classList.add('active');
+        // Show share button and save leaderboard
+        document.getElementById('share-btn-fenrir').style.display = '';
+        // Score = total hits (18 = perfect, but account for misses)
+        const score = fenrirHits;
+        saveScore('fenrir', score, 'Chains broken: ' + fenrirHits + '/18');
+        renderLeaderboard('fenrir');
       }, 800);
     } else {
       document.getElementById('fenrir-status').textContent = 'Chain broken! Next binding: ' + fenrirChainData[fenrirActive].name;
@@ -2694,6 +3323,11 @@ function jormuNextRound() {
     document.getElementById('jormu-done').classList.add('active');
     document.getElementById('jormu-status').textContent = '🎉 All runes recalled!';
     jormuFreed = true;
+    // Show share button and save leaderboard
+    document.getElementById('share-btn-jormu').style.display = '';
+    const score = jormuRound * 100 + jormuLives * 50;
+    saveScore('jormu', score, 'Round ' + jormuRound + '/6 complete');
+    renderLeaderboard('jormu');
     return;
   }
 
@@ -2755,6 +3389,11 @@ function jormuNextRound() {
           jormuShowing = true;
           document.getElementById('jormu-gameover').classList.add('active');
           document.getElementById('jormu-status').textContent = '⏰ Time ran out... The Serpent closed in.';
+          // Show share button
+          document.getElementById('share-btn-jormu').style.display = '';
+          const score = Math.max(0, jormuRound * 10 - (3 - jormuLives) * 20);
+          saveScore('jormu', score, 'Game Over — Round ' + jormuRound + ', ' + (3 - jormuLives) + ' lives lost');
+          renderLeaderboard('jormu');
         } else {
           document.getElementById('jormu-status').textContent = '⏰ Time\'s up! Try this round again.';
           jormuPlayerIdx = 0;
@@ -2789,6 +3428,8 @@ document.querySelectorAll('.jormu-rune').forEach(function(rune) {
 
     if (runeIdx === expectedIdx) {
       // Correct!
+      initAudio();
+      playRuneMatch();
       rune.classList.add('lit');
       setTimeout(function() { rune.classList.remove('lit'); }, 300);
       jormuPlayerIdx++;
@@ -2817,6 +3458,11 @@ document.querySelectorAll('.jormu-rune').forEach(function(rune) {
         jormuShowing = true;
         document.getElementById('jormu-gameover').classList.add('active');
         document.getElementById('jormu-status').textContent = '💀 The Serpent closed in...';
+        // Show share button
+        document.getElementById('share-btn-jormu').style.display = '';
+        const score = Math.max(0, jormuRound * 10);
+        saveScore('jormu', score, 'Game Over — Round ' + jormuRound + ', wrong sequence');
+        renderLeaderboard('jormu');
       } else {
         // Restart current round
         jormuPlayerIdx = 0;
@@ -2924,6 +3570,10 @@ function showNextHelSoul() {
     const ratings = ['💀 Hel is disappointed...', '⚖️ Mediocre judgment', '🔮 Passing grade', '⚖️ Honorable judgment', '👑 Master of the Realms!'];
     const ratingIdx = Math.min(4, Math.floor(helScore / 2.5));
     document.getElementById('hel-rating').textContent = ratings[ratingIdx];
+    // Show share button and save leaderboard
+    document.getElementById('share-btn-hel').style.display = '';
+    saveScore('hel', helScore, 'Score: ' + helScore + '/10 — ' + ratings[ratingIdx]);
+    renderLeaderboard('hel');
     return;
   }
 
@@ -2978,6 +3628,9 @@ function helSort(choice) {
     if (helStreak > helMaxStreak) helMaxStreak = helStreak;
     document.getElementById('hel-score').textContent = helScore;
     soulEl.className = 'hel-soul correct';
+    // Sound: correct judgment
+    initAudio();
+    playSoulJudgment(true);
     // Streak display
     if (helStreak >= 3) {
       document.getElementById('hel-streak').textContent = '🔥 ' + helStreak + ' streak!';
@@ -2994,6 +3647,9 @@ function helSort(choice) {
     showHelFeedback('❌ Wrong. ' + soul.explain, 'wrong');
     helLives--;
     soulEl.className = 'hel-soul wrong';
+    // Sound: wrong judgment
+    initAudio();
+    playSoulJudgment(false);
 
     // Update lives
     const livesHtml = [];
@@ -3004,6 +3660,10 @@ function helSort(choice) {
     if (helLives <= 0) {
       helActive = false;
       document.getElementById('hel-gameover').classList.add('active');
+      // Show share button
+      document.getElementById('share-btn-hel').style.display = '';
+      saveScore('hel', helScore, 'Game Over — Score: ' + helScore + '/10');
+      renderLeaderboard('hel');
       return;
     }
   }
@@ -3122,6 +3782,10 @@ function sleipnirStart() {
     r.classList.remove('wreck');
   });
   document.getElementById('sleipnir-runner-2').style.display = '';
+
+  // Gallop sound on start
+  initAudio();
+  playGallop();
 
   // Game loop — increment distance
   sleipnirGameLoop = setInterval(function() {
@@ -3256,6 +3920,7 @@ function sleipnirEnd(won) {
   document.getElementById('sleipnir-start-btn').disabled = false;
 
   const extraInfo = ' | 🪙' + sleipnirCoins + ' coins collected';
+  const score = sleipnirDistance + sleipnirCoins * 5;
   if (won) {
     document.getElementById('sleipnir-done').classList.add('active');
     document.getElementById('sleipnir-final-distance').textContent = sleipnirDistance + 'm' + extraInfo;
@@ -3263,6 +3928,10 @@ function sleipnirEnd(won) {
     document.getElementById('sleipnir-gameover').classList.add('active');
     document.getElementById('sleipnir-gameover-distance').textContent = sleipnirDistance + 'm' + extraInfo;
   }
+  // Show share button and save leaderboard
+  document.getElementById('share-btn-sleipnir').style.display = '';
+  saveScore('sleipnir', score, 'Distance: ' + sleipnirDistance + 'm, 🪙' + sleipnirCoins + (won ? ' — Asgard reached!' : ''));
+  renderLeaderboard('sleipnir');
 }
 
 function sleipnirReset() {
@@ -3272,6 +3941,91 @@ function sleipnirReset() {
   document.getElementById('sleipnir-start-btn').disabled = false;
   sleipnirRunning = false;
 }
+
+// ===== GLOW BLOOM UTILITY =====
+function applyGlow(ctx, x, y, radius, color, passes) {
+  passes = passes || 3;
+  const offscreen = document.createElement('canvas');
+  const dpr = window.devicePixelRatio || 1;
+  const size = Math.ceil(radius * 2 + 20) * dpr;
+  offscreen.width = size;
+  offscreen.height = size;
+  const offCtx = offscreen.getContext('2d');
+  offCtx.scale(dpr, dpr);
+  const cx = size / (2 * dpr);
+  const cy = cx;
+  const grad = offCtx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+  grad.addColorStop(0, color);
+  grad.addColorStop(1, 'transparent');
+  offCtx.fillStyle = grad;
+  offCtx.beginPath();
+  offCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+  offCtx.fill();
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < passes; i++) {
+    const alpha = 1 / (i + 1);
+    ctx.globalAlpha = alpha;
+    ctx.drawImage(offscreen, x - cx, y - cy, radius * 2, radius * 2);
+  }
+  ctx.restore();
+}
+
+// ===== PARTICLE BACKGROUND SYSTEM =====
+(function initParticleBg() {
+  const canvas = document.getElementById('particle-bg');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  function resize() {
+    const dpr = window.devicePixelRatio || 1;
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.scale(dpr, dpr);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+  const particles = [];
+  const COUNT = 60;
+  for (let i = 0; i < COUNT; i++) {
+    particles.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      size: 1.5 + Math.random() * 3,
+      speedY: 0.2 + Math.random() * 0.6,
+      speedX: (Math.random() - 0.5) * 0.3,
+      opacity: 0.2 + Math.random() * 0.6,
+      phase: Math.random() * Math.PI * 2,
+      hue: Math.random() < 0.3 ? 35 : (Math.random() < 0.5 ? 200 : 0)
+    });
+  }
+  function drawParticles() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      p.y += p.speedY;
+      p.x += p.speedX + Math.sin(Date.now() * 0.001 + p.phase) * 0.05;
+      if (p.y > H + 10) { p.y = -10; p.x = Math.random() * W; }
+      if (p.x < -10) p.x = W + 10;
+      if (p.x > W + 10) p.x = -10;
+      const pulse = Math.sin(Date.now() * 0.002 + p.phase) * 0.3 + 0.7;
+      const alpha = p.opacity * pulse;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      if (p.hue === 35) {
+        ctx.fillStyle = `rgba(245,158,11,${alpha})`;
+      } else if (p.hue === 200) {
+        ctx.fillStyle = `rgba(148,163,184,${alpha * 0.7})`;
+      } else {
+        ctx.fillStyle = `rgba(200,200,220,${alpha * 0.5})`;
+      }
+      ctx.fill();
+    });
+    requestAnimationFrame(drawParticles);
+  }
+  drawParticles();
+})();
 
 // ===== CANVAS CHARACTER ENGINE =====
 // High-quality canvas-drawn character portraits with full animation
@@ -3289,8 +4043,14 @@ let sleipnirFreed = false;
 function initCharCanvas(id, drawFn) {
   const c = document.getElementById(id);
   if (!c) return null;
+  const dpr = window.devicePixelRatio || 1;
+  c.width = 240 * dpr;
+  c.height = 240 * dpr;
+  c.style.width = '240px';
+  c.style.height = '240px';
   const ctx = c.getContext('2d');
-  return { canvas: c, ctx, drawFn, tick: 0 };
+  ctx.scale(dpr, dpr);
+  return { canvas: c, ctx, drawFn, tick: 0, dpr: dpr };
 }
 
 function startCanvasAnim() {
@@ -3300,7 +4060,7 @@ function startCanvasAnim() {
     // Draw all visible canvases
     Object.values(canvasPortraits).forEach(p => {
       if (p.canvas && p.canvas.offsetParent !== null) {
-        p.ctx.clearRect(0, 0, 140, 140);
+        p.ctx.clearRect(0, 0, 240, 240);
         p.tick++;
         // Determine freed state per character
         const id = p.canvas.id;
@@ -3309,7 +4069,7 @@ function startCanvasAnim() {
         else if (id === 'canvas-jormu') freed = jormuFreed;
         else if (id === 'canvas-hel') freed = helFreed;
         else if (id === 'canvas-sleipnir') freed = sleipnirFreed;
-        p.drawFn(p.ctx, 140, 140, p.tick, freed);
+        p.drawFn(p.ctx, 240, 240, p.tick, freed);
       }
     });
     canvasAnimId = requestAnimationFrame(loop);
@@ -3329,7 +4089,7 @@ function drawFenrir(ctx, w, h, t, freed) {
   const cx = w/2, cy = h/2;
   
   // Background cave scene
-  const bg = ctx.createRadialGradient(cx-10, cy-20, 0, cx, cy, 75);
+  const bg = ctx.createRadialGradient(cx-17, cy-34, 0, cx, cy, 128);
   bg.addColorStop(0, freed ? '#145A32' : '#1E1B2E');
   bg.addColorStop(0.5, freed ? '#0D2818' : '#0F0D1A');
   bg.addColorStop(1, '#000000');
@@ -3338,38 +4098,38 @@ function drawFenrir(ctx, w, h, t, freed) {
   
   // Blood moon
   const moonColor = freed ? '#22C55E' : '#DC2626';
-  const moonAura = ctx.createRadialGradient(cx, cy-24, 0, cx, cy-24, 22);
+  const moonAura = ctx.createRadialGradient(cx, cy-40, 0, cx, cy-40, 38);
   moonAura.addColorStop(0, freed ? '#22C55E44' : '#DC262644');
   moonAura.addColorStop(0.5, freed ? '#22C55E22' : '#7F1D1D22');
   moonAura.addColorStop(1, 'transparent');
   ctx.fillStyle = moonAura;
-  ctx.beginPath(); ctx.arc(cx, cy-24, 22, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx, cy-40, 38, 0, Math.PI*2); ctx.fill();
   
-  ctx.beginPath(); ctx.arc(cx, cy-24, 10, 0, Math.PI*2);
+  ctx.beginPath(); ctx.arc(cx, cy-40, 17, 0, Math.PI*2);
   ctx.fillStyle = freed ? '#22C55E66' : '#DC262666';
   ctx.fill();
-  ctx.beginPath(); ctx.arc(cx-3, cy-27, 4, 0, Math.PI*2);
+  ctx.beginPath(); ctx.arc(cx-5, cy-46, 7, 0, Math.PI*2);
   ctx.fillStyle = freed ? '#4ADE8066' : '#EF444466';
   ctx.fill();
   
   // Inner ear glow
-  ctx.beginPath(); ctx.ellipse(cx-24, cy-36, 6, 4, -0.3, 0, Math.PI*2);
+  ctx.beginPath(); ctx.ellipse(cx-40, cy-60, 10, 7, -0.3, 0, Math.PI*2);
   ctx.fillStyle = '#63444466'; ctx.fill();
-  ctx.beginPath(); ctx.ellipse(cx+24, cy-36, 6, 4, 0.3, 0, Math.PI*2);
+  ctx.beginPath(); ctx.ellipse(cx+40, cy-60, 10, 7, 0.3, 0, Math.PI*2);
   ctx.fillStyle = '#63444466'; ctx.fill();
   
   // Ears - left
   ctx.beginPath();
-  ctx.moveTo(cx-22, cy-14); ctx.lineTo(cx-36, cy-44); ctx.lineTo(cx-10, cy-22); ctx.closePath();
-  const earGradL = ctx.createLinearGradient(cx-30, cy-40, cx-15, cy-20);
+  ctx.moveTo(cx-38, cy-24); ctx.lineTo(cx-62, cy-74); ctx.lineTo(cx-17, cy-38); ctx.closePath();
+  const earGradL = ctx.createLinearGradient(cx-50, cy-68, cx-25, cy-34);
   earGradL.addColorStop(0, '#4A5565'); earGradL.addColorStop(1, '#1F2937');
   ctx.fillStyle = earGradL; ctx.fill();
   ctx.strokeStyle = '#374151'; ctx.lineWidth = 1; ctx.stroke();
   
   // Ears - right
   ctx.beginPath();
-  ctx.moveTo(cx+22, cy-14); ctx.lineTo(cx+36, cy-44); ctx.lineTo(cx+10, cy-22); ctx.closePath();
-  const earGradR = ctx.createLinearGradient(cx+30, cy-40, cx+15, cy-20);
+  ctx.moveTo(cx+38, cy-24); ctx.lineTo(cx+62, cy-74); ctx.lineTo(cx+17, cy-38); ctx.closePath();
+  const earGradR = ctx.createLinearGradient(cx+50, cy-68, cx+25, cy-34);
   earGradR.addColorStop(0, '#4A5565'); earGradR.addColorStop(1, '#1F2937');
   ctx.fillStyle = earGradR; ctx.fill();
   ctx.strokeStyle = '#374151'; ctx.lineWidth = 1; ctx.stroke();
@@ -3377,10 +4137,10 @@ function drawFenrir(ctx, w, h, t, freed) {
   // Fur tufts on cheeks
   for (let side = -1; side <= 1; side += 2) {
     for (let i = 0; i < 4; i++) {
-      const fx = cx + side * (32 + i*4);
-      const fy = cy + 4 + i*6;
+      const fx = cx + side * (55 + i*7);
+      const fy = cy + 7 + i*10;
       ctx.beginPath();
-      ctx.moveTo(fx, fy); ctx.lineTo(fx + side*6, fy+2); ctx.lineTo(fx - side*2, fy+5);
+      ctx.moveTo(fx, fy); ctx.lineTo(fx + side*10, fy+3); ctx.lineTo(fx - side*3, fy+8);
       ctx.closePath();
       ctx.fillStyle = '#1F2937'; ctx.fill();
     }
@@ -3388,8 +4148,8 @@ function drawFenrir(ctx, w, h, t, freed) {
   
   // Head
   ctx.beginPath();
-  ctx.ellipse(cx, cy+4, 36, 30, 0, 0, Math.PI*2);
-  const headGrad = ctx.createRadialGradient(cx-5, cy-5, 0, cx, cy, 32);
+  ctx.ellipse(cx, cy+7, 62, 52, 0, 0, Math.PI*2);
+  const headGrad = ctx.createRadialGradient(cx-8, cy-8, 0, cx, cy, 55);
   headGrad.addColorStop(0, '#3A3A4E'); headGrad.addColorStop(0.6, '#2A2A3E'); headGrad.addColorStop(1, '#151520');
   ctx.fillStyle = headGrad; ctx.fill();
   ctx.strokeStyle = '#374151'; ctx.lineWidth = 1; ctx.stroke();
@@ -3399,88 +4159,84 @@ function drawFenrir(ctx, w, h, t, freed) {
   for (let i = 0; i < 8; i++) {
     const angle = -1 + i * 0.3;
     ctx.beginPath();
-    ctx.moveTo(cx + Math.cos(angle)*5, cy-20 + Math.sin(angle)*8);
-    ctx.lineTo(cx + Math.cos(angle)*22, cy-16 + Math.sin(angle)*10);
+    ctx.moveTo(cx + Math.cos(angle)*8, cy-34 + Math.sin(angle)*14);
+    ctx.lineTo(cx + Math.cos(angle)*38, cy-28 + Math.sin(angle)*17);
     ctx.stroke();
   }
   
   // Eyes - glowing
   const eyeColor = freed ? '#22C55E' : '#EF4444';
   const eyeBright = freed ? '#4ADE80' : '#FF6B35';
-  const glowSize = 16 + Math.sin(t*0.04)*4;
+  const glowSize = 28 + Math.sin(t*0.04)*7;
   
   [-1, 1].forEach(side => {
-    const ex = cx + side * 12;
-    const ey = cy - 2;
+    const ex = cx + side * 20;
+    const ey = cy - 3;
     const angle = Math.sin(t*0.03 + side) * 0.1;
     
-    // Outer glow
-    ctx.shadowBlur = glowSize;
-    ctx.shadowColor = eyeColor;
-    ctx.beginPath();
-    ctx.ellipse(ex, ey, 8 + Math.sin(t*0.05)*0.5, 7, angle, 0, Math.PI*2);
-    ctx.fillStyle = eyeColor + '88'; ctx.fill();
-    ctx.shadowBlur = 0;
+    // Outer glow with bloom
+    const glowColor = freed ? 'rgba(34,197,94,0.6)' : 'rgba(239,68,68,0.6)';
+    applyGlow(ctx, ex, ey, glowSize, glowColor, 3);
     
     // Eye white base  
     ctx.beginPath();
-    ctx.ellipse(ex, ey, 6, 5.5, angle, 0, Math.PI*2);
+    ctx.ellipse(ex, ey, 10, 9.5, angle, 0, Math.PI*2);
     ctx.fillStyle = '#FFFFFF22'; ctx.fill();
     
     // Iris
     ctx.beginPath();
-    ctx.ellipse(ex, ey, 5, 4.5, angle, 0, Math.PI*2);
-    const iris = ctx.createRadialGradient(ex, ey, 0, ex, ey, 5);
+    ctx.ellipse(ex, ey, 8.5, 8, angle, 0, Math.PI*2);
+    const iris = ctx.createRadialGradient(ex, ey, 0, ex, ey, 8.5);
     iris.addColorStop(0, eyeBright); iris.addColorStop(1, eyeColor);
     ctx.fillStyle = iris; ctx.fill();
     
     // Pupil
     ctx.beginPath();
-    ctx.ellipse(ex + side*0.5, ey, 2.5, 4, angle, 0, Math.PI*2);
+    ctx.ellipse(ex + side*1, ey, 4, 7, angle, 0, Math.PI*2);
     ctx.fillStyle = '#000'; ctx.fill();
     
     // Highlight
     ctx.beginPath();
-    ctx.arc(ex - side*1.5, ey - 1.5, 1.8, 0, Math.PI*2);
+    ctx.arc(ex - side*2.5, ey - 2.5, 3, 0, Math.PI*2);
     ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.fill();
     ctx.beginPath();
-    ctx.arc(ex - side*0.5, ey + 1.5, 0.8, 0, Math.PI*2);
+    ctx.arc(ex - side*1, ey + 2.5, 1.5, 0, Math.PI*2);
     ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.fill();
     
     // Eye slit
     ctx.beginPath();
-    ctx.moveTo(ex - 9, ey + 7);
-    ctx.quadraticCurveTo(ex, ey + 10, ex + 9, ey + 7);
-    ctx.strokeStyle = '#000'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.moveTo(ex - 15, ey + 12);
+    ctx.quadraticCurveTo(ex, ey + 17, ex + 15, ey + 12);
+    ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5; ctx.stroke();
   });
   
   // Snout
   ctx.beginPath();
-  ctx.ellipse(cx, cy+16, 14, 10, 0, 0, Math.PI*2);
+  ctx.ellipse(cx, cy+28, 24, 17, 0, 0, Math.PI*2);
   ctx.fillStyle = '#151520'; ctx.fill();
   
   // Nose
   ctx.beginPath();
-  ctx.ellipse(cx, cy+13, 5, 3.5, 0, 0, Math.PI*2);
+  ctx.ellipse(cx, cy+22, 8.5, 6, 0, 0, Math.PI*2);
   ctx.fillStyle = '#000'; ctx.fill();
   ctx.beginPath();
-  ctx.ellipse(cx-2, cy+12, 1.5, 1, 0, 0, Math.PI*2);
+  ctx.ellipse(cx-3, cy+20, 2.5, 1.5, 0, 0, Math.PI*2);
   ctx.fillStyle = '#333'; ctx.fill();
   
   // Mouth line
   ctx.beginPath();
-  ctx.moveTo(cx-10, cy+22);
-  ctx.quadraticCurveTo(cx, cy+26, cx+10, cy+22);
-  ctx.strokeStyle = '#555'; ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.moveTo(cx-17, cy+38);
+  ctx.quadraticCurveTo(cx, cy+44, cx+17, cy+38);
+  ctx.strokeStyle = '#555'; ctx.lineWidth = 2.5; ctx.stroke();
   
   // Fangs
   const fangColor = freed ? '#4ADE80' : '#EF4444';
-  const fangs = [[-8,23,-6,31],[-3,23,-2,29],[3,23,2,29],[8,23,6,31]];
+  const fangs = [[-14,39,-10,53],[-5,39,-3,50],[5,39,3,50],[14,39,10,53]];
   fangs.forEach(([x1,y1,x2,y2]) => {
     ctx.beginPath();
     ctx.moveTo(cx+x1, cy+y1);
     ctx.lineTo(cx+x2, cy+y2);
-    ctx.lineTo(cx+x1+2, cy+y1);
+    ctx.lineTo(cx+x1+3, cy+y1);
     ctx.closePath();
     ctx.fillStyle = fangColor; ctx.fill();
     ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.lineWidth = 0.5; ctx.stroke();
@@ -3488,34 +4244,33 @@ function drawFenrir(ctx, w, h, t, freed) {
   
   // Between-fang gaps
   ctx.fillStyle = '#1A1A2E';
-  ctx.beginPath(); ctx.arc(cx-5, cy+24, 1, 0, Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.arc(cx+5, cy+24, 1, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx-8, cy+40, 2, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx+8, cy+40, 2, 0, Math.PI*2); ctx.fill();
   
   // Chain links around Fenrir (8 chains)
   if (!freed) {
-    ctx.strokeStyle = '#818CF8'; ctx.lineWidth = 2.5;
-    ctx.shadowBlur = 3; ctx.shadowColor = '#6366F144';
+    ctx.strokeStyle = '#818CF8'; ctx.lineWidth = 4;
+    applyGlow(ctx, cx, cy, 60, 'rgba(99,102,241,0.2)', 2);
     
     const chains = [
-      [-38,-14, -18,-30], [38,-14, 18,-30], [-42,6, -24,-6], [42,6, 24,-6],
-      [-38,30, -20,22], [38,30, 20,22], [-6,-36, 6,-30], [-26,34, 26,34]
+      [-65,-24, -30,-50], [65,-24, 30,-50], [-72,10, -40,-10], [72,10, 40,-10],
+      [-65,50, -34,38], [65,50, 34,38], [-10,-62, 10,-52], [-44,58, 44,58]
     ];
     
     chains.forEach(([x1,y1,x2,y2], ci) => {
       let dx = x2-x1, dy = y2-y1;
       let dist = Math.sqrt(dx*dx+dy*dy);
-      let links = Math.max(2, Math.round(dist/10));
+      let links = Math.max(2, Math.round(dist/17));
       for (let j = 0; j < links; j++) {
         let frac = j/links;
-        let wobble = Math.sin(t*0.06 + ci*1.5 + j*0.7) * 2;
+        let wobble = Math.sin(t*0.06 + ci*1.5 + j*0.7) * 3;
         let lx = cx + x1 + dx*frac + wobble;
-        let ly = cy + y1 + dy*frac + Math.cos(t*0.06 + ci*1.5 + j*0.7) * 2;
+        let ly = cy + y1 + dy*frac + Math.cos(t*0.06 + ci*1.5 + j*0.7) * 3;
         ctx.beginPath();
-        ctx.ellipse(lx, ly, 5, 2.5, Math.atan2(dy,dx), 0, Math.PI*2);
+        ctx.ellipse(lx, ly, 8, 4, Math.atan2(dy,dx), 0, Math.PI*2);
         ctx.stroke();
       }
     });
-    ctx.shadowBlur = 0;
   }
 }
 
@@ -3524,7 +4279,7 @@ function drawJormu(ctx, w, h, t, freed) {
   const cx = w/2, cy = h/2;
   
   // Ocean background
-  const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, 75);
+  const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, 128);
   bg.addColorStop(0, freed ? '#145A32' : '#0A1A1A');
   bg.addColorStop(0.5, freed ? '#0D2818' : '#050A0A');
   bg.addColorStop(1, '#000000');
@@ -3533,15 +4288,15 @@ function drawJormu(ctx, w, h, t, freed) {
   // Ripples
   for (let i = 0; i < 3; i++) {
     let phase = t*0.02 + i*1.2;
-    let r = 48 + Math.sin(phase)*8;
+    let r = 82 + Math.sin(phase)*14;
     ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2);
     ctx.strokeStyle = `rgba(5,150,105,${0.05 - i*0.015})`;
     ctx.lineWidth = 1; ctx.stroke();
   }
   
   // Coil rings with gradient color
-  const coilRadius = [4,3.5,3,2.5,2];
-  const coilScale = [40,34,28,22,16];
+  const coilRadius = [7,6,5,4,3];
+  const coilScale = [68,58,48,38,28];
   
   for (let i = 0; i < 5; i++) {
     let pr = coilScale[i];
@@ -3578,243 +4333,291 @@ function drawJormu(ctx, w, h, t, freed) {
   // Scale dots along outer coil
   for (let i = 0; i < 24; i++) {
     let angle = i/24 * Math.PI*2 + t*0.01;
-    let r = 38 + Math.sin(t*0.02 + i)*1;
+    let r = 65 + Math.sin(t*0.02 + i)*2;
     ctx.beginPath();
-    ctx.arc(cx + Math.cos(angle)*r, cy + Math.sin(angle)*r*0.85, 1.5, 0, Math.PI*2);
+    ctx.arc(cx + Math.cos(angle)*r, cy + Math.sin(angle)*r*0.85, 2.5, 0, Math.PI*2);
     ctx.fillStyle = freed ? `rgba(74,222,128,0.3)` : `rgba(5,150,105,0.25)`;
     ctx.fill();
   }
   
   // Serpent head
-  let headBobX = Math.sin(t*0.025)*3;
-  let headBobY = Math.sin(t*0.03)*2;
+  let headBobX = Math.sin(t*0.025)*5;
+  let headBobY = Math.sin(t*0.03)*4;
   
   // Head shape
   ctx.beginPath();
-  ctx.ellipse(cx + headBobX, cy - 28 + headBobY, 12, 9, 0, 0, Math.PI*2);
-  const headGrad = ctx.createRadialGradient(cx+headBobX-2, cy-28+headBobY-2, 0, cx+headBobX, cy-28+headBobY, 12);
+  ctx.ellipse(cx + headBobX, cy - 48 + headBobY, 20, 15, 0, 0, Math.PI*2);
+  const headGrad = ctx.createRadialGradient(cx+headBobX-3, cy-48+headBobY-3, 0, cx+headBobX, cy-48+headBobY, 20);
   headGrad.addColorStop(0, '#059669'); headGrad.addColorStop(1, '#047857');
   ctx.fillStyle = headGrad; ctx.fill();
   ctx.strokeStyle = '#10B981'; ctx.lineWidth = 1; ctx.stroke();
   
   // Eyes on head
-  const eyeOff = 5;
+  const eyeOff = 8;
   [-1, 1].forEach(side => {
     const ex = cx + headBobX + side*eyeOff;
-    const ey = cy - 30 + headBobY;
+    const ey = cy - 52 + headBobY;
     
-    ctx.shadowBlur = 8; ctx.shadowColor = freed ? '#22C55E' : '#10B981';
-    ctx.beginPath(); ctx.arc(ex, ey, 2.5, 0, Math.PI*2);
+    const glowColor = freed ? 'rgba(34,197,94,0.6)' : 'rgba(16,185,129,0.6)';
+    applyGlow(ctx, ex, ey, 14, glowColor, 3);
+    
+    ctx.beginPath(); ctx.arc(ex, ey, 4, 0, Math.PI*2);
     ctx.fillStyle = freed ? '#4ADE80' : '#34D399'; ctx.fill();
-    ctx.shadowBlur = 0;
     
-    ctx.beginPath(); ctx.arc(ex, ey, 1.2, 0, Math.PI*2);
+    ctx.beginPath(); ctx.arc(ex, ey, 2, 0, Math.PI*2);
     ctx.fillStyle = '#000'; ctx.fill();
   });
   
   // Forked tongue
-  let tongueFlex = Math.sin(t*0.15) * 0.4;
-  ctx.strokeStyle = '#EF4444'; ctx.lineWidth = 2;
+  let tongueFlex = Math.sin(t*0.15) * 0.7;
+  ctx.strokeStyle = '#EF4444'; ctx.lineWidth = 3;
   ctx.beginPath();
-  ctx.moveTo(cx + headBobX, cy - 36 + headBobY);
-  ctx.quadraticCurveTo(cx + headBobX + tongueFlex*2, cy - 46 + headBobY, cx + headBobX - 4 + tongueFlex*3, cy - 52 + headBobY);
+  ctx.moveTo(cx + headBobX, cy - 62 + headBobY);
+  ctx.quadraticCurveTo(cx + headBobX + tongueFlex*3, cy - 78 + headBobY, cx + headBobX - 7 + tongueFlex*5, cy - 88 + headBobY);
   ctx.stroke();
   ctx.beginPath();
-  ctx.moveTo(cx + headBobX - 2 + tongueFlex*2, cy - 44 + headBobY);
-  ctx.quadraticCurveTo(cx + headBobX + tongueFlex*4, cy - 52 + headBobY, cx + headBobX - 2 + tongueFlex*5, cy - 56 + headBobY);
+  ctx.moveTo(cx + headBobX - 3 + tongueFlex*3, cy - 75 + headBobY);
+  ctx.quadraticCurveTo(cx + headBobX + tongueFlex*7, cy - 88 + headBobY, cx + headBobX - 3 + tongueFlex*8, cy - 96 + headBobY);
   ctx.stroke();
 }
 
 // --- HEL: Half-Living Half-Dead ---
 function drawHel(ctx, w, h, t, freed) {
   const cx = w/2, cy = h/2;
+  const deadHue = freed ? 140 : 0; // Warm/hue shift when freed
   
   // Underworld background
-  const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, 75);
+  const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, 128);
   bg.addColorStop(0, freed ? '#145A32' : '#1A0A2E');
   bg.addColorStop(0.5, '#0D0520'); bg.addColorStop(1, '#000000');
   ctx.fillStyle = bg; ctx.fillRect(0,0,w,h);
   
-  // Floating soul particles
-  for (let i = 0; i < 6; i++) {
-    let px = cx + Math.sin(t*0.02 + i*1.7)*50;
-    let py = cy + Math.cos(t*0.03 + i*2.1)*40;
-    let ps = 2 + Math.sin(t*0.05 + i)*1;
+  // Floating soul particles (purple→gold when freed)
+  for (let i = 0; i < 10; i++) {
+    let px = cx + Math.sin(t*0.02 + i*1.7)*85;
+    let py = cy + Math.cos(t*0.03 + i*2.1)*68;
+    let ps = 3 + Math.sin(t*0.05 + i)*2;
     ctx.beginPath(); ctx.arc(px, py, ps, 0, Math.PI*2);
-    ctx.fillStyle = `rgba(147,51,234,${0.15 + Math.sin(t*0.04 + i)*0.08})`;
+    if (freed) {
+      ctx.fillStyle = `rgba(250,204,21,${0.2 + Math.sin(t*0.04 + i)*0.12})`;
+    } else {
+      ctx.fillStyle = `rgba(147,51,234,${0.15 + Math.sin(t*0.04 + i)*0.08})`;
+    }
     ctx.fill();
+    // Extra golden sparkle when freed
+    if (freed && i % 2 === 0) {
+      ctx.beginPath(); ctx.arc(px+5, py-3, 1.5, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(255,215,0,${0.3 + Math.sin(t*0.06 + i)*0.15})`;
+      ctx.fill();
+    }
   }
   
   // Hair base
   // Left side (dark)
   ctx.beginPath();
-  ctx.ellipse(cx-4, cy, 40, 44, 0, 0, Math.PI*2);
+  ctx.ellipse(cx-7, cy, 68, 75, 0, 0, Math.PI*2);
   ctx.fillStyle = '#1A1A2E'; ctx.fill();
-  // Right side (darker, decayed)
+  // Right side - hue shifts warm/green when freed
   ctx.beginPath();
-  ctx.ellipse(cx+4, cy, 40, 44, 0, 0, Math.PI*2);
-  ctx.fillStyle = '#0A0A14'; ctx.fill();
+  ctx.ellipse(cx+7, cy, 68, 75, 0, 0, Math.PI*2);
+  ctx.fillStyle = freed ? '#0D2818' : '#0A0A14';
+  ctx.fill();
   
   // Hair strands
   for (let i = 0; i < 10; i++) {
     let side = i < 5 ? -1 : 1;
     let idx = i < 5 ? i : i-5;
-    let sx = cx + side*(8 + idx*5);
-    let sy = cy - 28 + Math.sin(t*0.02 + i)*3;
+    let sx = cx + side*(14 + idx*8);
+    let sy = cy - 48 + Math.sin(t*0.02 + i)*5;
     
     ctx.beginPath();
     ctx.moveTo(sx, sy);
-    ctx.quadraticCurveTo(sx + side*3, sy + 20, sx + side*2, sy + 36);
-    ctx.strokeStyle = side === -1 ? '#2A2A3E' : '#15152A';
-    ctx.lineWidth = 2.5; ctx.stroke();
+    ctx.quadraticCurveTo(sx + side*5, sy + 34, sx + side*3, sy + 62);
+    ctx.strokeStyle = side === -1 ? '#2A2A3E' : (freed ? '#145A32' : '#15152A');
+    ctx.lineWidth = 4; ctx.stroke();
   }
   
-  // Crown
+  // Crown with gem lighting
   for (let i = 0; i < 5; i++) {
     let angle = -0.3 + i*0.15;
-    let cx2 = cx + Math.sin(angle)*14;
+    let cx2 = cx + Math.sin(angle)*24;
+    const gemGlow = freed ? (0.5 + Math.sin(t*0.04 + i)*0.3) : 0.2;
     ctx.beginPath();
-    ctx.moveTo(cx2 - 5, cy - 34);
-    ctx.lineTo(cx2, cy - 48 + Math.sin(t*0.03 + i)*2);
-    ctx.lineTo(cx2 + 5, cy - 34);
+    ctx.moveTo(cx2 - 8, cy - 58);
+    ctx.lineTo(cx2, cy - 82 + Math.sin(t*0.03 + i)*3);
+    ctx.lineTo(cx2 + 8, cy - 58);
     ctx.closePath();
-    const crownOp = 0.2 + i*0.03;
-    ctx.fillStyle = `rgba(139,92,246,${crownOp})`;
+    const crownOp = freed ? 0.3 + i*0.05 : 0.2 + i*0.03;
+    ctx.fillStyle = freed ? `rgba(34,197,94,${crownOp})` : `rgba(139,92,246,${crownOp})`;
     ctx.fill();
+    // Gem tip glow
+    if (freed) {
+      applyGlow(ctx, cx2, cy - 82 + Math.sin(t*0.03 + i)*3, 8, 'rgba(34,197,94,0.4)', 2);
+    }
   }
   
-  // Split face
-  // Left half (living)
+  // Crack lines that seal with green light when freed
+  if (freed) {
+    ctx.strokeStyle = '#22C55E44';
+    ctx.lineWidth = 1.5;
+    const cracks = [
+      [cx-20,cy-20, cx+10,cy-5], [cx+15,cy-15, cx,cy+10],
+      [cx-10,cy+5, cx+20,cy+15], [cx-5,cy-25, cx+25,cy-10]
+    ];
+    cracks.forEach(([x1,y1,x2,y2]) => {
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo((x1+x2)/2, (y1+y2)/2 + Math.sin(t*0.03)*3);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    });
+    applyGlow(ctx, cx, cy, 40, 'rgba(34,197,94,0.1)', 2);
+  }
+  
+  // Split face - living left side
   ctx.save();
   ctx.beginPath();
-  ctx.rect(cx-34, cy-34, 34, 68);
-  ctx.arc(cx-34, cy, 34, -Math.PI/2, Math.PI/2, true);
+  ctx.rect(cx-58, cy-58, 58, 116);
+  ctx.arc(cx-58, cy, 58, -Math.PI/2, Math.PI/2, true);
   ctx.closePath();
-  const livingGrad = ctx.createLinearGradient(cx-34, cy, cx, cy);
+  const livingGrad = ctx.createLinearGradient(cx-58, cy, cx, cy);
   livingGrad.addColorStop(0, '#FCD34D'); livingGrad.addColorStop(1, '#F59E0B');
   ctx.fillStyle = livingGrad; ctx.fill();
   ctx.restore();
   
-  // Right half (dead)
+  // Split face - dead right side (hue shifts warm/green when freed)
   ctx.save();
   ctx.beginPath();
-  ctx.rect(cx, cy-34, 34, 68);
-  ctx.arc(cx+34, cy, 34, Math.PI/2, -Math.PI/2, true);
+  ctx.rect(cx, cy-58, 58, 116);
+  ctx.arc(cx+58, cy, 58, Math.PI/2, -Math.PI/2, true);
   ctx.closePath();
-  const deadGrad = ctx.createLinearGradient(cx, cy, cx+34, cy);
-  deadGrad.addColorStop(0, '#4A5568'); deadGrad.addColorStop(1, '#2D3748');
+  const deadGrad = ctx.createLinearGradient(cx, cy, cx+58, cy);
+  if (freed) {
+    deadGrad.addColorStop(0, '#145A32');
+    deadGrad.addColorStop(0.5, '#22C55E44');
+    deadGrad.addColorStop(1, '#0D2818');
+  } else {
+    deadGrad.addColorStop(0, '#4A5568'); deadGrad.addColorStop(1, '#2D3748');
+  }
   ctx.fillStyle = deadGrad; ctx.fill();
   ctx.restore();
   
   // Face border
   ctx.beginPath();
-  ctx.arc(cx, cy, 34, 0, Math.PI*2);
-  ctx.strokeStyle = 'rgba(124,58,237,0.15)'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.arc(cx, cy, 58, 0, Math.PI*2);
+  ctx.strokeStyle = freed ? 'rgba(34,197,94,0.3)' : 'rgba(124,58,237,0.15)';
+  ctx.lineWidth = 2; ctx.stroke();
   
-  // Split line down the middle
+  // Split line down the middle (green glow when freed)
   ctx.beginPath();
-  ctx.moveTo(cx, cy-34); ctx.lineTo(cx, cy+34);
-  ctx.strokeStyle = '#7C3AED44'; ctx.lineWidth = 1; ctx.stroke();
+  ctx.moveTo(cx, cy-58); ctx.lineTo(cx, cy+58);
+  ctx.strokeStyle = freed ? '#22C55E66' : '#7C3AED44';
+  ctx.lineWidth = freed ? 2 : 1;
+  ctx.stroke();
   
   // LEFT EYE (living - warm)
-  ctx.beginPath(); ctx.ellipse(cx-12, cy-6, 7, 5, 0, 0, Math.PI*2);
+  ctx.beginPath(); ctx.ellipse(cx-20, cy-10, 12, 8, 0, 0, Math.PI*2);
   ctx.fillStyle = '#FFFEF0'; ctx.fill();
-  ctx.beginPath(); ctx.arc(cx-11, cy-6, 4.5, 0, Math.PI*2);
-  const irisL = ctx.createRadialGradient(cx-11, cy-6, 0, cx-11, cy-6, 4.5);
+  ctx.beginPath(); ctx.arc(cx-19, cy-10, 7.5, 0, Math.PI*2);
+  const irisL = ctx.createRadialGradient(cx-19, cy-10, 0, cx-19, cy-10, 7.5);
   irisL.addColorStop(0, '#92400E'); irisL.addColorStop(1, '#78350F');
   ctx.fillStyle = irisL; ctx.fill();
-  ctx.beginPath(); ctx.arc(cx-11, cy-6, 2.5, 0, Math.PI*2);
+  ctx.beginPath(); ctx.arc(cx-19, cy-10, 4, 0, Math.PI*2);
   ctx.fillStyle = '#000'; ctx.fill();
-  ctx.beginPath(); ctx.arc(cx-13, cy-8, 1.5, 0, Math.PI*2);
+  ctx.beginPath(); ctx.arc(cx-22, cy-13, 2.5, 0, Math.PI*2);
   ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.fill();
   // Eye line
   ctx.beginPath();
-  ctx.moveTo(cx-19, cy-10); ctx.quadraticCurveTo(cx-12, cy-13, cx-5, cy-10);
-  ctx.strokeStyle = '#92400E'; ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.moveTo(cx-32, cy-17); ctx.quadraticCurveTo(cx-20, cy-22, cx-8, cy-17);
+  ctx.strokeStyle = '#92400E'; ctx.lineWidth = 2.5; ctx.stroke();
   
-  // RIGHT EYE (dead - hollow)
-  ctx.beginPath(); ctx.ellipse(cx+12, cy-6, 7, 5, 0, 0, Math.PI*2);
-  ctx.fillStyle = '#1A1A2E'; ctx.fill();
-  ctx.beginPath(); ctx.arc(cx+12, cy-6, 4, 0, Math.PI*2);
+  // RIGHT EYE (dead - hollow, warms when freed)
+  ctx.beginPath(); ctx.ellipse(cx+20, cy-10, 12, 8, 0, 0, Math.PI*2);
+  ctx.fillStyle = freed ? '#1A3A2E' : '#1A1A2E'; ctx.fill();
+  // Eye socket glow when freed
+  if (freed) {
+    applyGlow(ctx, cx+20, cy-10, 15, 'rgba(34,197,94,0.3)', 2);
+  }
+  ctx.beginPath(); ctx.arc(cx+20, cy-10, 7, 0, Math.PI*2);
   ctx.fillStyle = '#000'; ctx.fill();
-  ctx.strokeStyle = '#555'; ctx.lineWidth = 0.5;
-  ctx.beginPath(); ctx.ellipse(cx+12, cy-6, 6, 4, 0, 0, Math.PI*2);
+  ctx.strokeStyle = freed ? '#22C55E88' : '#555'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.ellipse(cx+20, cy-10, 10, 7, 0, 0, Math.PI*2);
   ctx.stroke();
   // Eye socket shadow
-  ctx.beginPath(); ctx.arc(cx+12, cy-2, 6, 0, Math.PI*2);
-  ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.fill();
+  ctx.beginPath(); ctx.arc(cx+20, cy-3, 10, 0, Math.PI*2);
+  ctx.fillStyle = freed ? 'rgba(34,197,94,0.1)' : 'rgba(0,0,0,0.3)'; ctx.fill();
   
   // LEFT MOUTH (warm, slight smile)
   ctx.beginPath();
-  ctx.moveTo(cx-22, cy+12);
-  ctx.quadraticCurveTo(cx-14, cy+18, cx-4, cy+14);
-  ctx.strokeStyle = '#92400E'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.moveTo(cx-38, cy+20);
+  ctx.quadraticCurveTo(cx-24, cy+30, cx-7, cy+24);
+  ctx.strokeStyle = '#92400E'; ctx.lineWidth = 3; ctx.stroke();
   
-  // RIGHT MOUTH (dead, droop)
+  // RIGHT MOUTH (dead, droop - fades when freed)
   ctx.beginPath();
-  ctx.moveTo(cx+4, cy+14);
-  ctx.quadraticCurveTo(cx+14, cy+22, cx+22, cy+12);
-  ctx.strokeStyle = '#555'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.moveTo(cx+7, cy+24);
+  ctx.quadraticCurveTo(cx+24, cy+38, cx+38, cy+20);
+  ctx.strokeStyle = freed ? '#22C55E88' : '#555'; ctx.lineWidth = 3; ctx.stroke();
   
   // Cheek shadows
-  ctx.beginPath(); ctx.arc(cx-20, cy+4, 6, 0, Math.PI*2);
+  ctx.beginPath(); ctx.arc(cx-34, cy+7, 10, 0, Math.PI*2);
   ctx.fillStyle = 'rgba(146,64,14,0.1)'; ctx.fill();
-  ctx.beginPath(); ctx.arc(cx+20, cy+4, 6, 0, Math.PI*2);
-  ctx.fillStyle = 'rgba(0,0,0,0.15)'; ctx.fill();
+  ctx.beginPath(); ctx.arc(cx+34, cy+7, 10, 0, Math.PI*2);
+  ctx.fillStyle = freed ? 'rgba(34,197,94,0.08)' : 'rgba(0,0,0,0.15)'; ctx.fill();
 }
 
 // --- SLEIPNIR: Eight-Legged Horse ---
 function drawSleipnir(ctx, w, h, t, freed) {
-  const cx = w/2, cy = h/2 + 8;
+  const cx = w/2, cy = h/2 + 14;
   
   // Plains background
-  const bg = ctx.createRadialGradient(cx, cy+10, 0, cx, cy, 75);
+  const bg = ctx.createRadialGradient(cx, cy+17, 0, cx, cy, 128);
   bg.addColorStop(0, freed ? '#145A32' : '#1A1410');
   bg.addColorStop(0.5, '#0A0A14'); bg.addColorStop(1, '#000000');
   ctx.fillStyle = bg; ctx.fillRect(0,0,w,h);
   
   // Ground line
   ctx.beginPath();
-  ctx.moveTo(0, cy+36 + Math.sin(t*0.02)*2);
-  ctx.lineTo(w, cy+36 + Math.sin(t*0.02+1)*3);
+  ctx.moveTo(0, cy+62 + Math.sin(t*0.02)*3);
+  ctx.lineTo(w, cy+62 + Math.sin(t*0.02+1)*5);
   ctx.strokeStyle = 'rgba(255,255,255,0.03)'; ctx.lineWidth = 1; ctx.stroke();
   
   // Speed lines
   for (let i = 0; i < 5; i++) {
-    let ly = cy - 10 + i*8 + Math.sin(t*0.03 + i)*3;
-    let lx = w - 20 - Math.sin(t*0.05 + i)*10;
+    let ly = cy - 17 + i*14 + Math.sin(t*0.03 + i)*5;
+    let lx = w - 34 - Math.sin(t*0.05 + i)*17;
     ctx.beginPath();
     ctx.moveTo(lx, ly);
-    ctx.lineTo(lx + 20 + Math.sin(t*0.04 + i*2)*5, ly);
+    ctx.lineTo(lx + 34 + Math.sin(t*0.04 + i*2)*8, ly);
     ctx.strokeStyle = `rgba(245,158,11,${0.04 + Math.sin(t*0.03 + i)*0.02})`;
-    ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.lineWidth = 2.5; ctx.stroke();
   }
   
   // Dust particles
   for (let i = 0; i < 8; i++) {
     let phase = t*0.04 + i*0.8;
-    let dx = Math.sin(phase) * 20 + 10;
-    let dy = -Math.abs(Math.sin(phase)) * 15;
+    let dx = Math.sin(phase) * 34 + 17;
+    let dy = -Math.abs(Math.sin(phase)) * 26;
     let dp = Math.sin(phase)*0.5 + 0.5;
-    ctx.beginPath(); ctx.arc(cx - 20 + dx, cy + 30 + dy, 2 * dp, 0, Math.PI*2);
+    ctx.beginPath(); ctx.arc(cx - 34 + dx, cy + 52 + dy, 3 * dp, 0, Math.PI*2);
     ctx.fillStyle = `rgba(245,158,11,${dp * 0.12})`;
     ctx.fill();
   }
   
   // Body
-  let gallop = Math.sin(t*0.12) * 3;
+  let gallop = Math.sin(t*0.12) * 5;
   ctx.beginPath();
-  ctx.ellipse(cx + gallop*0.5, cy + 2, 26, 14, -0.1, 0, Math.PI*2);
+  ctx.ellipse(cx + gallop*0.5, cy + 3, 44, 24, -0.1, 0, Math.PI*2);
   ctx.fillStyle = freed ? '#6B7280' : '#5C4A3A';
   ctx.fill();
   ctx.strokeStyle = '#7C6B5A'; ctx.lineWidth = 1; ctx.stroke();
   
   // Neck
   ctx.beginPath();
-  ctx.moveTo(cx + 24, cy - 2);
-  ctx.quadraticCurveTo(cx + 40, cy - 16, cx + 48, cy - 28);
-  ctx.lineTo(cx + 40, cy - 30);
-  ctx.quadraticCurveTo(cx + 36, cy - 18, cx + 20, cy - 6);
+  ctx.moveTo(cx + 40, cy - 3);
+  ctx.quadraticCurveTo(cx + 68, cy - 28, cx + 82, cy - 48);
+  ctx.lineTo(cx + 68, cy - 52);
+  ctx.quadraticCurveTo(cx + 62, cy - 30, cx + 34, cy - 10);
   ctx.closePath();
   ctx.fillStyle = freed ? '#6B7280' : '#5C4A3A';
   ctx.fill();
@@ -3822,76 +4625,102 @@ function drawSleipnir(ctx, w, h, t, freed) {
   
   // Head
   ctx.beginPath();
-  ctx.ellipse(cx + 52, cy - 30, 8, 6, 0.2, 0, Math.PI*2);
+  ctx.ellipse(cx + 88, cy - 52, 14, 10, 0.2, 0, Math.PI*2);
   ctx.fillStyle = freed ? '#6B7280' : '#5C4A3A';
   ctx.fill();
   ctx.strokeStyle = '#7C6B5A'; ctx.lineWidth = 1; ctx.stroke();
   
   // Ear
   ctx.beginPath();
-  ctx.moveTo(cx + 48, cy - 36);
-  ctx.lineTo(cx + 46, cy - 44);
-  ctx.lineTo(cx + 52, cy - 38);
+  ctx.moveTo(cx + 82, cy - 62);
+  ctx.lineTo(cx + 78, cy - 76);
+  ctx.lineTo(cx + 88, cy - 66);
   ctx.closePath();
   ctx.fillStyle = '#4A3A2A'; ctx.fill();
   
-  // Eye
-  ctx.beginPath(); ctx.arc(cx + 54, cy - 31, 2, 0, Math.PI*2);
-  ctx.fillStyle = '#000'; ctx.fill();
-  ctx.beginPath(); ctx.arc(cx + 53, cy - 32, 0.8, 0, Math.PI*2);
+  // Eye with glow when freed
+  const eyeGlowColor = freed ? 'rgba(34,197,94,0.7)' : 'rgba(0,0,0,0)';
+  if (freed) {
+    applyGlow(ctx, cx + 92, cy - 54, 12, eyeGlowColor, 3);
+  }
+  ctx.beginPath(); ctx.arc(cx + 92, cy - 54, 3.5, 0, Math.PI*2);
+  ctx.fillStyle = freed ? '#22C55E' : '#000'; ctx.fill();
+  if (freed) {
+    ctx.beginPath(); ctx.arc(cx + 92, cy - 54, 1.5, 0, Math.PI*2);
+    ctx.fillStyle = '#4ADE80'; ctx.fill();
+  }
+  ctx.beginPath(); ctx.arc(cx + 90, cy - 55, 1.2, 0, Math.PI*2);
   ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.fill();
   
   // Mouth / muzzle
   ctx.beginPath();
-  ctx.ellipse(cx + 58, cy - 28, 4, 3, 0, 0, Math.PI*2);
+  ctx.ellipse(cx + 98, cy - 48, 7, 5, 0, 0, Math.PI*2);
   ctx.fillStyle = '#3A2A1A'; ctx.fill();
   
   // Nostril
-  ctx.beginPath(); ctx.arc(cx + 60, cy - 28, 0.8, 0, Math.PI*2);
+  ctx.beginPath(); ctx.arc(cx + 102, cy - 48, 1.5, 0, Math.PI*2);
   ctx.fillStyle = '#000'; ctx.fill();
   
-  // Mane
+  // Mane - shimmer when freed
   const maneColor = freed ? '#22C55E' : '#F59E0B';
   for (let i = 0; i < 8; i++) {
-    let mx = cx + 44 - i*4 + Math.sin(t*0.08 + i)*2;
-    let my = cy - 22 - i*3 + Math.sin(t*0.06 + i*1.2)*3;
+    let mx = cx + 75 - i*7 + Math.sin(t*0.08 + i)*3;
+    let my = cy - 38 - i*5 + Math.sin(t*0.06 + i*1.2)*5;
     ctx.beginPath();
-    ctx.moveTo(mx, cy - 8 + i*1.5);
-    ctx.quadraticCurveTo(mx - 4, my + 4, mx + 2, my - 10);
+    ctx.moveTo(mx, cy - 14 + i*2.5);
+    ctx.quadraticCurveTo(mx - 7, my + 7, mx + 3, my - 17);
     ctx.strokeStyle = maneColor;
-    ctx.lineWidth = 2.5 - i*0.15;
+    ctx.lineWidth = 4 - i*0.25;
     ctx.stroke();
+    // Shimmer when freed
+    if (freed) {
+      ctx.strokeStyle = `rgba(74,222,128,${0.1 + Math.sin(t*0.1 + i)*0.08})`;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(mx, my - 5);
+      ctx.quadraticCurveTo(mx + 2, my - 12, mx - 1, my - 18);
+      ctx.stroke();
+    }
   }
   
-  // Tail
+  // Tail - shimmer when freed
   for (let i = 0; i < 6; i++) {
-    let tx = cx - 30 - i*2 + Math.sin(t*0.07 + i)*2;
-    let ty = cy + i*2 + Math.sin(t*0.05 + i*0.5)*3;
+    let tx = cx - 52 - i*3 + Math.sin(t*0.07 + i)*3;
+    let ty = cy + 3 + i*3 + Math.sin(t*0.05 + i*0.5)*5;
     ctx.beginPath();
-    ctx.moveTo(cx - 26, cy + 4);
-    ctx.quadraticCurveTo(tx - 2, ty + 2, tx - 4, ty + 6);
+    ctx.moveTo(cx - 44, cy + 7);
+    ctx.quadraticCurveTo(tx - 3, ty + 3, tx - 7, ty + 10);
     ctx.strokeStyle = maneColor;
-    ctx.lineWidth = 2; ctx.stroke();
+    ctx.lineWidth = 3; ctx.stroke();
+    // Shimmer when freed
+    if (freed) {
+      ctx.strokeStyle = `rgba(74,222,128,${0.08 + Math.sin(t*0.09 + i*0.7)*0.06})`;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(tx - 2, ty + 2);
+      ctx.quadraticCurveTo(tx + 1, ty - 2, tx - 3, ty - 6);
+      ctx.stroke();
+    }
   }
   
-  // 8 legs
+  // 8 legs (scaled)
   const legPositions = [
-    [-12, 0, -16, 30], [-6, 2, -10, 32], [0, 4, -4, 34], [6, 2, 2, 32],
-    [12, 0, 16, 30], [18, -2, 22, 28], [24, -4, 28, 26], [30, -6, 34, 24]
+    [-20, 0, -28, 52], [-10, 3, -17, 55], [0, 7, -7, 58], [10, 3, 3, 55],
+    [20, 0, 28, 52], [30, -3, 38, 48], [40, -7, 48, 44], [50, -10, 58, 40]
   ];
   
   legPositions.forEach(([x1, y1, x2, y2], i) => {
-    let legSwing = Math.sin(t*0.12 + i*0.7) * 4;
-    let lift = Math.abs(Math.sin(t*0.12 + i*0.7)) * 4;
+    let legSwing = Math.sin(t*0.12 + i*0.7) * 7;
+    let lift = Math.abs(Math.sin(t*0.12 + i*0.7)) * 7;
     ctx.beginPath();
     ctx.moveTo(cx + x1, cy + y1);
     ctx.lineTo(cx + (x1+x2)/2 + legSwing, cy + (y1+y2)/2 - lift);
     ctx.lineTo(cx + x2 + legSwing, cy + y2 - lift);
     ctx.strokeStyle = freed ? '#4B5563' : '#6B5B45';
-    ctx.lineWidth = 3.5; ctx.stroke({round: true});
+    ctx.lineWidth = 6; ctx.stroke({round: true});
     // Hoof
     ctx.fillStyle = '#3A2A1A';
-    ctx.fillRect(cx + x2 + legSwing - 2, cy + y2 - lift - 2, 4, 4);
+    ctx.fillRect(cx + x2 + legSwing - 3, cy + y2 - lift - 3, 7, 7);
   });
 }
 function toggleInstr(name) {
@@ -3952,6 +4781,490 @@ document.querySelectorAll('.game-modal-overlay').forEach(overlay => {
     }
   });
 });
+
+// ============================================================
+// ===== LEADERBOARD SYSTEM =====
+// ============================================================
+
+function getNickname() {
+  let nick = localStorage.getItem('lm_nickname');
+  if (!nick) {
+    nick = prompt('Enter a nickname for the leaderboard:', 'Player');
+    if (!nick || nick.trim() === '') nick = 'Player';
+    localStorage.setItem('lm_nickname', nick.trim().slice(0, 20));
+  }
+  return localStorage.getItem('lm_nickname') || 'Player';
+}
+
+function getScores(gameId) {
+  try {
+    return JSON.parse(localStorage.getItem('lm_leaderboard_' + gameId)) || [];
+  } catch(e) { return []; }
+}
+
+function saveScore(gameId, score, detail) {
+  const nick = getNickname();
+  const entry = {
+    name: nick,
+    score: score,
+    detail: detail || '',
+    date: Date.now(),
+    week: getWeekNumber(new Date()),
+    day: new Date().toDateString()
+  };
+  let scores = getScores(gameId);
+  scores.push(entry);
+  // Sort descending by score
+  scores.sort(function(a,b) { return b.score - a.score; });
+  // Keep top 50
+  if (scores.length > 50) scores = scores.slice(0, 50);
+  try {
+    localStorage.setItem('lm_leaderboard_' + gameId, JSON.stringify(scores));
+  } catch(e) { /* localStorage full, ignore */ }
+}
+
+function getWeekNumber(d) {
+  const start = new Date(d.getFullYear(), 0, 1);
+  const diff = (d - start + (start.getTimezoneOffset() - d.getTimezoneOffset()) * 60000) / 86400000;
+  return Math.ceil((diff + start.getDay() + 1) / 7);
+}
+
+function renderLeaderboard(gameId) {
+  const container = document.getElementById('lb-' + gameId);
+  if (!container) return;
+  const scores = getScores(gameId);
+  if (scores.length === 0) {
+    container.innerHTML = '<div class="lb-title">🏆 Leaderboard</div><div class="lb-empty">No scores yet. Be the first!</div>';
+    return;
+  }
+
+  const nick = getNickname();
+  const now = Date.now();
+  const dayMs = 86400000;
+  const weekMs = dayMs * 7;
+
+  const tabs = [
+    { id: 'all', label: 'All-Time', filter: function() { return true; } },
+    { id: 'weekly', label: 'This Week', filter: function(s) { return now - s.date < weekMs; } },
+    { id: 'daily', label: 'Today', filter: function(s) { return now - s.date < dayMs; } }
+  ];
+
+  let html = '<div class="lb-title">🏆 Leaderboard</div>';
+  html += '<div class="lb-tabs" id="lb-tabs-' + gameId + '">';
+  tabs.forEach(function(t, i) {
+    html += '<span class="lb-tab' + (i === 0 ? ' active' : '') + '" data-game="' + gameId + '" data-filter="' + t.id + '">' + t.label + '</span>';
+  });
+  html += '</div>';
+  html += '<ul class="lb-list" id="lb-list-' + gameId + '">';
+
+  // Filtered entries
+  let filtered = scores.filter(function(s) { return tabs[0].filter(s); }); // all-time default
+  filtered = filtered.slice(0, 5);
+
+  filtered.forEach(function(s, i) {
+    const rankClass = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
+    const meClass = s.name === nick ? ' lb-me' : '';
+    const medals = ['🥇','🥈','🥉'];
+    const rankDisplay = i < 3 ? medals[i] : '#' + (i+1);
+    html += '<li class="lb-entry' + meClass + '">';
+    html += '<span class="lb-rank' + (rankClass ? ' ' + rankClass : '') + '">' + rankDisplay + '</span>';
+    html += '<span class="lb-name">' + escapeHtml(s.name) + '</span>';
+    html += '<span class="lb-score">' + s.score + '</span>';
+    if (s.detail) html += '<span style="font-size:10px;color:#64748b;flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px;">' + escapeHtml(s.detail) + '</span>';
+    html += '</li>';
+  });
+
+  html += '</ul>';
+  container.innerHTML = html;
+
+  // Tab switching
+  container.querySelectorAll('.lb-tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      container.querySelectorAll('.lb-tab').forEach(function(t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      const filterId = tab.dataset.filter;
+      const game = tab.dataset.game;
+      const allScores = getScores(game);
+      let filtered2;
+      if (filterId === 'all') filtered2 = allScores.filter(function(s) { return true; });
+      else if (filterId === 'weekly') filtered2 = allScores.filter(function(s) { return now - s.date < weekMs; });
+      else filtered2 = allScores.filter(function(s) { return now - s.date < dayMs; });
+      filtered2 = filtered2.slice(0, 5);
+
+      let listHtml = '';
+      filtered2.forEach(function(s, i) {
+        const meClass2 = s.name === nick ? ' lb-me' : '';
+        const medals2 = ['🥇','🥈','🥉'];
+        const rankDisplay2 = i < 3 ? medals2[i] : '#' + (i+1);
+        const rankClass2 = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
+        listHtml += '<li class="lb-entry' + meClass2 + '">';
+        listHtml += '<span class="lb-rank' + (rankClass2 ? ' ' + rankClass2 : '') + '">' + rankDisplay2 + '</span>';
+        listHtml += '<span class="lb-name">' + escapeHtml(s.name) + '</span>';
+        listHtml += '<span class="lb-score">' + s.score + '</span>';
+        if (s.detail) listHtml += '<span style="font-size:10px;color:#64748b;flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px;">' + escapeHtml(s.detail) + '</span>';
+        listHtml += '</li>';
+      });
+      document.getElementById('lb-list-' + game).innerHTML = listHtml;
+    });
+  });
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// ============================================================
+// ===== SHARE CARD GENERATION =====
+// ============================================================
+
+let lastShareData = null;
+
+function generateShareCard(gameId, scoreLabel, detail) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 1200;
+  canvas.height = 630;
+  const ctx = canvas.getContext('2d');
+
+  // Dark background with gradient
+  const bgGrad = ctx.createLinearGradient(0, 0, 0, 630);
+  bgGrad.addColorStop(0, '#0f0f1a');
+  bgGrad.addColorStop(0.5, '#0a0a14');
+  bgGrad.addColorStop(1, '#07070a');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, 1200, 630);
+
+  // Star field
+  for (let i = 0; i < 80; i++) {
+    const sx = Math.random() * 1200;
+    const sy = Math.random() * 630;
+    const sr = Math.random() * 2 + 0.5;
+    ctx.beginPath();
+    ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,' + (Math.random() * 0.3 + 0.1) + ')';
+    ctx.fill();
+  }
+
+  // Gold accent line
+  ctx.fillStyle = '#f59e0b';
+  ctx.fillRect(0, 0, 8, 630);
+  ctx.fillRect(1192, 0, 8, 630);
+
+  // Header branding
+  ctx.font = 'bold 42px "Cinzel", Georgia, serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  const brandGrad = ctx.createLinearGradient(40, 40, 500, 40);
+  brandGrad.addColorStop(0, '#f59e0b');
+  brandGrad.addColorStop(1, '#fbbf24');
+  ctx.fillStyle = brandGrad;
+  ctx.fillText('✦ LOKI\'S MISCHIEF', 40, 40);
+
+  // Subtitle
+  ctx.font = '18px "Inter", sans-serif';
+  ctx.fillStyle = '#94a3b8';
+  ctx.fillText('Smart Automations for Agency Owners', 40, 96);
+
+  // Game icon/section
+  const gameNames = {
+    fenrir: { icon: '🐺', name: 'Fenrir — Chain Strike' },
+    jormu: { icon: '🐍', name: 'Jörmungandr — Serpent Memory' },
+    hel: { icon: '💀', name: 'Hel — Soul Sorting' },
+    sleipnir: { icon: '🐎', name: 'Sleipnir — Eight-Legged Sprint' }
+  };
+  const gName = gameNames[gameId] || { icon: '🎮', name: 'Game' };
+
+  ctx.font = 'bold 30px "Inter", sans-serif';
+  ctx.fillStyle = '#e4e4e7';
+  ctx.fillText(gName.icon + '  ' + gName.name, 40, 140);
+
+  // Score section
+  ctx.font = 'bold 72px "Inter", sans-serif';
+  ctx.textAlign = 'center';
+  const scoreGrad = ctx.createLinearGradient(600, 260, 600, 320);
+  scoreGrad.addColorStop(0, '#f59e0b');
+  scoreGrad.addColorStop(1, '#fbbf24');
+  ctx.fillStyle = scoreGrad;
+  ctx.fillText(scoreLabel, 600, 250);
+
+  // Detail
+  if (detail) {
+    ctx.font = '24px "Inter", sans-serif';
+    ctx.fillStyle = '#94a3b8';
+    ctx.textAlign = 'center';
+    ctx.fillText(detail, 600, 340);
+  }
+
+  // URL
+  ctx.font = '20px "Inter", sans-serif';
+  ctx.fillStyle = '#475569';
+  ctx.textAlign = 'center';
+  ctx.fillText('lokismischief.com', 600, 580);
+
+  // Draw the character at larger size on right side
+  try {
+    const charCanvas = document.getElementById('canvas-' + (gameId === 'fenrir' ? 'fenrir' : gameId === 'jormu' ? 'jormu' : gameId === 'hel' ? 'hel' : 'sleipnir'));
+    if (charCanvas && charCanvas.getContext) {
+      const charCtx = charCanvas.getContext('2d');
+      const charData = charCtx.getImageData(0, 0, 140, 140);
+      // Draw the character from the original canvas scaled up
+      // We draw at the right side of the card
+      const destX = 900, destY = 170, destW = 260, destH = 260;
+      ctx.drawImage(charCanvas, 0, 0, 140, 140, destX, destY, destW, destH);
+    }
+  } catch(e) {
+    // Fallback: draw a simple character icon
+    ctx.font = '120px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(gName.icon, 1030, 300);
+  }
+
+  return canvas;
+}
+
+function shareResult(gameId) {
+  const scores = getScores(gameId);
+  if (scores.length === 0) return;
+  const latest = scores[scores.length - 1];
+  const scoreLabel = '' + latest.score;
+  const detail = latest.detail || '';
+
+  // Generate share card
+  const canvas = generateShareCard(gameId, scoreLabel, detail);
+
+  // Try Web Share API first
+  if (navigator.share) {
+    // For Web Share API we need a blob
+    canvas.toBlob(function(blob) {
+      if (blob && navigator.canShare && navigator.canShare({ files: [new File([blob], 'lokis-mischief.png', { type: 'image/png' })] })) {
+        navigator.share({
+          title: 'Loki\'s Mischief',
+          text: 'I scored ' + scoreLabel + ' on ' + gameId + '! 🎮 Can you beat me?',
+          files: [new File([blob], 'lokis-mischief.png', { type: 'image/png' })]
+        }).catch(function() {
+          // Fallback: download
+          downloadCanvas(canvas);
+        });
+      } else {
+        downloadCanvas(canvas);
+      }
+    }, 'image/png');
+  } else {
+    // Fallback: download
+    downloadCanvas(canvas);
+  }
+}
+
+function downloadCanvas(canvas) {
+  const link = document.getElementById('share-download-link');
+  if (!link) return;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+// ============================================================
+// ===== EASTER EGGS =====
+// ============================================================
+
+// --- Konami Code ---
+let konamiBuffer = [];
+const konamiCode = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+
+let thorGameActive = false;
+let thorScore = 0;
+let thorSpawnInterval = null;
+
+document.addEventListener('keydown', function(e) {
+  // Konami code detection
+  konamiBuffer.push(e.key);
+  if (konamiBuffer.length > konamiCode.length) konamiBuffer.shift();
+  if (konamiBuffer.length === konamiCode.length && konamiBuffer.every(function(k,i) { return k === konamiCode[i]; })) {
+    konamiBuffer = [];
+    launchThorGame();
+  }
+});
+
+function launchThorGame() {
+  const flag = localStorage.getItem('lm_thor_unlocked');
+  if (flag) {
+    showToast('⚡ Thor already approves!', 'success');
+    return;
+  }
+  document.getElementById('thor-overlay').classList.add('active');
+  thorScore = 0;
+  thorGameActive = true;
+  document.getElementById('thor-counter').textContent = '0';
+  document.getElementById('thor-approves').classList.remove('show');
+  document.getElementById('thor-game-area').innerHTML = '';
+  document.getElementById('thor-score').textContent = '⚡ Thor\'s Lightning — Click 5 bolts! Score: 0/5';
+
+  // Spawn lightning bolts
+  if (thorSpawnInterval) clearInterval(thorSpawnInterval);
+  thorSpawnInterval = setInterval(function() {
+    if (!thorGameActive || thorScore >= 5) return;
+    spawnLightning();
+  }, 800);
+
+  // Spawn the first one immediately
+  spawnLightning();
+}
+
+function spawnLightning() {
+  if (!thorGameActive || thorScore >= 5) return;
+  const area = document.getElementById('thor-game-area');
+  if (!area) return;
+
+  const bolt = document.createElement('div');
+  bolt.className = 'thor-lightning';
+  bolt.textContent = '⚡';
+  bolt.style.left = (Math.random() * 85 + 5) + '%';
+  bolt.style.top = (Math.random() * 75 + 10) + '%';
+  bolt.style.animationDuration = (Math.random() * 0.4 + 0.6) + 's';
+
+  bolt.addEventListener('click', function() {
+    if (bolt.classList.contains('caught')) return;
+    if (!thorGameActive) return;
+    thorScore++;
+    document.getElementById('thor-counter').textContent = thorScore;
+    bolt.classList.add('caught');
+    document.getElementById('thor-score').textContent = '⚡ Thor\'s Lightning — Click 5 bolts! Score: ' + thorScore + '/5';
+
+    if (thorScore >= 5) {
+      thorGameActive = false;
+      if (thorSpawnInterval) clearInterval(thorSpawnInterval);
+      document.getElementById('thor-approves').classList.add('show');
+      localStorage.setItem('lm_thor_unlocked', 'true');
+      showToast('⚡ THOR APPROVES!', 'success');
+    }
+  });
+
+  area.appendChild(bolt);
+
+  // Auto-remove after animation
+  setTimeout(function() {
+    if (bolt.parentNode) bolt.remove();
+  }, 1000);
+}
+
+function closeThorGame() {
+  thorGameActive = false;
+  if (thorSpawnInterval) clearInterval(thorSpawnInterval);
+  document.getElementById('thor-overlay').classList.remove('active');
+}
+
+// --- Logo Click Easter Egg ---
+let logoClickCount = 0;
+let logoTimer = null;
+
+function logoClick() {
+  logoClickCount++;
+  clearTimeout(logoTimer);
+  logoTimer = setTimeout(function() { logoClickCount = 0; }, 3000);
+
+  if (logoClickCount >= 5) {
+    logoClickCount = 0;
+    showToast('🦊 This is fine.', 'info');
+  }
+  return false;
+}
+
+// --- Toast Helper ---
+function showToast(msg, type) {
+  const el = document.getElementById('ee-toast');
+  if (!el) return;
+  el.textContent = msg;
+  el.className = 'ee-toast' + (type ? ' ' + type : '');
+  // Force reflow
+  void el.offsetWidth;
+  el.classList.add('show');
+  clearTimeout(el._hide);
+  el._hide = setTimeout(function() {
+    el.classList.remove('show');
+  }, 3000);
+}
+
+// --- URL Param Easter Egg: ?cheat=odin ---
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('cheat') === 'odin') {
+    fenrirFreed = true;
+    jormuFreed = true;
+    helFreed = true;
+    sleipnirFreed = true;
+    showToast('👁️ Odin\'s wisdom grants you freedom!', 'success');
+  }
+})();
+
+// ============================================================
+// ===== INIT LEADERBOARDS ON GAME OPEN =====
+// ============================================================
+
+// Patch openGame to render leaderboards
+const _origOpenGame = window.openGame;
+window.openGame = function(name) {
+  _origOpenGame(name);
+  const gameMap = { fenrir: 'fenrir', jormungandr: 'jormu', hel: 'hel', sleipnir: 'sleipnir' };
+  const gameId = gameMap[name] || name;
+  // Delay render to let DOM settle
+  setTimeout(function() {
+    renderLeaderboard(gameId);
+  }, 100);
+};
+
+// Also reset share button when game resets
+const _origInitFenrir = window.initFenrir;
+window.initFenrir = function() {
+  _origInitFenrir();
+  document.getElementById('share-btn-fenrir').style.display = 'none';
+};
+
+const _origInitJormu = window.initJormungandr;
+window.initJormungandr = function() {
+  _origInitJormu();
+  document.getElementById('share-btn-jormu').style.display = 'none';
+};
+
+const _origInitHel = window.initHel;
+window.initHel = function() {
+  _origInitHel();
+  document.getElementById('share-btn-hel').style.display = 'none';
+};
+
+const _origSleipnirReset = window.sleipnirReset;
+window.sleipnirReset = function() {
+  _origSleipnirReset();
+  document.getElementById('share-btn-sleipnir').style.display = 'none';
+};
+
+// Hide share buttons when game modals are closed
+document.querySelectorAll('.game-modal-overlay').forEach(function(overlay) {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) {
+      overlay.querySelectorAll('.share-btn').forEach(function(btn) { btn.style.display = 'none'; });
+    }
+  });
+});
+
+// Close game modal on X click (already have closeGame, but also hide share)
+const _origCloseGame = window.closeGame;
+window.closeGame = function(name) {
+  _origCloseGame(name);
+  const btnMap = { fenrir: 'share-btn-fenrir', jormungandr: 'share-btn-jormu', hel: 'share-btn-hel', sleipnir: 'share-btn-sleipnir' };
+  const btn = document.getElementById(btnMap[name]);
+  if (btn) btn.style.display = 'none';
+};
+
 </script>
+<script>
+// ===== INIT ON PAGE LOAD =====
+document.addEventListener('DOMContentLoaded', function() {
+  updateStreak();
+  // Update high score displays for all games
+  ['fenrir', 'jormungandr', 'hel', 'sleipnir'].forEach(updateHighScoreDisplay);
+});
+</script>
+</div>
 </body>
 </html>
