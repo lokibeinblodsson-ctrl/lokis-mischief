@@ -1,0 +1,3957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loki's Mischief — Smart Automations for Agency Owners</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background: #07070a;
+    color: #e4e4e7;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Navigation */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: #07070aee; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid #1a1a24;
+    padding: 0 24px;
+    height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  nav .logo {
+    font-size: 18px; font-weight: 800;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-decoration: none;
+    letter-spacing: -.5px;
+  }
+  nav .logo .accent { color: #f59e0b; -webkit-text-fill-color: #f59e0b; }
+  nav .links { display: flex; gap: 24px; align-items: center; }
+  nav .links a {
+    color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 500;
+    transition: color .2s;
+  }
+  nav .links a:hover { color: #fff; }
+  nav .btn-nav {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #07070a !important;
+    padding: 8px 18px; border-radius: 8px; font-weight: 700 !important; font-size: 13px !important;
+  }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  /* ===== PREMIUM VISUAL UPGRADE ===== */
+
+  /* Typography */
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+  h1, h2, h3, h4, .game-card .gc-title, .gm-title { font-family: 'Cinzel', Georgia, serif; }
+
+  /* Cosmic background layers */
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: -2;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 30%, #1a0533aa 0%, transparent 70%),
+      radial-gradient(ellipse 60% 50% at 80% 70%, #0d2137aa 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 50% 0%, #2d1b4e55 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* Star field */
+  body::after {
+    content: ''; position: fixed; inset: 0; z-index: -1;
+    background-image:
+      radial-gradient(1px 1px at 10% 20%, #ffffff55, transparent),
+      radial-gradient(1px 1px at 20% 50%, #ffffff44, transparent),
+      radial-gradient(1.5px 1.5px at 30% 10%, #ffffff66, transparent),
+      radial-gradient(1px 1px at 40% 80%, #ffffff33, transparent),
+      radial-gradient(1.5px 1.5px at 50% 30%, #ffffff55, transparent),
+      radial-gradient(1px 1px at 60% 60%, #ffffff44, transparent),
+      radial-gradient(2px 2px at 70% 15%, #ffffff66, transparent),
+      radial-gradient(1px 1px at 80% 45%, #ffffff33, transparent),
+      radial-gradient(1.5px 1.5px at 90% 75%, #ffffff55, transparent),
+      radial-gradient(1px 1px at 15% 90%, #ffffff44, transparent),
+      radial-gradient(2px 2px at 25% 40%, #ffffff66, transparent),
+      radial-gradient(1px 1px at 35% 65%, #ffffff33, transparent),
+      radial-gradient(1.5px 1.5px at 45% 5%, #ffffff55, transparent),
+      radial-gradient(1px 1px at 55% 85%, #ffffff44, transparent),
+      radial-gradient(2px 2px at 65% 35%, #ffffff66, transparent),
+      radial-gradient(1px 1px at 75% 55%, #ffffff33, transparent),
+      radial-gradient(1.5px 1.5px at 85% 95%, #ffffff55, transparent),
+      radial-gradient(1px 1px at 95% 25%, #ffffff44, transparent),
+      radial-gradient(1.5px 1.5px at 5% 50%, #f59e0b33, transparent),
+      radial-gradient(1px 1px at 55% 6%, #f59e0b44, transparent);
+    background-size: 200% 200%;
+    animation: starTwinkle 8s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+  @keyframes starTwinkle {
+    0% { opacity: 0.6; }
+    100% { opacity: 1; }
+  }
+
+  /* Aurora / northern lights sweep */
+  .aurora {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      repeating-linear-gradient(90deg, transparent, transparent 20%,
+        rgba(16, 185, 129, 0.03) 25%, transparent 30%,
+        transparent 50%, rgba(99, 102, 241, 0.04) 55%, transparent 60%,
+        transparent 80%, rgba(245, 158, 11, 0.03) 85%, transparent 90%);
+    background-size: 300% 100%;
+    animation: auroraSweep 20s ease-in-out infinite;
+  }
+  @keyframes auroraSweep {
+    0% { background-position: 0% 0%; opacity: 0.5; }
+    33% { background-position: 100% 0%; opacity: 0.8; }
+    66% { background-position: 50% 0%; opacity: 0.6; }
+    100% { background-position: 0% 0%; opacity: 0.5; }
+  }
+
+  /* Aurora particle shimmer */
+  .aurora-particles {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    overflow: hidden;
+  }
+  .aurora-particles::before {
+    content: ''; position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: auroraFloat 25s ease-in-out infinite;
+  }
+  .aurora-particles::after {
+    content: ''; position: absolute;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: auroraFloat 30s ease-in-out infinite reverse;
+    top: 60%;
+    left: 70%;
+  }
+  @keyframes auroraFloat {
+    0% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(100px, -50px) scale(1.2); }
+    66% { transform: translate(-50px, 50px) scale(0.9); }
+    100% { transform: translate(0, 0) scale(1); }
+  }
+
+  /* Glassmorphism utility */
+  .glass {
+    background: rgba(10, 10, 20, 0.6);
+    backdrop-filter: blur(16px) saturate(1.2);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  /* Enhanced game cards */
+  .game-card {
+    background: rgba(12, 12, 24, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 20px;
+    padding: 28px;
+    transition: transform .4s cubic-bezier(.22,1,.36,1), box-shadow .4s, border-color .4s;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .game-card::before {
+    content: ''; position: absolute; inset: 0;
+    opacity: 0; transition: opacity .4s;
+    border-radius: 20px;
+  }
+  .game-card:hover {
+    transform: translateY(-6px) scale(1.01);
+    border-color: rgba(245, 158, 11, 0.2);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(245,158,11,0.05);
+  }
+  .game-card:hover::before { opacity: 1; }
+  .game-card:active { transform: translateY(-2px) scale(0.99); }
+
+  /* Card colored top glow per game */
+  .game-card[data-game="fenrir"] { border-top: 2px solid #2563eb44; }
+  .game-card[data-game="jormungandr"] { border-top: 2px solid #05966944; }
+  .game-card[data-game="hel"] { border-top: 2px solid #7c3aed44; }
+  .game-card[data-game="sleipnir"] { border-top: 2px solid #d9770644; }
+
+  .game-card[data-game="fenrir"]:hover { box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(37,99,235,0.08); }
+  .game-card[data-game="jormungandr"]:hover { box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(5,150,105,0.08); }
+  .game-card[data-game="hel"]:hover { box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(124,58,237,0.08); }
+  .game-card[data-game="sleipnir"]:hover { box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(217,119,6,0.08); }
+
+  .game-card .gc-icon {
+    font-size: 40px; transition: transform .4s cubic-bezier(.22,1,.36,1);
+    display: block; margin-bottom: 8px;
+    filter: drop-shadow(0 0 10px rgba(245,158,11,0.2));
+  }
+  .game-card:hover .gc-icon { transform: scale(1.15) rotate(-3deg); }
+  .game-card .gc-title {
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: 18px; font-weight: 700; letter-spacing: .5px;
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 6px;
+  }
+  .game-card .gc-desc { color: #94a3b8; font-size: 13px; line-height: 1.5; }
+
+  /* Card shine overlay */
+  .game-card::after {
+    content: ''; position: absolute; top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 60%);
+    opacity: 0; transition: opacity .6s;
+    pointer-events: none;
+  }
+  .game-card:hover::after { opacity: 1; }
+
+  /* Badge enhancements */
+  .gc-badge {
+    display: inline-block;
+    padding: 3px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 600; letter-spacing: .3px;
+    background: rgba(255,255,255,0.05);
+    color: #94a3b8;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .gc-badge.difficulty-easy { border-color: #22c55e44; color: #4ade80; }
+  .gc-badge.difficulty-medium { border-color: #f59e0b44; color: #fbbf24; }
+  .gc-badge.difficulty-hard { border-color: #ef444444; color: #f87171; }
+  .gc-badge.time { border-color: #6366f144; color: #818cf8; }
+
+  /* Enhanced game modal overlay */
+  .gm-overlay {
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .gm-content {
+    background: linear-gradient(160deg, #0f0f1a, #0a0a14);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 24px;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 60px rgba(245,158,11,0.03);
+  }
+
+  /* Fenrir — icy dark arena */
+  .fenrir-arena {
+    background: linear-gradient(160deg, #0c0f1a, #0a0e17);
+    border: 1px solid #1a223544;
+    border-radius: 16px; padding: 16px;
+    position: relative; overflow: hidden;
+  }
+  .fenrir-arena::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(37,99,235,0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .fenrir-chain.active-chain {
+    background: rgba(37,99,235,0.06);
+    border: 1px solid rgba(37,99,235,0.15);
+    box-shadow: 0 0 15px rgba(37,99,235,0.05);
+  }
+
+  /* Jörmungandr — deep ocean arena */
+  .jormu-arena {
+    background: linear-gradient(160deg, #0a1417, #071012);
+    border: 1px solid #0d2a2a44;
+    border-radius: 16px; padding: 16px;
+    position: relative; overflow: hidden;
+  }
+  .jormu-arena::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 50% 30% at 50% 100%, rgba(5,150,105,0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .jormu-rune {
+    width: 60px; height: 60px; border-radius: 50%;
+    background: rgba(10,20,20,0.8);
+    border: 2px solid #0d2a2a;
+    transition: all .3s ease;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
+  }
+  .jormu-rune.showing {
+    background: #05966955; border-color: #34d399;
+    box-shadow: 0 0 20px #05966944, inset 0 0 15px rgba(52,211,153,0.1);
+    transform: scale(1.1);
+  }
+  .jormu-rune.lit {
+    background: #05966988; border-color: #34d399;
+    box-shadow: 0 0 30px #05966966;
+  }
+  .jormu-rune.done {
+    background: #05966922; border-color: #05966944;
+  }
+  .jormu-rune.wrong {
+    background: #ef444455; border-color: #f87171;
+  }
+
+  /* Hel — misty death arena */
+  .hel-arena {
+    background: linear-gradient(160deg, #140e14, #0f0a10);
+    border: 1px solid #2a1a2a44;
+    border-radius: 16px; padding: 16px;
+    position: relative; overflow: hidden;
+  }
+  .hel-arena::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(124,58,237,0.03) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hel-soul {
+    font-size: 64px; text-align: center; padding: 20px;
+    transition: all .3s;
+    filter: drop-shadow(0 0 15px rgba(124,58,237,0.2));
+  }
+  .hel-soul.correct { filter: drop-shadow(0 0 25px #22c55eaa) brightness(1.3); }
+  .hel-soul.wrong { filter: drop-shadow(0 0 25px #ef4444aa) brightness(1.3); }
+  .hel-timer-fill {
+    background: linear-gradient(90deg, #059669, #22c55e);
+    height: 6px; border-radius: 3px; transition: width .1s linear;
+  }
+  .hel-timer-fill.danger { background: linear-gradient(90deg, #dc2626, #ef4444); animation: timerUrgency .5s ease-in-out infinite; }
+
+  /* Sleipnir — Nordic landscape arena */
+  .sleipnir-arena {
+    background: linear-gradient(160deg, #0a101a, #070c14);
+    border: 1px solid #1a1a2a44;
+    border-radius: 16px; padding: 16px;
+    position: relative; overflow: hidden;
+  }
+  .sleipnir-arena::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 30% 20% at 20% 0%, rgba(245,158,11,0.03) 0%, transparent 50%),
+      radial-gradient(ellipse 40% 15% at 80% 0%, rgba(99,102,241,0.03) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  /* Enhanced progress bars */
+  .progress-bar { background: #1a1a24; border-radius: 6px; height: 6px; overflow: hidden; }
+  .progress-bar-fill {
+    height: 100%; border-radius: 6px; transition: width .5s ease;
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    position: relative;
+  }
+  .progress-bar-fill::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    animation: progressShimmer 2s infinite;
+  }
+  @keyframes progressShimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  /* Fenrir specific */
+  .fenrir-chain .fc-pendulum {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    box-shadow: 0 0 8px #3b82f688;
+  }
+  .fenrir-chain.active-chain .fc-pendulum {
+    background: linear-gradient(135deg, #3b82f6, #60a5fa);
+    box-shadow: 0 0 12px #3b82f6aa;
+  }
+  .fenrir-combo { color: #fbbf24; font-weight: 700; font-size: 13px; margin-right: 8px; }
+
+  /* Sleipnir road dashes */
+  .sleipnir-track.racing .sleipnir-lane::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+    background: repeating-linear-gradient(90deg, #ffffff22 0px, #ffffff22 12px, transparent 12px, transparent 24px);
+    animation: roadScroll .5s linear infinite;
+  }
+
+  /* Sleipnir speed icons */
+  .s-speed-icon { display: inline-block; transition: all .3s; }
+  .s-speed-icon.blitz { animation: speedPulse .4s ease-in-out infinite; }
+  @keyframes speedPulse {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px #f59e0b); }
+    50% { transform: scale(1.2); filter: drop-shadow(0 0 10px #f59e0b); }
+  }
+  .s-speed-icon.gallop { animation: speedPulse .8s ease-in-out infinite; }
+  .s-speed-icon.canter { animation: speedPulse 1.2s ease-in-out infinite; }
+
+  /* Sleipnir milestone popup */
+  .sleipnir-milestone {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+    z-index: 10; text-align: center; pointer-events: none;
+    transition: none;
+  }
+  .sleipnir-milestone.pop {
+    animation: milestonePop 1.8s ease-out forwards;
+  }
+  .sleipnir-milestone div { font-size: 28px; font-weight: 900; color: #f59e0b; font-family: 'Cinzel', serif; }
+  .sleipnir-milestone .milestone-sub { font-size: 12px; color: #94a3b8; display: block; }
+  @keyframes milestonePop {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    15% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+    25% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    60% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+  }
+
+  /* Enhanced scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #07070a; }
+  ::-webkit-scrollbar-thumb { background: #1a1a24; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #2a2a34; }
+
+  /* Text glow utility */
+  .glow-text { text-shadow: 0 0 20px rgba(245,158,11,0.2); }
+
+  /* Lesson box */
+  .lesson-box {
+    display: flex; gap: 10px; align-items: flex-start;
+    background: linear-gradient(135deg, rgba(245,158,11,0.06), rgba(245,158,11,0.02));
+    border: 1px solid rgba(245,158,11,0.12);
+    border-radius: 10px; padding: 12px 14px; margin: 12px 0;
+    font-size: 13px; color: #d4d4d8; line-height: 1.6;
+  }
+  .lesson-box .lesson-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .lesson-box strong { color: #f59e0b; font-weight: 700; }
+  .lesson-box em { color: #94a3b8; font-style: italic; }
+
+  /* Start button */
+  .start-btn {
+    display: block; margin: 0 auto 12px auto; padding: 10px 28px;
+    font-size: 16px; font-weight: 700; letter-spacing: .5px;
+    animation: startPulse 2s ease-in-out infinite;
+  }
+  .start-btn:active { transform: scale(0.95); }
+  @keyframes startPulse {
+    0%, 100% { box-shadow: 0 4px 20px rgba(245,158,11,0.2); }
+    50% { box-shadow: 0 4px 30px rgba(245,158,11,0.4); }
+  }
+
+  /* ═══════════════════════════════════════════
+  /* Section titles */
+  .section-title {
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: 28px; letter-spacing: 1px;
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+  .section-subtitle { color: #64748b; font-size: 14px; }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 100px 24px 80px;
+    background: radial-gradient(ellipse at 50% 0%, #1a0a2e33 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, #f59e0b08 0%, transparent 40%);
+  }
+  .hero .icon { font-size: 64px; margin-bottom: 20px; }
+  .hero h1 {
+    font-size: 48px; font-weight: 800; line-height: 1.15;
+    margin-bottom: 12px;
+  }
+  .hero h1 .gradient {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero .tagline {
+    font-size: 20px; color: #94a3b8; max-width: 600px; margin: 0 auto 28px;
+  }
+  .hero .btn-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-block;
+    padding: 14px 32px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: transform .15s, box-shadow .2s;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn-primary {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #07070a;
+  }
+  .btn-primary:hover { box-shadow: 0 4px 20px #f59e0b44; }
+  .btn-secondary {
+    background: #1a1a24; border: 1px solid #2a2a3a;
+    color: #e4e4e7;
+  }
+  .btn-secondary:hover { border-color: #f59e0b44; }
+
+  .hero .subtitle {
+    margin-top: 40px;
+    font-size: 13px; color: #475569; letter-spacing: 1px; text-transform: uppercase;
+  }
+  .hero .platform-strip {
+    display: flex; justify-content: center; gap: 12px; margin-top: 10px;
+  }
+  .hero .platform-strip span {
+    font-size: 12px; font-weight: 700; padding: 5px 14px; border-radius: 6px;
+    text-transform: uppercase; letter-spacing: .5px;
+  }
+  .badge-make { background: #6366f122; color: #818cf8; border: 1px solid #6366f144; }
+  .badge-n8n { background: #ea580c22; color: #fb923c; border: 1px solid #ea580c44; }
+
+  /* Sections */
+  .section { padding: 80px 0; border-bottom: 1px solid #0d0d14; }
+  .section h2 {
+    font-size: 28px; font-weight: 800; margin-bottom: 8px;
+    background: linear-gradient(135deg, #f1f5f9, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .section .subtitle {
+    color: #64748b; font-size: 16px; margin-bottom: 32px;
+  }
+  .section-header { text-align: center; margin-bottom: 40px; }
+  .section-header h2 { -webkit-text-fill-color: #e4e4e7; background: none; color: #e4e4e7; }
+  .section-header .gold {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Featured */
+  .featured-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .feature-card {
+    background: #0d0d14; border: 1px solid #1a1a24; border-radius: 12px;
+    padding: 20px; text-align: center;
+  }
+  .feature-card .f-icon { font-size: 32px; margin-bottom: 8px; }
+  .feature-card h4 { font-size: 14px; font-weight: 700; }
+  .feature-card p { font-size: 12px; color: #64748b; }
+
+  /* ===== ENTERTAINMENT SECTION ===== */
+
+  /* Tab Navigation */
+  .ent-tabs {
+    display: flex; gap: 8px; justify-content: center; margin-bottom: 32px; flex-wrap: wrap;
+  }
+  .ent-tab {
+    background: #0d0d14; border: 1px solid #1a1a24; border-radius: 10px;
+    padding: 12px 20px; cursor: pointer; transition: all .2s;
+    font-size: 14px; font-weight: 600; color: #64748b;
+    text-align: center; min-width: 140px;
+  }
+  .ent-tab:hover { border-color: #2a2a3a; color: #e4e4e7; }
+  .ent-tab.active { border-color: #f59e0b44; background: #f59e0b11; color: #f59e0b; }
+  .ent-tab .tab-icon { font-size: 24px; display: block; margin-bottom: 4px; }
+
+  .ent-panel { display: none; }
+  .ent-panel.active { display: block; }
+
+  /* Card for entertainment content */
+  .ent-card {
+    background: #0d0d14; border: 1px solid #1a1a24; border-radius: 16px;
+    padding: 32px; margin-bottom: 24px;
+  }
+  .ent-card h3 {
+    font-size: 20px; font-weight: 700; margin-bottom: 16px;
+  }
+  .ent-card h3 .gold {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* === ROI CALCULATOR === */
+  .roi-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  }
+  .roi-inputs { display: flex; flex-direction: column; gap: 20px; }
+  .roi-field label {
+    display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; color: #94a3b8;
+  }
+  .roi-field .input-group {
+    display: flex; align-items: center; background: #07070a;
+    border: 1px solid #1a1a24; border-radius: 10px; overflow: hidden;
+  }
+  .roi-field .input-group .prefix {
+    padding: 12px 14px; background: #0d0d14; color: #64748b;
+    font-weight: 700; font-size: 15px;
+    border-right: 1px solid #1a1a24;
+  }
+  .roi-field input[type="number"], .roi-field input[type="range"] {
+    width: 100%; border: none; background: transparent; padding: 12px 14px;
+    color: #e4e4e7; font-size: 15px; font-weight: 600; outline: none;
+  }
+  .roi-field input[type="range"] { padding: 0; }
+  .roi-field .range-value {
+    font-size: 13px; color: #f59e0b; font-weight: 700; margin-top: 4px;
+  }
+
+  .roi-results {
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .roi-result-card {
+    background: #07070a; border: 1px solid #1a1a24; border-radius: 12px; padding: 20px;
+  }
+  .roi-result-card .rr-label { font-size: 12px; color: #64748b; margin-bottom: 4px; }
+  .roi-result-card .rr-value {
+    font-size: 28px; font-weight: 800;
+  }
+  .roi-result-card .rr-sub { font-size: 12px; color: #475569; margin-top: 4px; }
+  .roi-highlight .rr-value { color: #22c55e; }
+  .roi-warning .rr-value { color: #f59e0b; }
+
+  .roi-savings-bar {
+    margin-top: 20px;
+    background: #0d0d14; border: 1px solid #1a1a24; border-radius: 12px;
+    padding: 24px; text-align: center;
+  }
+  .roi-savings-bar .roi-final {
+    font-size: 48px; font-weight: 800;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .roi-savings-bar .roi-final-label { font-size: 14px; color: #94a3b8; }
+  .roi-savings-bar .roi-cta { margin-top: 16px; }
+
+  /* === QUIZ === */
+  .quiz-progress {
+    display: flex; gap: 8px; justify-content: center; margin-bottom: 24px;
+  }
+  .quiz-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #1a1a24; border: 1px solid #2a2a3a; transition: all .3s;
+  }
+  .quiz-dot.active { background: #f59e0b; border-color: #f59e0b; }
+  .quiz-dot.done { background: #22c55e; border-color: #22c55e; }
+
+  .quiz-question { display: none; }
+  .quiz-question.active { display: block; }
+  .quiz-question .q-text {
+    font-size: 20px; font-weight: 700; margin-bottom: 20px; text-align: center;
+  }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+  .quiz-opt {
+    background: #07070a; border: 1px solid #1a1a24; border-radius: 12px;
+    padding: 16px 20px; cursor: pointer; transition: all .2s;
+    font-size: 15px; text-align: left;
+  }
+  .quiz-opt:hover { border-color: #f59e0b44; background: #f59e0b08; }
+  .quiz-opt.selected { border-color: #f59e0b; background: #f59e0b11; }
+
+  .quiz-result { display: none; text-align: center; }
+  .quiz-result.active { display: block; }
+  .quiz-result .qr-icon { font-size: 64px; margin-bottom: 12px; }
+  .quiz-result h4 { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+  .quiz-result p { color: #94a3b8; margin-bottom: 16px; }
+  .quiz-result .qr-product {
+    background: #07070a; border: 1px solid #f59e0b33; border-radius: 12px;
+    padding: 20px; margin: 16px auto; max-width: 400px;
+  }
+  .quiz-result .qr-product .qr-price { font-size: 20px; font-weight: 800; color: #f59e0b; }
+
+  /* === HEALTH CHECK === */
+  .health-items { display: flex; flex-direction: column; gap: 12px; }
+  .health-item {
+    background: #07070a; border: 1px solid #1a1a24; border-radius: 12px;
+    padding: 16px 20px; cursor: pointer; transition: all .2s;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .health-item:hover { border-color: #2a2a3a; }
+  .health-item .h-check {
+    width: 22px; height: 22px; border-radius: 6px;
+    border: 2px solid #2a2a3a; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; transition: all .2s;
+  }
+  .health-item.checked .h-check {
+    background: #22c55e; border-color: #22c55e; color: #fff;
+  }
+  .health-item .h-text { flex: 1; font-size: 14px; }
+  .health-item .h-cost { font-size: 13px; color: #ef4444; font-weight: 600; }
+  .health-item.checked .h-cost { color: #22c55e; }
+
+  .health-score {
+    text-align: center; padding: 24px; margin-top: 16px;
+    background: #07070a; border: 1px solid #1a1a24; border-radius: 12px;
+  }
+  .health-score .hs-num { font-size: 48px; font-weight: 800; }
+  .health-score .hs-label { font-size: 14px; color: #94a3b8; }
+
+  /* === MISCHIEF METER (interactive gauge) === */
+  .meter-wrap {
+    display: flex; align-items: center; justify-content: center; gap: 32px; flex-wrap: wrap;
+  }
+  .meter-visual {
+    width: 200px; height: 200px; position: relative;
+  }
+  .meter-visual canvas { width: 100%; height: 100%; }
+  .meter-controls { flex: 1; min-width: 200px; }
+  .meter-controls .mc-label { font-size: 14px; color: #94a3b8; margin-bottom: 8px; }
+  .meter-controls input[type="range"] {
+    width: 100%; margin: 12px 0;
+    -webkit-appearance: none; background: #1a1a24; height: 6px; border-radius: 3px; outline: none;
+  }
+  .meter-controls input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%;
+    background: #f59e0b; cursor: pointer;
+  }
+  .meter-value {
+    font-size: 24px; font-weight: 800; color: #f59e0b; text-align: center;
+  }
+
+  /* === DID YOU KNOW / FACT CAROUSEL === */
+  .fact-carousel {
+    position: relative; min-height: 100px;
+  }
+  .fact-slide {
+    display: none; text-align: center; padding: 20px 40px;
+  }
+  .fact-slide.active { display: block; }
+  .fact-slide .fact-icon { font-size: 40px; margin-bottom: 8px; }
+  .fact-slide .fact-text { font-size: 18px; color: #cbd5e1; font-weight: 600; }
+  .fact-slide .fact-source { font-size: 12px; color: #475569; margin-top: 8px; }
+  .fact-nav {
+    display: flex; justify-content: center; gap: 8px; margin-top: 16px;
+  }
+  .fact-nav button {
+    width: 10px; height: 10px; border-radius: 50%; border: 1px solid #2a2a3a;
+    background: transparent; cursor: pointer; transition: all .2s;
+    padding: 0;
+  }
+  .fact-nav button.active { background: #f59e0b; border-color: #f59e0b; }
+
+  /* Products Grid */
+  .products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .product-card {
+    background: #0d0d14; border: 1px solid #1a1a24; border-radius: 12px;
+    padding: 24px;
+    transition: border-color .2s, transform .2s;
+  }
+  .product-card:hover { border-color: #f59e0b33; transform: translateY(-2px); }
+  .product-card .p-icon { font-size: 28px; margin-bottom: 8px; }
+  .product-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .product-card p { font-size: 13px; color: #64748b; margin-bottom: 12px; }
+  .product-card .p-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .product-card .p-price { font-size: 20px; font-weight: 800; }
+  .product-card .p-tag {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 5px; letter-spacing: .5px;
+  }
+  .product-card .p-tag-premium { background: #8b5cf622; color: #a78bfa; }
+  .product-card .p-tag-popular { background: #22c55e22; color: #4ade80; }
+  .product-card .p-action { margin-top: 12px; }
+  .product-card .p-action a {
+    display: inline-block;
+    padding: 8px 20px; border-radius: 8px; font-weight: 700; font-size: 13px;
+    text-decoration: none;
+    background: #1a1a24; color: #e4e4e7; border: 1px solid #2a2a3a;
+    transition: all .15s;
+  }
+  .product-card .p-action a:hover { border-color: #f59e0b44; }
+
+  .p-badges { display: flex; gap: 6px; margin: 8px 0; }
+  .p-badges span {
+    font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px;
+    text-transform: uppercase;
+  }
+  .p-badge-make { background: #6366f122; color: #818cf8; }
+  .p-badge-n8n { background: #ea580c22; color: #fb923c; }
+
+  /* Playbook banner */
+  .playbook-banner {
+    background: linear-gradient(135deg, #0f0a1a, #1a1028);
+    border: 1px solid #f59e0b22; border-radius: 16px;
+    padding: 40px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+    align-items: center;
+  }
+  .playbook-banner .pb-left h3 { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+  .playbook-banner .pb-left h3 .gold {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .playbook-banner .pb-left p { color: #94a3b8; font-size: 14px; margin-bottom: 16px; }
+  .playbook-banner .pb-left ul { list-style: none; margin-bottom: 20px; }
+  .playbook-banner .pb-left ul li {
+    padding: 6px 0; font-size: 13px; color: #cbd5e1;
+  }
+  .playbook-banner .pb-left ul li::before { content: "→ "; color: #f59e0b; }
+  .playbook-banner .pb-right {
+    background: #0d0d14; border: 1px solid #2a2a3a; border-radius: 12px;
+    padding: 28px; text-align: center;
+  }
+  .playbook-banner .pb-right .price-big { font-size: 36px; font-weight: 800; }
+  .playbook-banner .pb-right .price-label { font-size: 13px; color: #64748b; }
+
+  /* About */
+  .about-content {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+    align-items: center;
+  }
+  .about-content .about-text h3 { font-size: 22px; font-weight: 700; margin-bottom: 12px; }
+  .about-content .about-text p { color: #94a3b8; margin-bottom: 12px; font-size: 15px; }
+  .about-content .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .about-content .about-stats .stat {
+    background: #0d0d14; border: 1px solid #1a1a24; border-radius: 10px;
+    padding: 20px; text-align: center;
+  }
+  .about-content .about-stats .stat .num { font-size: 28px; font-weight: 800; color: #f59e0b; }
+  .about-content .about-stats .stat .label { font-size: 12px; color: #64748b; margin-top: 4px; }
+
+  /* Footer */
+  footer {
+    padding: 40px 0; text-align: center; color: #475569; font-size: 13px;
+  }
+  footer a { color: #64748b; text-decoration: none; }
+  footer a:hover { color: #94a3b8; }
+  footer .social { display: flex; justify-content: center; gap: 16px; margin-bottom: 16px; }
+
+  .test-ribbon {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+    background: #f59e0b11; border-top: 1px solid #f59e0b33;
+    text-align: center; padding: 8px; font-size: 12px; color: #fbbf24;
+  }
+
+  /* ===== SAGA TOGGLE ===== */
+  .saga-toggle {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #0d0d14; border: 1px solid #f59e0b22; border-radius: 8px;
+    padding: 8px 16px; cursor: pointer; font-size: 13px; font-weight: 600;
+    color: #f59e0b88; transition: all .2s; margin-top: 12px;
+  }
+  .saga-toggle:hover { border-color: #f59e0b55; color: #f59e0b; }
+  .saga-toggle.active { background: #f59e0b11; border-color: #f59e0b; color: #f59e0b; }
+  .saga-lore {
+    display: none; margin-top: 12px;
+    background: #0f0a1a; border: 1px solid #f59e0b15; border-radius: 12px;
+    padding: 20px; font-size: 14px; line-height: 1.7;
+    border-left: 3px solid #f59e0b33;
+  }
+  .saga-lore.active { display: block; }
+  .saga-lore .saga-title { font-weight: 700; color: #f59e0b; margin-bottom: 4px; }
+  .saga-lore .saga-text { color: #94a3b8; }
+  .saga-lore .saga-moral { color: #22c55e; font-weight: 600; margin-top: 8px; padding-top: 8px; border-top: 1px solid #1a1a24; }
+
+  /* ===== FENRIR & FRIENDS GAME ZONE ===== */
+  .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .game-card {
+    background: #07070a; border: 1px solid #1a1a24; border-radius: 14px;
+    padding: 24px; text-align: center; cursor: pointer; transition: all .2s;
+    position: relative; overflow: hidden;
+  }
+  .game-card:hover { border-color: #f59e0b33; transform: translateY(-2px); }
+  .game-card .gc-icon { font-size: 48px; margin-bottom: 10px; }
+  .game-card .gc-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .game-card .gc-desc { font-size: 12px; color: #64748b; }
+  .game-card .gc-play {
+    margin-top: 12px; display: inline-block;
+    padding: 8px 24px; border-radius: 8px; font-weight: 700; font-size: 13px;
+    background: linear-gradient(135deg, #f59e0b, #d97706); color: #07070a;
+  }
+  .game-card[data-child="fenrir"] { border-color: #6366f133; }
+  .game-card[data-child="fenrir"] .gc-icon { filter: drop-shadow(0 0 8px #6366f144); }
+  .game-card[data-game="jormungandr" data-child="jormungandr"] { border-color: #22c55e33; }
+  .game-card[data-game="jormungandr" data-child="jormungandr"] .gc-icon { filter: drop-shadow(0 0 8px #22c55e44); }
+  .game-card[data-child="hel"] { border-color: #a855f733; }
+  .game-card[data-child="hel"] .gc-icon { filter: drop-shadow(0 0 8px #a855f744); }
+  .game-card[data-child="sleipnir"] { border-color: #f59e0b33; }
+  .game-card[data-child="sleipnir"] .gc-icon { filter: drop-shadow(0 0 8px #f59e0b44); }
+
+  /* Game Modal / Expanded */
+  .game-modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 500;
+    background: #000000cc; justify-content: center; align-items: center;
+    padding: 24px;
+  }
+  .game-modal-overlay.active { display: flex; }
+  .game-modal {
+    background: #0d0d14; border: 1px solid #1a1a24; border-radius: 20px;
+    max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto;
+    padding: 32px; position: relative;
+  }
+  .game-modal .gm-close {
+    position: absolute; top: 16px; right: 20px; font-size: 24px;
+    cursor: pointer; color: #64748b; border: none; background: none;
+  }
+  .game-modal .gm-close:hover { color: #fff; }
+  .game-modal .gm-header { text-align: center; margin-bottom: 24px; }
+  .game-modal .gm-header .gm-icon { font-size: 56px; }
+  .game-modal .gm-header h3 { font-size: 22px; font-weight: 800; margin-top: 8px; }
+  .game-modal .gm-saga {
+    background: #07070a; border: 1px solid #f59e0b15; border-radius: 10px;
+    padding: 16px; margin-bottom: 20px; font-size: 13px; color: #94a3b8;
+    border-left: 3px solid #f59e0b33;
+  }
+  .game-modal .gm-saga .saga-label { color: #f59e0b; font-weight: 700; }
+  .game-modal .gm-status {
+    text-align: center; margin: 16px 0;
+    font-size: 14px; color: #94a3b8;
+  }
+  .game-modal .gm-status strong { color: #f59e0b; font-size: 18px; }
+
+  /* --- Fenrir — Chain Strike --- */
+  .fenrir-arena { margin: 20px 0; }
+  .fenrir-chains { display: flex; flex-direction: column; gap: 12px; }
+  .fenrir-chain {
+    display: flex; align-items: center; gap: 12px;
+    background: #1a0a0a; border: 1px solid #63222244; border-radius: 10px;
+    padding: 12px 16px; cursor: pointer; transition: all .3s;
+    position: relative; overflow: hidden;
+  }
+  .fenrir-chain.active-chain { border-color: #f59e0b; box-shadow: 0 0 12px #f59e0b33; }
+  .fenrir-chain.broken {
+    opacity: 0.35; background: #0a1a0a; border-color: #22c55e33;
+    pointer-events: none;
+  }
+  .fenrir-chain .fc-icon { font-size: 18px; width: 28px; text-align: center; }
+  .fenrir-chain .fc-name { flex: 1; font-size: 13px; font-weight: 600; }
+  .fenrir-chain .fc-indicator {
+    width: 80px; height: 14px; border-radius: 7px;
+    background: #1a1a24; position: relative; overflow: hidden;
+  }
+  .fenrir-chain .fc-pendulum {
+    position: absolute; top: 0; left: 0; width: 14px; height: 14px;
+    border-radius: 50%; transition: none;
+    background: linear-gradient(135deg, #f59e0b, #22c55e);
+    box-shadow: 0 0 6px #22c55e88;
+  }
+  .fenrir-chain.active-chain .fc-pendulum {
+    background: linear-gradient(135deg, #22c55e, #4ade80);
+    box-shadow: 0 0 10px #22c55eaa;
+  }
+  .fenrir-chain.chain-miss .fc-pendulum {
+    background: linear-gradient(135deg, #ef4444, #f87171);
+    box-shadow: 0 0 10px #ef4444aa;
+  }
+  .fenrir-chain .fc-zone { position: absolute; top: 0; width: 28px; height: 14px; border-radius: 7px; background: transparent; left: 26px; }
+  .fenrir-chain.active-chain .fc-zone { background: #22c55e44; border: 1px solid #22c55e88; }
+  @keyframes pendulumMove {
+    0% { left: 0; }
+    100% { left: 66px; }
+  }
+  .fenrir-chain .fc-progress { display: flex; gap: 3px; }
+  .fenrir-chain .fc-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #1a1a24; border: 1px solid #333;
+    transition: all .3s;
+  }
+  .fenrir-chain .fc-dot.hit { background: #22c55e; border-color: #22c55e; box-shadow: 0 0 6px #22c55e88; }
+  .fenrir-chain.broken .fc-dot.hit { background: #166534; border-color: #166534; box-shadow: none; }
+  .fenrir-chain:active:not(.broken) { transform: scale(.97); }
+  .fenrir-freed {
+    display: none; text-align: center; padding: 24px;
+    background: linear-gradient(135deg, #1a0a00, #0a1a00);
+    border: 1px solid #f59e0b33; border-radius: 16px;
+  }
+  .fenrir-freed.active { display: block; }
+  .fenrir-freed .ff-icon { font-size: 64px; animation: pulse 1s ease-in-out infinite; }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+  .fenrir-freed h4 { font-size: 24px; font-weight: 800; margin: 8px 0; color: #22c55e; }
+
+  /* --- Jörmungandr — Serpent Memory --- */
+  .jormu-arena { margin: 20px 0; }
+  .jormu-rune-circle {
+    display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
+    max-width: 320px; margin: 0 auto 20px;
+  }
+  .jormu-rune {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: #07070a; border: 2px solid #1a1a24;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; cursor: pointer; transition: all .2s;
+    user-select: none;
+  }
+  .jormu-rune:hover:not(.locked) { border-color: #22c55e66; }
+  .jormu-rune.lit { 
+    border-color: #22c55e; background: #22c55e22;
+    box-shadow: 0 0 16px #22c55e66;
+  }
+  .jormu-rune.wrong {
+    border-color: #ef4444; background: #ef444422;
+    box-shadow: 0 0 16px #ef444466;
+  }
+  .jormu-rune.done {
+    border-color: #166534; background: #16653422;
+    opacity: 0.5; pointer-events: none;
+  }
+  .jormu-info {
+    text-align: center; margin-bottom: 16px;
+  }
+  .jormu-info .j-round { font-size: 14px; color: #94a3b8; }
+  .jormu-info .j-round strong { color: #22c55e; font-size: 18px; }
+  .jormu-info .j-lives { font-size: 13px; color: #64748b; }
+  .jormu-info .j-lives .lives-dot { color: #ef4444; }
+  .jormu-done {
+    display: none; text-align: center; padding: 20px;
+    background: #0a1a0a; border: 1px solid #22c55e33; border-radius: 12px;
+  }
+  .jormu-done.active { display: block; }
+  .jormu-done h4 { font-size: 20px; color: #22c55e; }
+  .jormu-done p { color: #94a3b8; font-size: 14px; }
+  .jormu-gameover {
+    display: none; text-align: center; padding: 20px;
+    background: #1a0a0a; border: 1px solid #ef444433; border-radius: 12px;
+  }
+  .jormu-gameover.active { display: block; }
+  .jormu-gameover h4 { font-size: 20px; color: #ef4444; }
+
+  /* --- Hel — Soul Sorting --- */
+  .hel-arena { margin: 20px 0; text-align: center; }
+  .hel-soul-area { 
+    min-height: 120px; display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+  }
+  .hel-soul {
+    font-size: 72px; text-align: center;
+    animation: soulFloat .6s ease-in-out;
+    transition: all .3s;
+  }
+  .hel-soul.correct { animation: soulAscend .5s forwards; }
+  .hel-soul.wrong { animation: soulShake .5s forwards; }
+  @keyframes soulFloat {
+    0% { transform: translateY(-20px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes soulAscend {
+    0% { transform: translateY(0) scale(1); opacity: 1; }
+    100% { transform: translateY(-40px) scale(1.3); opacity: 0; }
+  }
+  @keyframes soulShake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-10px) rotate(-5deg); }
+    40% { transform: translateX(10px) rotate(5deg); }
+    60% { transform: translateX(-10px) rotate(-5deg); }
+    80% { transform: translateX(10px) rotate(5deg); }
+  }
+  .hel-desc { color: #94a3b8; font-size: 14px; margin-bottom: 20px; min-height: 48px; }
+  .hel-buttons { display: flex; gap: 16px; justify-content: center; }
+  .hel-btn {
+    padding: 16px 32px; border-radius: 12px; font-size: 16px; font-weight: 700;
+    cursor: pointer; border: 2px solid; transition: all .15s;
+    min-width: 160px;
+  }
+  .hel-btn:active { transform: scale(.95); }
+  .hel-btn.auto {
+    background: #22c55e22; color: #4ade80; border-color: #22c55e66;
+  }
+  .hel-btn.auto:hover { background: #22c55e33; box-shadow: 0 0 20px #22c55e44; }
+  .hel-btn.manual {
+    background: #a855f722; color: #c084fc; border-color: #a855f766;
+  }
+  .hel-btn.manual:hover { background: #a855f733; box-shadow: 0 0 20px #a855f744; }
+  .hel-btn:disabled { opacity: 0.4; pointer-events: none; }
+  .hel-timer {
+    width: 100%; height: 4px; background: #1a1a24; border-radius: 2px;
+    margin-bottom: 20px; overflow: hidden;
+  }
+  .hel-timer-fill {
+    height: 100%; background: #22c55e; border-radius: 2px;
+    transition: width .1s linear;
+  }
+  .hel-timer-fill.warning { background: #f59e0b; }
+  .hel-timer-fill.danger { background: #ef4444; }
+  .hel-info {
+    display: flex; justify-content: center; gap: 24px;
+    margin-bottom: 16px; font-size: 13px; color: #64748b;
+  }
+  .hel-info strong { color: #e4e4e7; }
+  .hel-done {
+    display: none; text-align: center; padding: 20px;
+    background: #0a0a1a; border: 1px solid #a855f722; border-radius: 12px;
+  }
+  .hel-done.active { display: block; }
+  .hel-done h4 { font-size: 20px; color: #c084fc; }
+  .hel-done .hel-score { font-size: 36px; font-weight: 800; color: #22c55e; }
+  .hel-done .hel-rating { font-size: 24px; margin: 8px 0; }
+  .hel-gameover {
+    display: none; text-align: center; padding: 20px;
+    background: #1a0a0a; border: 1px solid #ef444433; border-radius: 12px;
+  }
+  .hel-gameover.active { display: block; }
+  .hel-gameover h4 { font-size: 20px; color: #ef4444; }
+
+  /* --- Sleipnir — Eight-Legged Sprint --- */
+  .sleipnir-arena { margin: 20px 0; }
+  .sleipnir-track {
+    display: flex; flex-direction: column; gap: 4px;
+    background: #07070a; border: 1px solid #1a1a24; border-radius: 12px;
+    padding: 4px; margin-bottom: 16px; position: relative;
+  }
+  .sleipnir-lane {
+    height: 48px; border-radius: 8px;
+    background: #0a0a0f; border: 1px solid #1a1a24;
+    display: flex; align-items: center; padding: 0 8px;
+    position: relative; overflow: hidden;
+  }
+  .sleipnir-lane .sleipnir-runner {
+    font-size: 24px; transition: left .15s ease;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    filter: drop-shadow(0 0 6px #f59e0b88);
+    z-index: 2;
+  }
+  .sleipnir-lane .sleipnir-runner.wreck {
+    filter: drop-shadow(0 0 6px #ef444488);
+    animation: wreckSpin .5s;
+  }
+  @keyframes wreckSpin {
+    0% { transform: translateX(-50%) rotate(0deg); }
+    100% { transform: translateX(-50%) rotate(720deg); }
+  }
+  .sleipnir-lane.active-lane { border-color: #f59e0b55; background: #0a0a15; }
+  .sleipnir-lane .sleipnir-obstacle {
+    position: absolute; font-size: 28px;
+    animation: obstacleSlide 1.2s linear forwards;
+    z-index: 1;
+  }
+  @keyframes obstacleSlide {
+    0% { left: -40px; }
+    100% { left: 100%; }
+  }
+  .sleipnir-lane .sleipnir-obstacle.fast { animation-duration: .7s; }
+  .sleipnir-lane .sleipnir-coin {
+    position: absolute; font-size: 22px;
+    animation: coinSlide 1.2s linear forwards;
+    z-index: 1;
+  }
+  @keyframes coinSlide {
+    0% { left: -40px; }
+    100% { left: 100%; }
+  }
+  .sleipnir-controls {
+    display: flex; gap: 8px; justify-content: center;
+  }
+  .sleipnir-controls .sc-btn {
+    width: 56px; height: 56px; border-radius: 12px;
+    background: #1a1a24; border: 1px solid #2a2a3a;
+    font-size: 20px; cursor: pointer; transition: all .15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .sleipnir-controls .sc-btn:hover { background: #2a2a3a; border-color: #f59e0b44; }
+  .sleipnir-controls .sc-btn:active { transform: scale(.9); }
+  .sleipnir-stats {
+    display: flex; justify-content: center; gap: 32px;
+    margin: 16px 0; font-size: 14px; color: #64748b;
+  }
+  .sleipnir-stats strong { color: #f59e0b; font-size: 20px; }
+  .sleipnir-start-btn {
+    display: block; margin: 0 auto;
+    padding: 12px 32px; border-radius: 10px; font-size: 16px; font-weight: 700;
+    background: linear-gradient(135deg, #f59e0b, #d97706); color: #07070a;
+    border: none; cursor: pointer;
+  }
+  .sleipnir-start-btn:active { transform: scale(.95); }
+  .sleipnir-done {
+    display: none; text-align: center; padding: 20px;
+    background: #0a1a0a; border: 1px solid #22c55e33; border-radius: 12px;
+  }
+  .sleipnir-done.active { display: block; }
+  .sleipnir-done h4 { font-size: 20px; color: #22c55e; }
+  .sleipnir-done .sleipnir-final-score { font-size: 36px; font-weight: 800; color: #f59e0b; }
+  .sleipnir-gameover {
+    display: none; text-align: center; padding: 20px;
+    background: #1a0a0a; border: 1px solid #ef444433; border-radius: 12px;
+  }
+  .sleipnir-gameover.active { display: block; }
+  .sleipnir-gameover h4 { font-size: 20px; color: #ef4444; }
+  .sleipnir-gameover .sleipnir-final-score { font-size: 36px; font-weight: 800; color: #f59e0b; }
+
+  /* ===== GAME INSTRUCTIONS PANEL ===== */
+  .game-instr-toggle {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; color: #64748b; cursor: pointer; margin-bottom: 16px;
+    padding: 6px 12px; border-radius: 6px; border: 1px solid #1a1a24;
+    background: #07070a; transition: all .2s;
+    user-select: none;
+  }
+  .game-instr-toggle:hover { border-color: #f59e0b44; color: #e4e4e7; }
+  .game-instr-toggle.active { border-color: #f59e0b44; background: #f59e0b08; }
+  .game-instr-panel {
+    display: none; margin-bottom: 20px;
+    background: #0a0a14; border: 1px solid #1a1a24; border-radius: 12px;
+    padding: 16px 20px;
+  }
+  .game-instr-panel.active { display: block; }
+  .game-instr-panel h4 { font-size: 13px; font-weight: 700; color: #f59e0b; margin-bottom: 10px; letter-spacing: .5px; text-transform: uppercase; }
+  .game-instr-panel .instr-step {
+    display: flex; gap: 10px; align-items: flex-start;
+    padding: 8px 0; border-bottom: 1px solid #1a1a2411;
+    font-size: 13px; color: #c8c8d0;
+  }
+  .game-instr-panel .instr-step:last-child { border-bottom: none; }
+  .game-instr-panel .instr-num {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+    background: #f59e0b22; color: #f59e0b;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 800;
+  }
+  .game-instr-panel .instr-step .instr-icon { font-size: 16px; flex-shrink: 0; }
+
+  /* ===== GAME CARD UPGRADES ===== */
+  .gc-badges { display: flex; gap: 6px; justify-content: center; margin: 6px 0; flex-wrap: wrap; }
+  .gc-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 10px; font-weight: 700; letter-spacing: .3px; text-transform: uppercase;
+  }
+  .gc-badge-easy { background: #22c55e22; color: #4ade80; border: 1px solid #22c55e44; }
+  .gc-badge-medium { background: #f59e0b22; color: #fbbf24; border: 1px solid #f59e0b44; }
+  .gc-badge-hard { background: #ef444422; color: #f87171; border: 1px solid #ef444444; }
+  .gc-badge-time { background: #6366f122; color: #a5b4fc; border: 1px solid #6366f144; }
+  .gc-badge-lesson { background: #a855f722; color: #c084fc; border: 1px solid #a855f744; }
+
+  .game-card .gc-glow {
+    position: absolute; inset: 0; border-radius: 14px;
+    opacity: 0; transition: opacity .4s;
+    pointer-events: none;
+  }
+  .game-card[data-child="fenrir"] .gc-glow { background: radial-gradient(ellipse at 50% 50%, #6366f122 0%, transparent 70%); }
+  .game-card[data-game="jormungandr" data-child="jormungandr"] .gc-glow { background: radial-gradient(ellipse at 50% 50%, #22c55e22 0%, transparent 70%); }
+  .game-card[data-child="hel"] .gc-glow { background: radial-gradient(ellipse at 50% 50%, #a855f722 0%, transparent 70%); }
+  .game-card[data-child="sleipnir"] .gc-glow { background: radial-gradient(ellipse at 50% 50%, #f59e0b22 0%, transparent 70%); }
+  .game-card:hover .gc-glow { opacity: 1; }
+
+  .game-card .gc-lesson {
+    margin-top: 8px; font-size: 11px; color: #475569; font-style: italic;
+    padding: 6px 10px; border-radius: 6px; background: #07070a;
+    border: 1px solid #1a1a24;
+    transition: all .2s;
+  }
+  .game-card:hover .gc-lesson { color: #94a3b8; border-color: #2a2a3a; }
+
+  /* ===== ENHANCED GAME UI ===== */
+  .gm-progress-bar {
+    width: 100%; height: 3px; background: #1a1a24; border-radius: 2px;
+    margin-bottom: 16px; overflow: hidden;
+  }
+  .gm-progress-fill {
+    height: 100%; border-radius: 2px; transition: width .4s ease;
+    background: linear-gradient(90deg, #f59e0b, #d97706);
+  }
+  .gm-saga-collapse {
+    font-size: 12px; color: #64748b; cursor: pointer; text-align: center;
+    padding: 6px; margin-top: -12px; margin-bottom: 16px;
+    transition: color .2s;
+  }
+  .gm-saga-collapse:hover { color: #f59e0b; }
+  .gm-saga.collapsed { max-height: 0; padding: 0 20px; overflow: hidden; margin: 0; border: none; transition: all .3s; }
+  .gm-saga { transition: all .3s; }
+  .gm-saga strong { color: #f59e0b; display: block; margin-top: 10px; }
+  .gm-saga em { color: #a5b4fc; font-style: normal; }
+  .gm-saga .saga-label { color: #f59e0b; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 6px; }
+
+  /* Fenrir chain break animation */
+  @keyframes chainBreak {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(0.95); opacity: 0.6; }
+  }
+  .fenrir-chain.broken { animation: chainBreak .5s ease-out forwards; }
+
+  /* Jörmungandr rune pulse when showing sequence */
+  .jormu-rune.lit { animation: runePulse .4s ease-in-out; }
+  @keyframes runePulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); box-shadow: 0 0 24px #22c55eaa; }
+    100% { transform: scale(1); }
+  }
+
+  /* Hel timer urgency pulse */
+  @keyframes timerUrgency {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+  .hel-timer-fill.danger { animation: timerUrgency .5s ease-in-out infinite; }
+
+  .hel-feedback {
+    text-align: center; font-size: 12px; color: #94a3b8; min-height: 20px;
+    padding: 4px 10px; margin: 4px 0 10px; border-radius: 6px;
+    transition: all .3s; line-height: 1.4;
+  }
+  .hel-feedback.correct { color: #4ade80; background: #22c55e11; }
+  .hel-feedback.wrong { color: #f87171; background: #ef444411; }
+
+  /* Sleipnir speed lines */
+  .sleipnir-lane.active-lane::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: #f59e0b; box-shadow: 0 0 8px #f59e0b;
+  }
+
+  /* Scrolling road animation — dashes on the lane divider */
+  .sleipnir-track.racing .sleipnir-lane::after {
+    content: ''; position: absolute; left: -200%; right: 0; bottom: 0; height: 1px;
+    background: repeating-linear-gradient(90deg, #334155 0px, #334155 12px, transparent 12px, transparent 24px);
+    animation: roadScroll 0.6s linear infinite;
+    pointer-events: none;
+  }
+  .sleipnir-track.racing .sleipnir-lane:nth-child(even)::after { bottom: 100%; }
+  @keyframes roadScroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(24px); }
+  }
+
+  /* Speed meter icons */
+  .s-speed-icon { display: inline-block; transition: all .5s; font-size: 16px; }
+  .s-speed-icon.canter { transform: scale(1.1); }
+  .s-speed-icon.gallop { transform: scale(1.2); filter: hue-rotate(30deg); }
+  .s-speed-icon.blitz { transform: scale(1.3); filter: hue-rotate(60deg); animation: sBlitz .4s ease-in-out infinite alternate; }
+  @keyframes sBlitz { from { transform: scale(1.2); } to { transform: scale(1.4); } }
+
+  /* Milestone popup */
+  .sleipnir-milestone {
+    text-align: center; font-size: 24px; font-weight: 800; color: #f59e0b;
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0);
+    opacity: 0; pointer-events: none; z-index: 20;
+    text-shadow: 0 0 30px #f59e0b88; transition: all .4s cubic-bezier(.34,1.56,.64,1);
+  }
+  .sleipnir-milestone.pop { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  .sleipnir-milestone .milestone-sub { font-size: 14px; font-weight: 400; color: #94a3b8; display: block; margin-top: 4px; }
+
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 32px; }
+    .hero .tagline { font-size: 17px; }
+    .products-grid { grid-template-columns: 1fr; }
+    .about-content { grid-template-columns: 1fr; }
+    .playbook-banner { grid-template-columns: 1fr; }
+    .featured-grid { grid-template-columns: 1fr 1fr; }
+    .roi-grid { grid-template-columns: 1fr; }
+    nav .links a:not(.btn-nav) { display: none; }
+    .playbook-banner { padding: 24px; }
+    .ent-tab { min-width: 100px; padding: 10px 14px; }
+    .meter-wrap { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="aurora"></div>
+<div class="aurora-particles"></div>
+
+<nav>
+  <a href="#" class="logo">✦ LOKI'S MISCHIEF</a>
+  <div class="links">
+    <a href="#games">🐺 Games</a>
+    <a href="#entertainment">Fun Stuff</a>
+    <a href="#products">Products</a>
+    <a href="#playbook">Playbook</a>
+    <a href="#about">About</a>
+    <a href="#products" class="btn-nav">Browse All</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div>
+    <div class="icon">⚡</div>
+    <h1>The God of Mischief<br>Runs Your <span class="gradient">Agency Ops</span></h1>
+    <p class="tagline">Pre-built Make.com &amp; n8n automations that handle client intake, reporting, proposals, invoicing, and follow-ups — so you actually have time to do the work.</p>
+    <div class="btn-group">
+      <a href="#entertainment" class="btn btn-secondary">Test the Tools →</a>
+      <a href="#products" class="btn btn-primary">See the Products</a>
+    </div>
+    <div class="subtitle">Available on</div>
+    <div class="platform-strip">
+      <span class="badge-make">Make.com</span>
+      <span class="badge-n8n">n8n</span>
+    </div>
+    <div class="saga-toggle" onclick="toggleSaga('hero-saga')">📖 Loki's Saga</div>
+    <div class="saga-lore" id="hero-saga">
+      <div class="saga-title">📖 The God Who Broke the Rules</div>
+      <div class="saga-text">Loki, the blood-brother of Odin, was no ordinary god — he was the shape-shifter, the boundary-breaker, the one who refused to play by the rules of Asgard. While the other gods followed protocol, Loki found clever ways around every wall and chain. He gave Odin his eight-legged steed Sleipnir, gave Thor his hammer Mjölnir, and gave the gods their greatest victories — all by thinking differently.</div>
+      <div class="saga-moral">✦ Loki's Mischief follows the same code: break the rules of manual ops, automate the tedious, and free yourself to do the work that matters.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Strip -->
+<div class="section" style="padding-top:0;">
+  <div class="container">
+    <div class="featured-grid">
+      <div class="feature-card">
+        <div class="f-icon">🤖</div>
+        <h4>AI-Powered</h4>
+        <p>GPT-4o analyzes, qualifies, and personalizes every interaction automatically</p>
+      </div>
+      <div class="feature-card">
+        <div class="f-icon">📦</div>
+        <h4>Import &amp; Go</h4>
+        <p>Every product is a single JSON file. Connect your accounts. Hit run.</p>
+      </div>
+      <div class="feature-card">
+        <div class="f-icon">🔄</div>
+        <h4>Two Platforms</h4>
+        <p>Available for both Make.com and n8n — pick your automation stack</p>
+      </div>
+      <div class="feature-card">
+        <div class="f-icon">⏱️</div>
+        <h4>15-Min Setup</h4>
+        <p>Configure once. Zero maintenance. Frees 10+ hours every week.</p>
+      </div>
+    </div>
+    <div class="saga-toggle" onclick="toggleSaga('feature-saga')">📖 Sigyn's Faith</div>
+    <div class="saga-lore" id="feature-saga">
+      <div class="saga-title">📖 The Binding of Loki</div>
+      <div class="saga-text">After Loki's mischief caused the death of Baldr, the gods bound him to a rock with the entrails of his son — transformed into iron chains. There he lay, venom dripping onto his face, until Ragnarök. But here's the part worth remembering: Loki didn't break because he knew his chains were temporary. Every chain, no matter how tight, eventually shatters.</div>
+      <div class="saga-moral">✦ Your manual ops chains feel permanent. They're not. One automation at a time, you break free.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FENRIR & FRIENDS GAME ZONE ===== -->
+<section id="games" class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2>🐺 <span class="gold">Fenrir & Friends</span></h2>
+      <p class="subtitle">Meet Loki's children. Each one has a game that'll teach you something about your agency — and free you from the chains of manual work.</p>
+    </div>
+
+    <!-- Game Cards Grid -->
+    <div class="game-grid">
+      <div class="game-card" data-game="fenrir" data-child="fenrir" onclick="openGame('fenrir')">
+        <div class="gc-glow"></div>
+        <div class="gc-icon">🐺</div>
+        <div class="gc-name">Fenrir — Chain Strike</div>
+        <div class="gc-badges">
+          <span class="gc-badge gc-badge-medium">⌛ TIMING</span>
+          <span class="gc-badge gc-badge-time">~2 min</span>
+        </div>
+        <div class="gc-desc">Strike each binding when the pendulum is in the green zone. 3 clean hits breaks every chain — free the great wolf!</div>
+        <div class="gc-lesson">✦ Lesson: Break manual chains with perfect timing</div>
+        <span class="gc-play">Play →</span>
+      </div>
+      <div class="game-card" data-game="jormungandr" data-child="jormungandr" onclick="openGame('jormungandr')">
+        <div class="gc-glow"></div>
+        <div class="gc-icon">🐍</div>
+        <div class="gc-name">Jörmungandr — Serpent Memory</div>
+        <div class="gc-badges">
+          <span class="gc-badge gc-badge-easy">🧠 MEMORY</span>
+          <span class="gc-badge gc-badge-time">~3 min</span>
+        </div>
+        <div class="gc-desc">Watch the rune sequence, then repeat it back. Each correct round uncoils the endless loop. One wrong move and you lose a life.</div>
+        <div class="gc-lesson">✦ Lesson: Break cycles by remembering what works</div>
+        <span class="gc-play">Play →</span>
+      </div>
+      <div class="game-card" data-game="hel" data-child="hel" onclick="openGame('hel')">
+        <div class="gc-glow"></div>
+        <div class="gc-icon">💀</div>
+        <div class="gc-name">Hel — Soul Sorting</div>
+        <div class="gc-badges">
+          <span class="gc-badge gc-badge-hard">⚖️ JUDGMENT</span>
+          <span class="gc-badge gc-badge-time">~3 min</span>
+        </div>
+        <div class="gc-desc">Souls arrive at Hel's gate. Decide fast: automate or keep manual? You've got 5 seconds per soul — wrong choices have consequences.</div>
+        <div class="gc-lesson">✦ Lesson: Know what to automate vs keep human</div>
+        <span class="gc-play">Play →</span>
+      </div>
+      <div class="game-card" data-game="sleipnir" data-child="sleipnir" onclick="openGame('sleipnir')">
+        <div class="gc-glow"></div>
+        <div class="gc-icon">🐎</div>
+        <div class="gc-name">Sleipnir — Eight-Legged Sprint</div>
+        <div class="gc-badges">
+          <span class="gc-badge gc-badge-hard">🏃 REACTION</span>
+          <span class="gc-badge gc-badge-time">∞ endless</span>
+        </div>
+        <div class="gc-desc">Switch lanes to dodge obstacles and collect coins. Sleipnir's got 8 legs — you've got 4 lanes. How far can you run before crashing?</div>
+        <div class="gc-lesson">✦ Lesson: Speed multiplies when you switch paths smartly</div>
+        <span class="gc-play">Play →</span>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:16px;">
+      <span style="font-size:13px;color:#475569;">⚔️ Click any game to play. Each one teaches a different automation lesson.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== GAME MODALS ===== -->
+
+<!-- Fenrir Modal -->
+<div class="game-modal-overlay" id="game-fenrir">
+  <div class="game-modal">
+    <button class="gm-close" onclick="closeGame('fenrir')">✕</button>
+    <div class="gm-header">
+      <div class="gm-icon">🐺</div>
+      <h3>Fenrir — <span class="gold">Chain Strike</span></h3>
+    </div>
+    <div class="gm-progress-bar"><div class="gm-progress-fill" id="fenrir-progress" style="width:0%"></div></div>
+
+    <div class="lesson-box">
+      <div class="lesson-icon">📖</div>
+      <div><strong>The Lesson:</strong> Fenrir's chains — even Gleipnir, woven from six impossible things — always break at Ragnarök. Some forces cannot be bound forever, only delayed. <em>Every chain you smash in this game is a manual process holding your agency back. Break them one by one, with perfect timing.</em></div>
+    </div>
+
+    <div class="game-instr-panel" id="instr-fenrir" style="display:block">
+      <h4>🎯 Goal — Break All 6 Chains to Free Fenrir</h4>
+      <div class="instr-step"><span class="instr-num">1</span><span>A chain is active (glowing). Its pendulum swings left → right.</span></div>
+      <div class="instr-step"><span class="instr-icon">🎯</span><span>Click the chain when the pendulum is <strong>inside the green zone</strong>.</span></div>
+      <div class="instr-step"><span class="instr-num">3</span><span>Each chain needs <strong>3 clean hits</strong> to shatter. Misses do nothing.</span></div>
+      <div class="instr-step"><span class="instr-icon">🔓</span><span>Break all 6 chains → Fenrir goes free. This is what automation does for your agency.</span></div>
+    </div>
+
+    <div class="fenrir-arena" id="fenrir-arena">
+      <canvas width="140" height="140" id="canvas-fenrir" class="char-canvas" style="border-radius:20px;width:140px;height:140px;display:block;margin:0 auto 14px"></canvas>
+      <div class="fenrir-chains" id="fenrir-chains"></div>
+      <button class="btn btn-primary start-btn" id="fenrir-start-btn" onclick="fenrirStart()">🐺 Begin Hunt</button>
+      <div class="gm-status"><span id="fenrir-combo" class="fenrir-combo"></span> Hits: <strong id="fenrir-hits">0</strong> / 18 — <span id="fenrir-status">Press Begin to start!</span></div>
+    </div>
+    <div class="fenrir-freed" id="fenrir-freed">
+      <div class="ff-icon">🐺✨</div>
+      <h4>ALL CHAINS BROKEN!</h4>
+      <p style="color:#94a3b8;">Fenrir is free — and so are you. Every chain you smashed was a manual process holding your agency back. Time to automate what binds you.</p>
+      <div style="margin-top:12px;">
+        <a href="#products" class="btn btn-primary">Ready to Break Free? →</a>
+      </div>
+    </div>
+
+    <div class="gm-saga" id="fenrir-saga"><span class="saga-label">📖 The Saga:</span>
+
+      <strong>The Omen</strong> — Fenrir was the firstborn of Loki and the giantess Angrboda, a wolf of such terrible size and hunger that the gods themselves grew afraid. Even as a pup, his jaws could tear through oak and iron. The gods watched him grow day by day, and each day his appetite swelled beyond what the last could contain.
+
+      <strong>The Binding Attempts</strong> — Odin ordered Fenrir brought to Asgard, hoping to keep the beast close. Two chains were forged: <em>Leyding</em>, the strongest chain known to gods and men, and <em>Dromi</em>, twice as strong again. Fenrir shattered both like dried twigs. Each broken chain was a thunderclap heard across all Nine Realms.
+
+      <strong>Gleipnir</strong> — Desperate, the gods sent to Svartalfheim for the dwarves' finest work. The dwarves crafted <em>Gleipnir</em> — a ribbon made of <strong>six impossible ingredients</strong>: the sound of a cat's footfall, the roots of a mountain, a woman's beard, a fish's breath, a bird's spittle, and the sinews of a bear. Though it looked like a silken thread, it was the strongest bond ever made.
+
+      <strong>Tyr's Sacrifice</strong> — Fenrir, now wise to the gods' treachery, refused to be bound unless a god placed their hand in his mouth as a pledge of good faith. Only Tyr, the god of justice and single combat, was brave enough. Fenrir felt the Gleipnir tighten around him, and knew he was betrayed. His jaws snapped shut.
+
+      <strong>The Prophecy</strong> — At Ragnarök, Fenrir will break every chain. He will run free across the rainbow bridge, and on the battlefield of Vígríðr, he will devour Odin himself. The All-Father falls to the wolf he tried to cage. Some things cannot be bound forever — only delayed.</div>
+    <div class="gm-saga-collapse" onclick="document.getElementById('fenrir-saga').classList.toggle('collapsed');this.classList.toggle('active');">📖 Toggle Saga</div>
+  </div>
+</div>
+
+<!-- Jörmungandr Modal -->
+<div class="game-modal-overlay" id="game-jormungandr">
+  <div class="game-modal">
+    <button class="gm-close" onclick="closeGame('jormungandr')">✕</button>
+    <div class="gm-header">
+      <div class="gm-icon">🐍</div>
+      <h3>Jörmungandr — <span class="gold">Serpent Memory</span></h3>
+    </div>
+    <div class="gm-progress-bar"><div class="gm-progress-fill" id="jormu-progress" style="width:0%"></div></div>
+
+    <div class="lesson-box">
+      <div class="lesson-icon">📖</div>
+      <div><strong>The Lesson:</strong> The serpent that holds the world in a closed loop — endless, circling, repeating. The only way out is to remember the sequence. <em>Your agency runs in cycles too. Remember what worked, repeat it, and watch the loop uncoil.</em></div>
+    </div>
+
+    <div class="game-instr-panel" id="instr-jormu" style="display:block">
+      <h4>🎯 Goal — Complete All 6 Rounds to Slay the Serpent</h4>
+      <div class="instr-step"><span class="instr-num">1</span><span>A sequence of runes lights up. <strong>Watch carefully</strong> — each round adds one more.</span></div>
+      <div class="instr-step"><span class="instr-icon">👆</span><span>After the sequence plays, <strong>repeat it back</strong> by clicking the runes in order.</span></div>
+      <div class="instr-step"><span class="instr-num">3</span><span><strong>Wrong rune</strong> = lose a life (❤️). You get 3 lives. Wrong also replays the sequence so you can try again.</span></div>
+      <div class="instr-step"><span class="instr-icon">🐍</span><span>Complete round 6 with lives remaining → the serpent is slain. Your agency cycles are next.</span></div>
+    </div>
+
+    <div class="jormu-arena" id="jormu-arena">
+      <canvas width="140" height="140" id="canvas-jormu" class="char-canvas" style="border-radius:20px;width:140px;height:140px;display:block;margin:0 auto 14px"></canvas>
+      <div class="jormu-info">
+        <div class="j-round">Round <strong id="jormu-round">1</strong> / 6</div>
+        <div class="j-lives">Lives: <span id="jormu-lives"><span class="lives-dot">❤️</span><span class="lives-dot">❤️</span><span class="lives-dot">❤️</span></span></div>
+      </div>
+      <div class="hel-timer" style="margin-bottom:10px"><div class="hel-timer-fill" id="jormu-timer-fill" style="width:100%;background:#6366f1"></div></div>
+      <div class="jormu-rune-circle" id="jormu-rune-circle">
+        <div class="jormu-rune" data-rune="0">ᚠ</div>
+        <div class="jormu-rune" data-rune="1">ᚦ</div>
+        <div class="jormu-rune" data-rune="2">ᚨ</div>
+        <div class="jormu-rune" data-rune="3">ᚱ</div>
+        <div class="jormu-rune" data-rune="4">ᚲ</div>
+        <div class="jormu-rune" data-rune="5">ᚷ</div>
+        <div class="jormu-rune" data-rune="6">ᚹ</div>
+        <div class="jormu-rune" data-rune="7">ᚺ</div>
+      </div>
+      <div class="gm-status" id="jormu-status">Press <strong>🐍 Begin</strong> when ready...</div>
+      <button class="btn btn-primary start-btn" id="jormu-start-btn" onclick="jormuStart()">🐍 Begin</button>
+    </div>
+    <div class="jormu-done" id="jormu-done">
+      <h4>🐍 THE SERPENT IS SLAIN!</h4>
+      <p>8 runes recalled. The endless loop is broken. Your memory proved sharper than the cycle.</p>
+      <div style="margin-top:12px;">
+        <a href="#products" class="btn btn-primary">Cut Your Cycles →</a>
+      </div>
+    </div>
+    <div class="jormu-gameover" id="jormu-gameover">
+      <h4>💀 The Serpent Tightens</h4>
+      <p style="color:#94a3b8;font-size:14px;">You faltered and the cycle closed in.</p>
+      <div style="margin-top:12px;" onclick="initJormungandr()">
+        <button class="btn btn-secondary">Try Again</button>
+      </div>
+    </div>
+
+    <div class="gm-saga" id="jormu-saga"><span class="saga-label">📖 The Saga:</span>
+
+      <strong>The Cast-Out</strong> — Jörmungandr was the second child of Loki and Angrboda — a serpent so vast that when Odin cast him into the ocean that encircles Midgard, he grew until his tail met his own jaws. This is the <em>Urðar Serpent</em>, the World-Coiler, the beast that holds the circle of existence closed.
+
+      <strong>Thor's Fishing Trip</strong> — The most famous tale: Thor went fishing with the giant Hymir. Hoping to impress, Thor baited his hook with an ox's head and cast into the deepest waters. The line went taut. The sea boiled. Thor braced his feet against the bottom of the boat and pulled. Jörmungandr rose from the depths — poison dripping from his fangs, his body as wide as a fjord. Thor raised Mjölnir to strike, but Hymir, terrified, cut the line. The serpent sank back into the dark waters, and the boat was left trembling.
+
+      <strong>The Lifting of the Cat</strong> — Odin once visited the giant Utgarða-Loki, who set Thor a series of challenges — one of which was to lift a great gray cat. Thor strained with all his might. He lifted one of its paws from the ground, and no more. The illusion was revealed: the cat was Jörmungandr in disguise, and Thor had lifted the Midgard Serpent itself — nearly pulling the world's foundation loose.
+
+      <strong>The Ragnarök Battle</strong> — When the end comes, Jörmungandr will rise from the ocean. The seas will flood. The heavens will rain poison. Thor will meet the serpent one final time on the field of Vígríðr. He will strike it dead with Mjölnir — but will take only nine steps before the serpent's venom finishes him. The two greatest enemies in all Norse myth fall together. Some cycles are broken only by brave action — and a sharp enough memory.</div>
+    <div class="gm-saga-collapse" onclick="document.getElementById('jormu-saga').classList.toggle('collapsed');this.classList.toggle('active');">📖 Toggle Saga</div>
+  </div>
+</div>
+
+<!-- Hel Modal -->
+<div class="game-modal-overlay" id="game-hel">
+  <div class="game-modal">
+    <button class="gm-close" onclick="closeGame('hel')">✕</button>
+    <div class="gm-header">
+      <div class="gm-icon">💀</div>
+      <h3>Hel — <span class="gold">Soul Sorting</span></h3>
+    </div>
+    <div class="gm-progress-bar"><div class="gm-progress-fill" id="hel-progress" style="width:0%"></div></div>
+
+    <div class="lesson-box">
+      <div class="lesson-icon">📖</div>
+      <div><strong>The Lesson:</strong> Hel judges every soul — half her face is living flesh, half is cold corpse. Not everything can be automated. <em>Know what to keep human (strategy, emotion, creativity) and what to automate (repetition, rules, data). Wrong choices break your foundation.</em></div>
+    </div>
+
+    <div class="game-instr-panel" id="instr-hel" style="display:block">
+      <h4>🎯 Goal — Judge 10 Souls. Score as High as You Can.</h4>
+      <div class="instr-step"><span class="instr-num">1</span><span>A soul appears with a task description (e.g. "Client onboarding emails").</span></div>
+      <div class="instr-step"><span class="instr-icon">🤖</span><span>Click <strong>"Automate This"</strong> if the task should be automated (repetitive, rule-based).</span></div>
+      <div class="instr-step"><span class="instr-icon">👤</span><span>Click <strong>"Keep Manual"</strong> if it needs human judgment (strategy, creativity, sensitive).</span></div>
+      <div class="instr-step"><span class="instr-num">4</span><span><strong>5-second timer</strong> per soul. Wrong judgment = lose a life (❤️). 3 lives gone → game over.</span></div>
+      <div class="instr-step"><span class="instr-icon">⚖️</span><span>Final rating based on correct judgments out of 10. Master of the Realms awaits!</span></div>
+    </div>
+
+    <div class="hel-arena" id="hel-arena">
+      <canvas width="140" height="140" id="canvas-hel" class="char-canvas" style="border-radius:20px;width:140px;height:140px;display:block;margin:0 auto 14px"></canvas>
+      <div class="hel-info">
+        <span>Score: <strong id="hel-score">0</strong></span>
+        <span><span id="hel-streak" class="hel-streak"></span></span>
+        <span>Souls: <strong id="hel-count">0</strong> / 10</span>
+        <span>Lives: <span id="hel-lives"><span class="lives-dot">❤️</span><span class="lives-dot">❤️</span><span class="lives-dot">❤️</span></span></span>
+      </div>
+      <div class="hel-timer"><div class="hel-timer-fill" id="hel-timer-fill" style="width:100%"></div></div>
+      <div class="hel-feedback" id="hel-feedback"></div>
+      <div class="hel-soul-area"><div class="hel-soul" id="hel-soul">💀</div></div>
+      <div class="hel-desc" id="hel-desc">Press <strong>⚖️ Begin Judgment</strong> when ready...</div>
+      <div class="hel-buttons" id="hel-buttons" style="display:none">
+        <button class="hel-btn auto" id="hel-btn-auto" onclick="helSort('auto')">🤖 Automate This</button>
+        <button class="hel-btn manual" id="hel-btn-manual" onclick="helSort('manual')">👤 Keep Manual</button>
+      </div>
+      <button class="btn btn-primary start-btn" id="hel-start-btn" onclick="helStart()">⚖️ Begin Judgment</button>
+    </div>
+    <div class="hel-done" id="hel-done">
+      <h4>⚖️ JUDGMENT COMPLETE</h4>
+      <div class="hel-score" id="hel-final-score">0</div>
+      <div class="hel-rating" id="hel-rating">⚖️</div>
+      <p style="color:#94a3b8;font-size:14px;">Hel nods — you know what to automate and what to keep human.</p>
+      <div style="margin-top:12px;">
+        <a href="#products" class="btn btn-primary">Put This Wisdom to Work →</a>
+      </div>
+    </div>
+    <div class="hel-gameover" id="hel-gameover">
+      <h4>💀 HEL'S REALM CLAIMS YOU</h4>
+      <p style="color:#94a3b8;font-size:14px;">Too many wrong judgments. The souls pile up unblessed.</p>
+      <div style="margin-top:12px;" onclick="initHel()">
+        <button class="btn btn-secondary">Try Again</button>
+      </div>
+    </div>
+
+    <div class="gm-saga" id="hel-saga"><span class="saga-label">📖 The Saga:</span>
+
+      <strong>The Daughter of Two Worlds</strong> — Hel was the third child of Loki and the giantess Angrboda, and she was born half-living maiden and half-corpse. Her face and body on one side are the healthy flesh of the living; the other side is the blue and rotting flesh of the dead. She is the boundary — the place where life and death meet, where judgment must be made on what lives on and what perishes.
+
+      <strong>The Realm of Eljudnir</strong> — When the gods saw the children of Loki growing in power, they cast Hel into Niflheim and made her ruler of the dead. Her hall is called <em>Eljudnir</em> ("Drenched with Rain"), its walls woven from frozen rivers. Her servants are Ganglati ("Slow") and Ganglöt ("Slowpoken"). Her dish is Hunger. Her knife is Famine. This is the court of final judgment — and every soul that arrives is sorted by her will.
+
+      <strong>The Judge of the Common Dead</strong> — Unlike Odin (who takes half of slain warriors to Valhalla) and Freyja (who takes half to Fólkvangr), Hel receives those who die of sickness, age, or misadventure. The souls pile at her gate, each one needing a decision. Does this one belong with the blessed or the forgotten? Does this task deserve the living realm of automation or the cold manual grave? Every wrong judgment shakes the foundation of her realm.
+
+      <strong>The Bargain for Baldr</strong> — After Baldr the Beautiful was killed, Hermóðr rode Sleipnir (lent by Odin) to Hel's realm to bargain. Hel agreed to return Baldr — but only if every living thing in all Nine Realms wept for him. The giantess Þökk (who was Loki in disguise) refused to weep, and Baldr remained in Hel's hall. She does not bend to pleas or bargains. Her judgment is absolute.</div>
+    <div class="gm-saga-collapse" onclick="document.getElementById('hel-saga').classList.toggle('collapsed');this.classList.toggle('active');">📖 Toggle Saga</div>
+  </div>
+</div>
+
+<!-- Sleipnir Modal -->
+<div class="game-modal-overlay" id="game-sleipnir">
+  <div class="game-modal">
+    <button class="gm-close" onclick="closeGame('sleipnir')">✕</button>
+    <div class="gm-header">
+      <div class="gm-icon">🐎</div>
+      <h3>Sleipnir — <span class="gold">Eight-Legged Sprint</span></h3>
+    </div>
+    <div class="gm-progress-bar"><div class="gm-progress-fill" id="sleipnir-progress" style="width:100%"></div></div>
+
+    <div class="lesson-box">
+      <div class="lesson-icon">📖</div>
+      <div><strong>The Lesson:</strong> Eight legs, four lanes, one goal — keep moving. Sleipnir wasn't just the fastest horse; he could cross any terrain, bridge any realm. <em>Speed and adaptability carry you through obstacles. Switch lanes smartly, collect what helps, and never stop moving — that's what scalable automation does for an agency.</em></div>
+    </div>
+
+    <div class="game-instr-panel" id="instr-sleipnir" style="display:block">
+      <h4>🎯 Goal — Run as Far as You Can. It's an Endless Sprint.</h4>
+      <div class="instr-step"><span class="instr-num">1</span><span>Sleipnir runs in one of <strong>4 lanes</strong>. Obstacles (🌲) and coins (🪙) come at you.</span></div>
+      <div class="instr-step"><span class="instr-icon">⬆️⬇️</span><span>Use the <strong>arrow buttons</strong> to switch lanes. Dodge trees, grab coins for +5m bonus.</span></div>
+      <div class="instr-step"><span class="instr-num">3</span><span><strong>Hit a tree</strong> = lose a life (❤️). You start with 3 lives. Last one standing wins.</span></div>
+      <div class="instr-step"><span class="instr-icon">⚡</span><span>Speed increases every 15m. The faster you go, the tighter your reactions need to be.</span></div>
+      <div class="instr-step"><span class="instr-icon">🏆</span><span>No finish line — it's about how many obstacles you outrun. What's your best distance?</span></div>
+    </div>
+
+    <div class="sleipnir-arena" id="sleipnir-arena">
+      <canvas width="140" height="140" id="canvas-sleipnir" class="char-canvas" style="border-radius:20px;width:140px;height:140px;display:block;margin:0 auto 14px"></canvas>
+      <div class="sleipnir-stats">
+        <span>Distance: <strong id="sleipnir-distance">0</strong>m</span>
+        <span>🪙 <strong id="sleipnir-coins">0</strong></span>
+        <span>Speed: <span id="sleipnir-speed"><span class="s-speed-icon">🐢</span></span></span>
+        <span>Lives: <span id="sleipnir-lives"><span class="lives-dot">❤️</span><span class="lives-dot">❤️</span><span class="lives-dot">❤️</span></span></span>
+      </div>
+      <div class="sleipnir-status" id="sleipnir-status" style="text-align:center;font-size:13px;color:#94a3b8;margin-bottom:8px;">Press Start Sprint!</div>
+      <div class="sleipnir-milestone" id="sleipnir-milestone"></div>
+      <div class="sleipnir-track" id="sleipnir-track">
+        <div class="sleipnir-lane" data-lane="1"><span class="sleipnir-runner" id="sleipnir-runner-1">🐎</span></div>
+        <div class="sleipnir-lane active-lane" data-lane="2"><span class="sleipnir-runner" id="sleipnir-runner-2">🐎</span></div>
+        <div class="sleipnir-lane" data-lane="3"><span class="sleipnir-runner" id="sleipnir-runner-3">🐎</span></div>
+        <div class="sleipnir-lane" data-lane="4"><span class="sleipnir-runner" id="sleipnir-runner-4">🐎</span></div>
+      </div>
+      <div class="sleipnir-controls" id="sleipnir-controls">
+        <button class="sc-btn" onclick="sleipnirLane(1)">⬆️</button>
+        <button class="sc-btn" onclick="sleipnirLane(2)">⬆️</button>
+        <button class="sc-btn" onclick="sleipnirLane(3)">⬇️</button>
+        <button class="sc-btn" onclick="sleipnirLane(4)">⬇️</button>
+      </div>
+      <div style="text-align:center;margin-top:12px;">
+        <button class="btn btn-primary start-btn" id="sleipnir-start-btn" onclick="sleipnirStart()">🏁 Start Sprint</button>
+      </div>
+    </div>
+    <div class="sleipnir-done" id="sleipnir-done">
+      <h4>🏆 YOU OUTRAN THE OBSTACLES!</h4>
+      <div class="sleipnir-final-score" id="sleipnir-final-distance">0m</div>
+      <p style="color:#94a3b8;font-size:14px;">Sleipnir's speed multiplied your reach. Just like automation — more legs, faster growth.</p>
+      <div style="margin-top:12px;">
+        <a href="#products" class="btn btn-primary">Multiply Your Speed →</a>
+      </div>
+    </div>
+    <div class="sleipnir-gameover" id="sleipnir-gameover">
+      <h4>💥 SLEIPNIR STUMBLED</h4>
+      <div class="sleipnir-final-score" id="sleipnir-gameover-distance">0m</div>
+      <p style="color:#94a3b8;font-size:14px;">The obstacles caught up. But with 8 legs, you can always get back up.</p>
+      <div style="margin-top:12px;" onclick="sleipnirReset()">
+        <button class="btn btn-secondary">Try Again</button>
+      </div>
+    </div>
+
+    <div class="gm-saga" id="sleipnir-saga"><span class="saga-label">📖 The Saga:</span>
+
+      <strong>The Most Unlikely Birth</strong> — Sleipnir was born of Loki — but not as you might expect. When a giant builder offered to wall Asgard in a single winter, demanding the sun, the moon, and the goddess Freyja as payment, Loki transformed himself into a beautiful mare to lure the builder's stallion Svaðilfari away from his work. Loki (as a mare) succeeded — and from that union came Sleipnir: the eight-legged foal, the most magnificent horse in all the Nine Realms.
+
+      <strong>Gift to Odin</strong> — Loki presented Sleipnir to Odin, and the eight-legged horse became the All-Father's most trusted companion. With eight legs, Sleipnir could run through the air, over water, and across the Bifröst bridge faster than any other creature. He is the only horse that can travel between the worlds — from Asgard to Jötunheim to Niflheim, crossing the barriers that separate all existence.
+
+      <strong>The Ride to Hel</strong> — When Baldr the Beautiful was slain, Hermóðr, a son of Odin, rode Sleipnir for nine days and nine nights through dark valleys to reach Hel's gate. He leaped the wall of Eljudnir in a single bound — a feat no other horse could have managed. Sleipnir carries his rider not just fast, but through impossible barriers. Where others see walls, he finds a path.
+
+      <strong>The Path Between Worlds</strong> — Sleipnir represents speed, adaptability, and the ability to navigate obstacles in any terrain. Eight legs means four times the power, four times the grip, and four times the reach. But even Sleipnir must dodge what comes at him — the obstacles on the road between worlds are as real as they are in Midgard. Speed is only useful if you can steer.</div>
+    <div class="gm-saga-collapse" onclick="document.getElementById('sleipnir-saga').classList.toggle('collapsed');this.classList.toggle('active');">📖 Toggle Saga</div>
+  </div>
+</div>
+<section id="entertainment" class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Let's Be <span class="gold">Mischievous</span></h2>
+      <p class="subtitle">Interactive tools, calculators, and fun ways to see what your agency is really missing.</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="ent-tabs">
+      <div class="ent-tab active" data-tab="roi">
+        <span class="tab-icon">💰</span>
+        ROI Calculator
+      </div>
+      <div class="ent-tab" data-tab="quiz">
+        <span class="tab-icon">🎯</span>
+        Find Your Fit
+      </div>
+      <div class="ent-tab" data-tab="health">
+        <span class="tab-icon">🏥</span>
+        Agency Health Check
+      </div>
+      <div class="ent-tab" data-tab="meter">
+        <span class="tab-icon">🌡️</span>
+        Mischief Meter
+      </div>
+    </div>
+
+    <!-- Panel: ROI Calculator -->
+    <div class="ent-panel active" id="panel-roi">
+      <div class="ent-card">
+        <h3>💰 The <span class="gold">"Stop Burning Money"</span> Calculator</h3>
+        <p style="color:#94a3b8;margin-bottom:24px;">Manual ops is eating your revenue. See exactly how much you could save each year by automating.</p>
+        <div class="roi-grid">
+          <div class="roi-inputs">
+            <div class="roi-field">
+              <label>Your effective hourly rate</label>
+              <div class="input-group">
+                <span class="prefix">$</span>
+                <input type="number" id="roi-rate" value="150" min="50" max="500" step="10">
+              </div>
+            </div>
+            <div class="roi-field">
+              <label>Hours per week on manual ops (emails, data entry, reporting, follow-ups)</label>
+              <div class="input-group">
+                <span class="prefix">⏱️</span>
+                <input type="range" id="roi-hours" min="5" max="40" value="20">
+              </div>
+              <div class="range-value"><span id="roi-hours-display">20</span> hrs/week</div>
+            </div>
+            <div class="roi-field">
+              <label>How many clients do you manage?</label>
+              <div class="input-group">
+                <span class="prefix">👥</span>
+                <input type="number" id="roi-clients" value="10" min="3" max="50">
+              </div>
+            </div>
+          </div>
+          <div class="roi-results">
+            <div class="roi-result-card roi-warning">
+              <div class="rr-label">Annual cost of manual ops</div>
+              <div class="rr-value" id="roi-annual-cost">$0</div>
+              <div class="rr-sub">That's what you're burning on admin work</div>
+            </div>
+            <div class="roi-result-card roi-highlight">
+              <div class="rr-label">Estimated savings with automation</div>
+              <div class="rr-value" id="roi-savings">$0</div>
+              <div class="rr-sub">Based on 75% automation coverage (industry avg)</div>
+            </div>
+            <div class="roi-result-card">
+              <div class="rr-label">Hours FREED UP per week</div>
+              <div class="rr-value" id="roi-hours-freed">0</div>
+              <div class="rr-sub">To spend on growth, clients, or —gasp— rest</div>
+            </div>
+          </div>
+        </div>
+        <div class="roi-savings-bar">
+          <div class="roi-final-label">You could be saving</div>
+          <div class="roi-final" id="roi-final">$0</div>
+          <div class="roi-final-label">per year — that's a full-time employee</div>
+          <div class="roi-cta">
+            <a href="#products" class="btn btn-primary">See Products →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: Quiz -->
+    <div class="ent-panel" id="panel-quiz">
+      <div class="ent-card">
+        <h3>🎯 <span class="gold">Which Mischief</span> Fits Your Agency?</h3>
+        <p style="color:#94a3b8;margin-bottom:24px;">Answer 3 quick questions and we'll recommend the perfect automation for you.</p>
+
+        <div class="quiz-progress" id="quiz-progress">
+          <div class="quiz-dot active"></div>
+          <div class="quiz-dot"></div>
+          <div class="quiz-dot"></div>
+        </div>
+
+        <div id="quiz-area">
+          <!-- Q1 -->
+          <div class="quiz-question active" data-q="0">
+            <div class="q-text">What's your biggest ops headache right now?</div>
+            <div class="quiz-options">
+              <div class="quiz-opt" data-value="concierge">Client intake — keeping track of leads, scheduling, follow-ups</div>
+              <div class="quiz-opt" data-value="onboarding">Getting new clients set up — welcome emails, contracts, calendars</div>
+              <div class="quiz-opt" data-value="reporting">Pulling together client reports every month</div>
+              <div class="quiz-opt" data-value="invoicing">Chasing payments and sending reminders</div>
+            </div>
+          </div>
+          <!-- Q2 -->
+          <div class="quiz-question" data-q="1">
+            <div class="q-text">How many clients do you manage?</div>
+            <div class="quiz-options">
+              <div class="quiz-opt" data-value="small">1-5 — Just starting, doing everything myself</div>
+              <div class="quiz-opt" data-value="medium">5-15 — Small team, but ops is getting messy</div>
+              <div class="quiz-opt" data-value="large">15+ — I need systems, not more hires</div>
+            </div>
+          </div>
+          <!-- Q3 -->
+          <div class="quiz-question" data-q="2">
+            <div class="q-text">What's your automation comfort level?</div>
+            <div class="quiz-options">
+              <div class="quiz-opt" data-value="beginner">Never done this — I want something that just works</div>
+              <div class="quiz-opt" data-value="intermediate">Used Zapier/Make before — I can connect and configure</div>
+              <div class="quiz-opt" data-value="advanced">I build my own stuff — show me the most powerful option</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="quiz-result" id="quiz-result">
+          <div class="qr-icon" id="qr-icon">🤖</div>
+          <h4 id="qr-title">Your Recommendation</h4>
+          <p id="qr-desc">Here's the perfect product for you.</p>
+          <div class="qr-product">
+            <div id="qr-product-name">AI Client Concierge System</div>
+            <div class="qr-price" id="qr-product-price">$97</div>
+            <div style="margin-top:12px;">
+              <a id="qr-link" href="https://buy.stripe.com/test_dRm5kwf6e347dVq0LV9Zm06" class="btn btn-primary">Buy Now →</a>
+            </div>
+          </div>
+          <div style="margin-top:12px;">
+            <button class="btn btn-secondary" onclick="resetQuiz()">Take Again</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: Health Check -->
+    <div class="ent-panel" id="panel-health">
+      <div class="ent-card">
+        <h3>🏥 <span class="gold">Agency Health Check</span></h3>
+        <p style="color:#94a3b8;margin-bottom:24px;">Check which of these apply to you. Be honest — this is a safe space.</p>
+        <div class="health-items" id="health-items">
+          <div class="health-item" data-cost="7800">
+            <div class="h-check">✓</div>
+            <div class="h-text">I spend 2+ hours/week manually formatting and sending client reports</div>
+            <div class="h-cost">$7,800/yr</div>
+          </div>
+          <div class="health-item" data-cost="5200">
+            <div class="h-check">✓</div>
+            <div class="h-text">I hand-write welcome emails and onboarding materials for every new client</div>
+            <div class="h-cost">$5,200/yr</div>
+          </div>
+          <div class="health-item" data-cost="3900">
+            <div class="h-check">✓</div>
+            <div class="h-text">I manually follow up on late invoices and payment reminders</div>
+            <div class="h-cost">$3,900/yr</div>
+          </div>
+          <div class="health-item" data-cost="6500">
+            <div class="h-check">✓</div>
+            <div class="h-text">I copy-paste meeting notes into action items for each attendee</div>
+            <div class="h-cost">$6,500/yr</div>
+          </div>
+          <div class="health-item" data-cost="10400">
+            <div class="h-check">✓</div>
+            <div class="h-text">I write RFP/proposal responses from scratch each time</div>
+            <div class="h-cost">$10,400/yr</div>
+          </div>
+          <div class="health-item" data-cost="9100">
+            <div class="h-check">✓</div>
+            <div class="h-text">I spend 3+ hours/week qualifying leads and scheduling discovery calls</div>
+            <div class="h-cost">$9,100/yr</div>
+          </div>
+        </div>
+        <div class="health-score" id="health-score" style="display:none;">
+          <div style="font-size:14px;color:#94a3b8;margin-bottom:8px;">Your agency is leaking</div>
+          <div class="hs-num" id="health-loss">$0</div>
+          <div class="hs-label">per year on manual operations you could automate today</div>
+          <div style="margin-top:16px;">
+            <a href="#products" class="btn btn-primary">Fix These Now →</a>
+          </div>
+          <div style="margin-top:8px;font-size:12px;color:#475569;">
+            <span id="health-items-checked">0</span>/6 items checked
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: Mischief Meter -->
+    <div class="ent-panel" id="panel-meter">
+      <div class="ent-card">
+        <h3>🌡️ The <span class="gold">Mischief Meter</span></h3>
+        <p style="color:#94a3b8;margin-bottom:24px;">How much of your workweek is stolen by manual ops? Adjust the slider and watch the needle move.</p>
+        <div class="meter-wrap">
+          <div class="meter-visual">
+            <canvas id="meter-canvas" width="200" height="200"></canvas>
+          </div>
+          <div class="meter-controls">
+            <div class="mc-label">Hours spent on manual ops per week</div>
+            <input type="range" id="meter-slider" min="5" max="40" value="20" step="1">
+            <div class="meter-value"><span id="meter-display">20</span> hrs/week</div>
+            <div style="margin-top:16px;padding:16px;background:#07070a;border-radius:10px;border:1px solid #1a1a24;">
+              <div style="font-size:13px;color:#64748b;">With Loki's Mischief automations:</div>
+              <div style="font-size:20px;font-weight:700;color:#22c55e;"><span id="meter-saved">15</span> hrs saved/week</div>
+              <div style="font-size:24px;font-weight:800;color:#f59e0b;">$<span id="meter-savings">54,000</span>/yr</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Did You Know Carousel -->
+    <div class="ent-card" style="margin-top:0;">
+      <h3 style="text-align:center;">🎭 <span class="gold">Did You Know?</span></h3>
+      <div class="fact-carousel" id="fact-carousel">
+        <div class="fact-slide active">
+          <div class="fact-icon">📊</div>
+          <div class="fact-text">"The average agency owner spends 21-34 hours per week on manual operations — nearly a full-time job on admin work alone."</div>
+          <div class="fact-source">Source: Hinge Marketing Agency Study, 2024</div>
+        </div>
+        <div class="fact-slide">
+          <div class="fact-icon">💰</div>
+          <div class="fact-text">"Agencies that systematize their operations see 3.2x higher profit margins than those that don't."</div>
+          <div class="fact-source">Source: Hinge Marketing Agency Study, 2024</div>
+        </div>
+        <div class="fact-slide">
+          <div class="fact-icon">🤖</div>
+          <div class="fact-text">"72% of manual agency operations can be automated without any custom development — using existing Make.com and n8n modules."</div>
+          <div class="fact-source">Source: Automation Industry Report, 2025</div>
+        </div>
+        <div class="fact-slide">
+          <div class="fact-icon">⏰</div>
+          <div class="fact-text">"Agencies using pre-built automation workflows reduce client onboarding time by 68% and cut reporting time by 73%."</div>
+          <div class="fact-source">Source: Agency Ops Benchmark Survey, 2025</div>
+        </div>
+        <div class="fact-slide">
+          <div class="fact-icon">🔥</div>
+          <div class="fact-text">"The #1 reason agency owners burn out in year 2? They built a client-facing business but never built the systems behind it."</div>
+          <div class="fact-source">Source: Agency Scaling Report, 2025</div>
+        </div>
+      </div>
+      <div class="fact-nav" id="fact-nav">
+        <button class="active"></button>
+        <button></button>
+        <button></button>
+        <button></button>
+        <button></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Products -->
+<section id="products" class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Ready-Made <span class="gold">Mischief</span></h2>
+      <p class="subtitle">Professional automation workflows. Import. Connect. Profit.</p>
+    </div>
+    <div class="products-grid">
+      <div class="product-card">
+        <div class="p-icon">🤖</div>
+        <h3>AI Client Concierge System</h3>
+        <p>24/7 intake assistant — qualifies leads, schedules calls, sends personalized responses, logs CRM, notifies Slack.</p>
+        <div class="p-badges"><span class="p-badge-make">Make.com</span><span class="p-badge-n8n">n8n</span></div>
+        <div class="p-meta"><span class="p-price">$97</span><span class="p-tag p-tag-premium">Premium</span></div>
+        <div class="p-action"><a href="https://buy.stripe.com/test_dRm5kwf6e347dVq0LV9Zm06">Buy Now →</a></div>
+      </div>
+      <div class="product-card">
+        <div class="p-icon">🚀</div>
+        <h3>Agency Client Onboarding</h3>
+        <p>Webhook → Welcome email → Calendar invite → CRM entry → Slack alert. 5-step automated kickoff.</p>
+        <div class="p-badges"><span class="p-badge-make">Make.com</span><span class="p-badge-n8n">n8n</span></div>
+        <div class="p-meta"><span class="p-price">$39</span><span class="p-tag p-tag-popular">Popular</span></div>
+        <div class="p-action"><a href="https://buy.stripe.com/test_28EaEQcY62034kQ0LV9Zm05">Buy Now →</a></div>
+      </div>
+      <div class="product-card">
+        <div class="p-icon">📊</div>
+        <h3>Monthly Report Builder</h3>
+        <p>Fetch metrics → AI generates narrative → Log to sheets → Email client → Slack team.</p>
+        <div class="p-badges"><span class="p-badge-make">Make.com</span><span class="p-badge-n8n">n8n</span></div>
+        <div class="p-meta"><span class="p-price">$39</span></div>
+        <div class="p-action"><a href="https://buy.stripe.com/test_dRm4gs9LUeMP8B60LV9Zm01">Buy Now →</a></div>
+      </div>
+      <div class="product-card">
+        <div class="p-icon">📝</div>
+        <h3>RFP / RFI Response Drafter</h3>
+        <p>Receive RFP → Knowledge base search → AI draft → Google Doc → Email team → Slack notify.</p>
+        <div class="p-badges"><span class="p-badge-make">Make.com</span><span class="p-badge-n8n">n8n</span></div>
+        <div class="p-meta"><span class="p-price">$39</span></div>
+        <div class="p-action"><a href="https://buy.stripe.com/test_28E00c7DM347g3ybqz9Zm02">Buy Now →</a></div>
+      </div>
+      <div class="product-card">
+        <div class="p-icon">💰</div>
+        <h3>Invoice Dunning &amp; Reminders</h3>
+        <p>Smart branching: 1-3 days gentle → 4-10 days nudge → 11+ final notice + Slack alert.</p>
+        <div class="p-badges"><span class="p-badge-make">Make.com</span><span class="p-badge-n8n">n8n</span></div>
+        <div class="p-meta"><span class="p-price">$39</span></div>
+        <div class="p-action"><a href="https://buy.stripe.com/test_bJe4gs8HQ0VZaJe1PZ9Zm03">Buy Now →</a></div>
+      </div>
+      <div class="product-card">
+        <div class="p-icon">🎯</div>
+        <h3>Meeting-to-Action Tracker</h3>
+        <p>Submit transcript → AI extracts decisions → Sheets log → Emails to attendees → Slack summary.</p>
+        <div class="p-badges"><span class="p-badge-make">Make.com</span><span class="p-badge-n8n">n8n</span></div>
+        <div class="p-meta"><span class="p-price">$39</span></div>
+        <div class="p-action"><a href="https://buy.stripe.com/test_6oU8wI1fo8orcRm52b9Zm04">Buy Now →</a></div>
+      </div>
+    </div>
+    <div class="saga-toggle" style="text-align:center;" onclick="toggleSaga('products-saga')">📖 The Treasures of the Gods</div>
+    <div class="saga-lore" id="products-saga">
+      <div class="saga-title">📖 Loki's Gifts to the Gods</div>
+      <div class="saga-text">When Loki cut off Sif's hair, Thor threatened to break every bone in his body. To make amends, Loki went to the dwarves and commissioned treasures for the gods — each a tool of extraordinary power. The dwarves crafted Odin's spear Gungnir (which never misses its mark), Thor's hammer Mjölnir (which returns when thrown), and Freyr's ship Skíðblaðnir (which folds into a pocket). Each tool was a force multiplier — doing the work of many in the hands of one.</div>
+      <div class="saga-moral">✦ Every automation product here is a force multiplier for your agency. Import it once. It does the work of a whole team.</div>
+    </div>
+  </div>
+</section>
+<section id="playbook" class="section">
+  <div class="container">
+    <div class="playbook-banner">
+      <div class="pb-left">
+        <h3>📖 The <span class="gold">Automation Agency Playbook</span></h3>
+        <p>7 chapters. 50+ pages. The exact blueprint for cutting 10+ hours of ops work every week — written by someone who's actually built and sold these systems.</p>
+        <ul>
+          <li>Why manual ops is destroying your margins</li>
+          <li>Make.com vs n8n — the honest breakdown</li>
+          <li>Step-by-step: build your first automation</li>
+          <li>Pricing &amp; packaging automation services</li>
+          <li>AI integration guide (GPT-4o, Claude)</li>
+        </ul>
+        <a href="/playbook.md" class="btn btn-primary" download>Download Now — $19</a>
+      </div>
+      <div class="pb-right">
+        <div class="price-big">$19</div>
+        <div class="price-label">Instant digital download</div>
+        <div style="margin-top:16px;">
+          <a href="https://blodsson.gumroad.com" class="btn btn-secondary">Follow on Gumroad →</a>
+        </div>
+      </div>
+    </div>
+    <div class="saga-toggle" onclick="toggleSaga('playbook-saga')">📖 The Völuspá: A Prophecy</div>
+    <div class="saga-lore" id="playbook-saga">
+      <div class="saga-title">📖 The Völuspá (The Seeress's Prophecy)</div>
+      <div class="saga-text">The Völuspá is the first and most famous poem of the Poetic Edda — the account of creation, Ragnarök, and rebirth told by a völva (seeress) summoned from the dead by Odin. She tells of how the world was made from Ymir's body, of the first war, of the cunning of Loki's children, and of the inevitable destruction and renewal of all things. It is the playbook for the entire Norse cosmos — a blueprint of cycles, consequences, and eventual rebirth.</div>
+      <div class="saga-moral">✦ This playbook is your agency's Völuspá — a blueprint of what's broken, what's coming, and how to build something stronger from the ashes of manual processes.</div>
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+<section id="about" class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2>About <span class="gold">The Mischief</span></h2>
+      <p class="subtitle">Every automation is built, tested, and shipped by someone who's run agency ops himself.</p>
+    </div>
+    <div class="about-content">
+      <div class="about-text">
+        <h3>Loki Blodsson</h3>
+        <p>Agency automation isn't theory for me — it's what I've done for years. I got tired of rebuilding the same webhooks, emails, and schedules for every client, so I packaged them.</p>
+        <p>Every product here is a real workflow I've used in production. Import it, connect your accounts, and it works. No fluff. No "consulting needed." Just import → configure → done.</p>
+        <p style="color:#f59e0b;font-weight:600;">✦ Loki's Mischief — clever automations for serious agencies.</p>
+      </div>
+      <div class="about-stats">
+        <div class="stat"><div class="num">11</div><div class="label">Workflow Products</div></div>
+        <div class="stat"><div class="num">2</div><div class="label">Platforms (Make + n8n)</div></div>
+        <div class="stat"><div class="num">15</div><div class="label">Minutes to Setup</div></div>
+        <div class="stat"><div class="num">$39</div><div class="label">Starting Price</div></div>
+      </div>
+    </div>
+    <div class="saga-toggle" onclick="toggleSaga('about-saga')">📖 Loki's Children</div>
+    <div class="saga-lore" id="about-saga">
+      <div class="saga-title">📖 The Line of the Trickster</div>
+      <div class="saga-text">Loki fathered four extraordinary children, each with power to reshape worlds. With the giantess Angrboða he fathered three monsters: Fenrir the wolf (who will devour Odin), Jörmungandr the serpent (who encircles Midgard), and Hel (who rules the dead). With the stallion Svaðilfari, Loki transformed into a mare and bore Sleipnir, the eight-legged horse — the fastest creature in all realms, given to Odin. As the Prose Edda says: "Loki is also called the father of monsters, and his children are the greatest of monsters." But in Loki's Mischief, they are forces of liberation — each one a tool to transform your agency.</div>
+      <div class="saga-moral">✦ Loki's children became the most powerful forces in Norse mythology. Your automation systems will do the same for your agency.</div>
+    </div>
+  </div>
+</section>
+<footer>
+  <div class="container">
+    <div class="social">
+      <a href="https://blodsson.gumroad.com">✦ Gumroad</a>
+      <a href="mailto:loki.bein.blodsson@gmail.com">✉️ Email</a>
+      <a href="https://github.com/lokibeinblodsson-ctrl">⌨️ GitHub</a>
+    </div>
+    <p>© 2026 Loki's Mischief. All rights reserved. May contain traces of trickery.</p>
+  </div>
+</footer>
+
+<div class="test-ribbon">⚠ Test Mode — Stripe payment links are in test mode. No real charges processed.</div>
+
+<script>
+// ===== TAB SWITCHING =====
+const tabs = document.querySelectorAll('.ent-tab');
+const panels = {
+  roi: document.getElementById('panel-roi'),
+  quiz: document.getElementById('panel-quiz'),
+  health: document.getElementById('panel-health'),
+  meter: document.getElementById('panel-meter')
+};
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    Object.keys(panels).forEach(k => panels[k].classList.remove('active'));
+    panels[tab.dataset.tab].classList.add('active');
+    if (tab.dataset.tab === 'meter') drawMeter();
+  });
+});
+
+// ===== ROI CALCULATOR =====
+const roiRate = document.getElementById('roi-rate');
+const roiHours = document.getElementById('roi-hours');
+const roiClients = document.getElementById('roi-clients');
+const roiHoursDisplay = document.getElementById('roi-hours-display');
+const roiAnnualCost = document.getElementById('roi-annual-cost');
+const roiSavings = document.getElementById('roi-savings');
+const roiHoursFreed = document.getElementById('roi-hours-freed');
+const roiFinal = document.getElementById('roi-final');
+
+function calcROI() {
+  const rate = parseFloat(roiRate.value) || 150;
+  const hours = parseFloat(roiHours.value) || 20;
+  const clients = parseFloat(roiClients.value) || 10;
+  const weekly = rate * hours;
+  const annual = weekly * 48;
+  const savingsPerClient = Math.round(weekly * 0.75 * 48);
+  const totalSavings = Math.round(savingsPerClient * (1 + clients * 0.1));
+  const freed = Math.round(hours * 0.75);
+  roiHoursDisplay.textContent = hours;
+  roiAnnualCost.textContent = '$' + annual.toLocaleString();
+  roiSavings.textContent = '$' + totalSavings.toLocaleString();
+  roiHoursFreed.textContent = freed;
+  roiFinal.textContent = '$' + totalSavings.toLocaleString();
+}
+
+roiRate.addEventListener('input', calcROI);
+roiHours.addEventListener('input', calcROI);
+roiClients.addEventListener('input', calcROI);
+calcROI();
+
+// ===== QUIZ =====
+const quizData = {
+  concierge: { icon: '🤖', name: 'AI Client Concierge System', price: '$97', desc: '24/7 intake that qualifies, schedules, and communicates for you.', link: 'https://buy.stripe.com/test_dRm5kwf6e347dVq0LV9Zm06' },
+  onboarding: { icon: '🚀', name: 'Agency Client Onboarding Agent', price: '$39', desc: 'Automated 5-step kickoff that runs itself.', link: 'https://buy.stripe.com/test_28EaEQcY62034kQ0LV9Zm05' },
+  reporting: { icon: '📊', name: 'Monthly Report Builder', price: '$39', desc: 'AI-generated client reports in minutes, not hours.', link: 'https://buy.stripe.com/test_dRm4gs9LUeMP8B60LV9Zm01' },
+  rfp: { icon: '📝', name: 'RFP / RFI Response Drafter', price: '$39', desc: 'From RFP to draft in 5 minutes with AI.', link: 'https://buy.stripe.com/test_28E00c7DM347g3ybqz9Zm02' },
+  invoicing: { icon: '💰', name: 'Invoice Dunning & Reminder System', price: '$39', desc: 'Never chase a payment again — automated follow-ups.', link: 'https://buy.stripe.com/test_bJe4gs8HQ0VZaJe1PZ9Zm03' },
+  meeting: { icon: '🎯', name: 'Meeting-to-Action Tracker', price: '$39', desc: 'Transcripts become action items automatically.', link: 'https://buy.stripe.com/test_6oU8wI1fo8orcRm52b9Zm04' }
+};
+
+let quizStep = 0;
+let quizAnswers = [];
+
+document.querySelectorAll('.quiz-opt').forEach(opt => {
+  opt.addEventListener('click', () => {
+    const parent = opt.closest('.quiz-question');
+    parent.querySelectorAll('.quiz-opt').forEach(o => o.classList.remove('selected'));
+    opt.classList.add('selected');
+    
+    const qIdx = parseInt(parent.dataset.q);
+    quizAnswers[qIdx] = opt.dataset.value;
+    
+    // Next question
+    setTimeout(() => {
+      const dots = document.querySelectorAll('.quiz-dot');
+      dots[qIdx].classList.remove('active');
+      dots[qIdx].classList.add('done');
+      
+      if (qIdx < 2) {
+        document.querySelectorAll('.quiz-question').forEach(q => q.classList.remove('active'));
+        document.querySelector(`.quiz-question[data-q="${qIdx+1}"]`).classList.add('active');
+        dots[qIdx+1].classList.add('active');
+      } else {
+        showQuizResult();
+      }
+    }, 300);
+  });
+});
+
+function showQuizResult() {
+  document.getElementById('quiz-area').style.display = 'none';
+  const result = document.getElementById('quiz-result');
+  result.classList.add('active');
+  
+  // Determine recommendation
+  const pain = quizAnswers[0] || 'concierge';
+  const scale = quizAnswers[1] || 'medium';
+  const skill = quizAnswers[2] || 'intermediate';
+  
+  let rec;
+  const painMap = {
+    concierge: 'concierge',
+    onboarding: 'onboarding',
+    reporting: 'reporting',
+    invoicing: 'invoicing'
+  };
+  rec = quizData[painMap[pain] || 'concierge'];
+  if (!rec) rec = quizData.concierge;
+  
+  document.getElementById('qr-icon').textContent = rec.icon;
+  document.getElementById('qr-title').textContent = 'Your Perfect Match: ' + rec.name;
+  document.getElementById('qr-desc').textContent = rec.desc;
+  document.getElementById('qr-product-name').textContent = rec.name;
+  document.getElementById('qr-product-price').textContent = rec.price;
+  document.getElementById('qr-link').href = rec.link;
+}
+
+function resetQuiz() {
+  quizStep = 0;
+  quizAnswers = [];
+  document.querySelectorAll('.quiz-question').forEach(q => q.classList.remove('active'));
+  document.querySelector('.quiz-question[data-q="0"]').classList.add('active');
+  document.querySelectorAll('.quiz-opt').forEach(o => o.classList.remove('selected'));
+  document.querySelectorAll('.quiz-dot').forEach(d => { d.classList.remove('active', 'done'); });
+  document.querySelectorAll('.quiz-dot')[0].classList.add('active');
+  document.getElementById('quiz-area').style.display = 'block';
+  document.getElementById('quiz-result').classList.remove('active');
+}
+
+// ===== HEALTH CHECK =====
+document.querySelectorAll('.health-item').forEach(item => {
+  item.addEventListener('click', () => {
+    item.classList.toggle('checked');
+    updateHealth();
+  });
+});
+
+function updateHealth() {
+  const checked = document.querySelectorAll('.health-item.checked');
+  const score = document.getElementById('health-score');
+  document.getElementById('health-items-checked').textContent = checked.length;
+  
+  if (checked.length > 0) {
+    score.style.display = 'block';
+    let total = 0;
+    checked.forEach(c => { total += parseInt(c.dataset.cost); });
+    document.getElementById('health-loss').textContent = '$' + total.toLocaleString();
+  } else {
+    score.style.display = 'none';
+  }
+}
+
+// ===== MISCHIEF METER (canvas gauge) =====
+const meterSlider = document.getElementById('meter-slider');
+const meterDisplay = document.getElementById('meter-display');
+const meterSaved = document.getElementById('meter-saved');
+const meterSavings = document.getElementById('meter-savings');
+
+function drawMeter() {
+  const canvas = document.getElementById('meter-canvas');
+  const ctx = canvas.getContext('2d');
+  const hours = parseFloat(meterSlider.value) || 20;
+  const w = canvas.width, h = canvas.height;
+  const cx = w/2, cy = h/2, r = 80;
+  
+  ctx.clearRect(0, 0, w, h);
+  
+  // Arc background
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0.75 * Math.PI, 2.25 * Math.PI);
+  ctx.strokeStyle = '#1a1a24';
+  ctx.lineWidth = 20;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+  
+  // Arc value (hours mapped 5-40 → 0.75π to 2.25π)
+  const frac = (hours - 5) / 35;
+  const endAngle = 0.75 * Math.PI + frac * 1.5 * Math.PI;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0.75 * Math.PI, endAngle);
+  
+  // Gradient
+  const grad = ctx.createLinearGradient(0, 0, w, 0);
+  grad.addColorStop(0, '#22c55e');
+  grad.addColorStop(0.5, '#f59e0b');
+  grad.addColorStop(1, '#ef4444');
+  ctx.strokeStyle = grad;
+  ctx.lineWidth = 20;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+  
+  // Center text
+  ctx.fillStyle = '#e4e4e7';
+  ctx.font = 'bold 28px -apple-system, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(hours + 'h', cx, cy - 8);
+  ctx.fillStyle = '#64748b';
+  ctx.font = '12px -apple-system, sans-serif';
+  ctx.fillText('manual ops', cx, cy + 18);
+  
+  // Meter labels
+  ctx.fillStyle = '#475569';
+  ctx.font = '10px -apple-system, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('5h', 15, h - 10);
+  ctx.textAlign = 'right';
+  ctx.fillText('40h', w - 15, h - 10);
+}
+
+meterSlider.addEventListener('input', () => {
+  const hours = parseFloat(meterSlider.value);
+  meterDisplay.textContent = hours;
+  const saved = Math.round(hours * 0.75);
+  meterSaved.textContent = saved;
+  const annual = Math.round(hours * 150 * 48 * 0.75);
+  meterSavings.textContent = annual.toLocaleString();
+  drawMeter();
+});
+
+// Initial draw
+drawMeter();
+
+// ===== FACT CAROUSEL =====
+let factIdx = 0;
+const factSlides = document.querySelectorAll('.fact-slide');
+const factDots = document.querySelectorAll('.fact-nav button');
+
+function showFact(idx) {
+  factSlides.forEach(s => s.classList.remove('active'));
+  factDots.forEach(d => d.classList.remove('active'));
+  factSlides[idx].classList.add('active');
+  factDots[idx].classList.add('active');
+  factIdx = idx;
+}
+
+factDots.forEach((dot, i) => {
+  dot.addEventListener('click', () => showFact(i));
+});
+
+setInterval(() => {
+  showFact((factIdx + 1) % factSlides.length);
+}, 6000);
+
+// ===== SAGA TOGGLES =====
+function toggleSaga(id) {
+  const lore = document.getElementById(id);
+  const btn = lore.previousElementSibling;
+  lore.classList.toggle('active');
+  btn.classList.toggle('active');
+}
+
+// ===== FENRIR — CHAIN STRIKE =====
+const fenrirChainData = [
+  { icon: '📧', name: 'Client Email Flood' },
+  { icon: '📊', name: 'Manual Report Grind' },
+  { icon: '📝', name: 'Proposal Purgatory' },
+  { icon: '💰', name: 'Invoice Chasing Loop' },
+  { icon: '📅', name: 'Scheduling Spiral' },
+  { icon: '🤝', name: 'Lead Qualification Lag' }
+];
+
+let fenrirActive = 0;  // index of active chain
+let fenrirHits = 0;    // total hits
+let fenrirChainHits = [0,0,0,0,0,0]; // hits per chain
+let fenrirAnimID = null;
+let fenrirPendulumPos = 0;
+let fenrirPendulumDir = 1;
+let fenrirGameActive = false;
+let fenrirCombo = 0;
+let fenrirMissStreak = 0;
+let fenrirComboClear = null;
+let fenrirStarted = false;
+
+function fenrirSpeed() {
+  // Speed ramps: early chains slow, later chains faster
+  if (fenrirActive <= 1) return 0.04;
+  if (fenrirActive <= 3) return 0.06;
+  return 0.08;
+}
+
+function initFenrir() {
+  const container = document.getElementById('fenrir-chains');
+  if (!container) return;
+  container.innerHTML = '';
+  fenrirActive = 0;
+  fenrirHits = 0;
+  fenrirChainHits = [0,0,0,0,0,0];
+  fenrirPendulumPos = 0;
+  fenrirPendulumDir = 1;
+  fenrirGameActive = false;
+  fenrirCombo = 0;
+  fenrirMissStreak = 0;
+  document.getElementById('fenrir-hits').textContent = '0';
+  document.getElementById('fenrir-progress').style.width = '0%';
+  document.getElementById('fenrir-combo').textContent = '';
+  document.getElementById('fenrir-freed').classList.remove('active');
+  fenrirFreed = false;
+  document.getElementById('fenrir-status').textContent = 'Press Begin to start!';
+
+  fenrirStarted = false;
+  const startBtn = document.getElementById('fenrir-start-btn');
+  if (startBtn) { startBtn.style.display = ''; }
+
+  fenrirChainData.forEach((c, i) => {
+    const div = document.createElement('div');
+    div.className = 'fenrir-chain' + (i === 0 ? ' active-chain' : '');
+    div.innerHTML =
+      '<span class="fc-icon">' + c.icon + '</span>' +
+      '<span class="fc-name">' + c.name + '</span>' +
+      '<div class="fc-indicator"><div class="fc-pendulum"></div><div class="fc-zone"></div></div>' +
+      '<div class="fc-progress">' +
+        '<div class="fc-dot"></div><div class="fc-dot"></div><div class="fc-dot"></div>' +
+      '</div>';
+    div.addEventListener('click', function(e) { fenrirClick(i); });
+    container.appendChild(div);
+  });
+
+  // DON'T auto-start — wait for start button
+  fenrirStarted = false;
+}
+
+function fenrirStart() {
+  if (fenrirStarted) return;
+  fenrirStarted = true;
+  const btn = document.getElementById('fenrir-start-btn');
+  if (btn) { btn.style.display = 'none'; }
+  fenrirGameActive = true;
+  fenrirTick();
+}
+
+function fenrirTick() {
+  if (!fenrirGameActive) return;
+  // Move pendulum with variable speed based on chain
+  const speed = fenrirSpeed();
+  fenrirPendulumPos += speed * fenrirPendulumDir;
+  if (fenrirPendulumPos > 1) {
+    fenrirPendulumPos = 1;
+    fenrirPendulumDir = -1;
+  } else if (fenrirPendulumPos < 0) {
+    fenrirPendulumPos = 0;
+    fenrirPendulumDir = 1;
+  }
+
+  const container = document.getElementById('fenrir-chains');
+  const activeChain = container.querySelectorAll('.fenrir-chain')[fenrirActive];
+  if (activeChain) {
+    const pendulum = activeChain.querySelector('.fc-pendulum');
+    if (pendulum) {
+      pendulum.style.left = Math.round(fenrirPendulumPos * 66) + 'px';
+    }
+  }
+  fenrirAnimID = requestAnimationFrame(fenrirTick);
+}
+
+function fenrirClick(idx) {
+  if (!fenrirStarted) return;
+  if (idx !== fenrirActive) return;
+  if (fenrirChainHits[idx] >= 3) return;
+  const container = document.getElementById('fenrir-chains');
+  const chain = container.querySelectorAll('.fenrir-chain')[idx];
+  if (!chain || chain.classList.contains('broken')) return;
+
+  // Check pendulum position — green zone matches CSS: left:26px on 66px range (39.4%) to right:26+28=54px (81.8%)
+  const inZone = fenrirPendulumPos >= 0.39 && fenrirPendulumPos <= 0.82;
+  if (!inZone) {
+    // === MISS PENALTY ===
+    // Lose progress on current chain (minimum 0)
+    fenrirCombo = 0;
+    fenrirMissStreak++;
+    document.getElementById('fenrir-combo').textContent = '💥';
+    document.getElementById('fenrir-combo').style.color = '#ef4444';
+    clearTimeout(fenrirComboClear);
+    fenrirComboClear = setTimeout(function() {
+      document.getElementById('fenrir-combo').textContent = '';
+    }, 600);
+
+    if (fenrirChainHits[idx] > 0) {
+      fenrirChainHits[idx]--;
+      fenrirHits--;
+      document.getElementById('fenrir-hits').textContent = fenrirHits;
+      // Update dots
+      const dots = chain.querySelectorAll('.fc-dot');
+      for (let d = 0; d < fenrirChainHits[idx]; d++) {
+        if (dots[d]) dots[d].classList.add('hit');
+      }
+      if (dots[fenrirChainHits[idx]]) dots[fenrirChainHits[idx]].classList.remove('hit');
+    }
+
+    // Miss flash
+    chain.style.borderColor = '#ef4444';
+    chain.style.transform = 'translateX(-4px)';
+    setTimeout(function() {
+      chain.style.borderColor = '';
+      chain.style.transform = '';
+    }, 150);
+
+    document.getElementById('fenrir-status').textContent =
+      '💥 Miss! Pendulum too ' + (fenrirPendulumPos < 0.39 ? 'left' : 'right') + '!';
+    return;
+  }
+
+  // === HIT ===
+  fenrirChainHits[idx]++;
+  fenrirHits++;
+  fenrirCombo++;
+  fenrirMissStreak = 0;
+  document.getElementById('fenrir-hits').textContent = fenrirHits;
+
+  // Combo display
+  if (fenrirCombo >= 3) {
+    document.getElementById('fenrir-combo').textContent = '🔥 COMBO x' + fenrirCombo;
+    document.getElementById('fenrir-combo').style.color = '#f59e0b';
+  } else if (fenrirCombo >= 2) {
+    document.getElementById('fenrir-combo').textContent = '⚡ x' + fenrirCombo;
+    document.getElementById('fenrir-combo').style.color = '#a5b4fc';
+  } else {
+    document.getElementById('fenrir-combo').textContent = '✓';
+    document.getElementById('fenrir-combo').style.color = '#22c55e';
+  }
+  clearTimeout(fenrirComboClear);
+  fenrirComboClear = setTimeout(function() {
+    document.getElementById('fenrir-combo').textContent = '';
+  }, 800);
+
+  // Update dots
+  const dots = chain.querySelectorAll('.fc-dot');
+  for (let d = 0; d < fenrirChainHits[idx]; d++) {
+    if (dots[d]) dots[d].classList.add('hit');
+  }
+
+  // Hit flash
+  chain.style.borderColor = '#22c55e';
+  chain.style.boxShadow = '0 0 20px #22c55e44';
+  setTimeout(function() { chain.style.borderColor = ''; chain.style.boxShadow = ''; }, 250);
+
+  if (fenrirChainHits[idx] >= 3) {
+    // Chain broken!
+    chain.classList.add('broken');
+    chain.classList.remove('active-chain');
+    fenrirActive = -1;
+
+    // Update progress bar (each chain = 16.67%)
+    const pct = Math.round((fenrirHits / 18) * 100);
+    document.getElementById('fenrir-progress').style.width = pct + '%';
+
+    document.getElementById('fenrir-status').textContent =
+      '🔓 ' + fenrirChainData[idx].name + ' — CHAIN BROKEN!';
+
+    // Find next unbroken chain
+    for (let i = 0; i < fenrirChainData.length; i++) {
+      if (fenrirChainHits[i] < 3) {
+        fenrirActive = i;
+        container.querySelectorAll('.fenrir-chain')[i].classList.add('active-chain');
+        break;
+      }
+    }
+
+    if (fenrirActive === -1) {
+      // ALL BROKEN!
+      fenrirGameActive = false;
+      fenrirFreed = true;
+      document.getElementById('fenrir-status').textContent = '🐺✨ ALL CHAINS SHATTERED! Fenrir is free!';
+      document.getElementById('fenrir-progress').style.width = '100%';
+      document.getElementById('fenrir-combo').textContent = '🏆 LIBERATOR!';
+      document.getElementById('fenrir-combo').style.color = '#f59e0b';
+      setTimeout(function() {
+        document.getElementById('fenrir-freed').classList.add('active');
+      }, 800);
+    } else {
+      document.getElementById('fenrir-status').textContent = 'Chain broken! Next binding: ' + fenrirChainData[fenrirActive].name;
+    }
+  } else {
+    document.getElementById('fenrir-status').textContent =
+      '✓ Hit ' + fenrirChainHits[idx] + '/3 — ' + fenrirChainData[idx].name;
+  }
+}
+
+// ===== JÖRMUNGANDR — SERPENT MEMORY =====
+const jormuRunes = ['ᚠ', 'ᚦ', 'ᚨ', 'ᚱ', 'ᚲ', 'ᚷ', 'ᚹ', 'ᚺ'];
+let jormuSequence = [];
+let jormuPlayerIdx = 0;
+let jormuRound = 0;
+let jormuLives = 3;
+let jormuShowing = false;
+let jormuMaxRound = 6;
+let jormuTimer = null;
+let jormuTimeLeft = 12;
+let jormuPlayerTurn = false;
+let jormuStarted = false;
+
+function initJormungandr() {
+  jormuRound = 0;
+  jormuLives = 3;
+  jormuSequence = [];
+  jormuPlayerIdx = 0;
+  jormuShowing = false;
+  jormuPlayerTurn = false;
+  if (jormuTimer) clearInterval(jormuTimer);
+  jormuTimer = null;
+  document.getElementById('jormu-round').textContent = '1';
+  document.getElementById('jormu-progress').style.width = '0%';
+  document.getElementById('jormu-done').classList.remove('active');
+  document.getElementById('jormu-gameover').classList.remove('active');
+  document.getElementById('jormu-status').innerHTML = 'Press <strong>🐍 Begin</strong> when ready...';
+  const startBtn = document.getElementById('jormu-start-btn');
+  if (startBtn) { startBtn.style.display = ''; startBtn.disabled = false; }
+
+  // Reset all runes
+  document.querySelectorAll('.jormu-rune').forEach(function(r) {
+    r.classList.remove('lit', 'wrong', 'done');
+  });
+
+  // Clear lives
+  document.getElementById('jormu-lives').innerHTML =
+    '<span class="lives-dot">❤️</span>'.repeat(3);
+
+  // DON'T auto-start — wait for start button
+  jormuStarted = false;
+}
+
+function jormuStart() {
+  if (jormuStarted) return;
+  jormuStarted = true;
+  const btn = document.getElementById('jormu-start-btn');
+  if (btn) { btn.style.display = 'none'; }
+  jormuNextRound();
+}
+
+function jormuNextRound() {
+  if (jormuRound >= jormuMaxRound) {
+    document.getElementById('jormu-done').classList.add('active');
+    document.getElementById('jormu-status').textContent = '🎉 All runes recalled!';
+    jormuFreed = true;
+    return;
+  }
+
+  jormuRound++;
+  document.getElementById('jormu-round').textContent = jormuRound;
+  document.getElementById('jormu-status').textContent = 'Watch...';
+  jormuPlayerIdx = 0;
+
+  // Update progress bar
+  const jormuPct = Math.round((jormuRound / jormuMaxRound) * 100);
+  document.getElementById('jormu-progress').style.width = jormuPct + '%';
+
+  // Add random rune to sequence
+  jormuSequence.push(Math.floor(Math.random() * 8));
+  jormuShowing = true;
+
+  // Show the sequence
+  let delay = 0;
+  jormuSequence.forEach(function(runeIdx, i) {
+    setTimeout(function() {
+      const runeEl = document.querySelector('.jormu-rune[data-rune="' + runeIdx + '"]');
+      if (runeEl) {
+        runeEl.classList.add('lit');
+        setTimeout(function() {
+          runeEl.classList.remove('lit');
+        }, 400);
+      }
+    }, delay);
+    delay += 600;
+  });
+
+  // Enable clicking after sequence finishes — and start timer
+  setTimeout(function() {
+    jormuShowing = false;
+    jormuPlayerTurn = true;
+    document.getElementById('jormu-status').textContent = 'Your turn! Repeat the sequence.';
+
+    // Start recall timer: decreases per round (12s → 10s → 8s → 6s)
+    if (jormuTimer) clearInterval(jormuTimer);
+    jormuTimeLeft = Math.max(6, 14 - jormuRound * 1.3);
+    document.getElementById('jormu-timer-fill').style.width = '100%';
+    document.getElementById('jormu-timer-fill').className = 'hel-timer-fill';
+    jormuTimer = setInterval(function() {
+      jormuTimeLeft -= 0.1;
+      if (!jormuPlayerTurn) return;
+      const pct = Math.max(0, (jormuTimeLeft / jormuTimeLeft) * 100); // starting from 100
+      document.getElementById('jormu-timer-fill').style.width = Math.max(0, (jormuTimeLeft / Math.max(6, 14 - jormuRound * 1.3)) * 100) + '%';
+      document.getElementById('jormu-timer-fill').className =
+        'hel-timer-fill' + (jormuTimeLeft < 3 ? ' danger' : jormuTimeLeft < 6 ? ' warning' : '');
+      if (jormuTimeLeft <= 0) {
+        clearInterval(jormuTimer);
+        // Time's up — lose a life
+        jormuLives--;
+        const livesHtml = [];
+        for (let i = 0; i < jormuLives; i++) livesHtml.push('<span class="lives-dot">❤️</span>');
+        for (let i = jormuLives; i < 3; i++) livesHtml.push('<span class="lives-dot" style="opacity:0.3">🖤</span>');
+        document.getElementById('jormu-lives').innerHTML = livesHtml.join('');
+        if (jormuLives <= 0) {
+          jormuShowing = true;
+          document.getElementById('jormu-gameover').classList.add('active');
+          document.getElementById('jormu-status').textContent = '⏰ Time ran out... The Serpent closed in.';
+        } else {
+          document.getElementById('jormu-status').textContent = '⏰ Time\'s up! Try this round again.';
+          jormuPlayerIdx = 0;
+          jormuPlayerTurn = false;
+          setTimeout(function() {
+            let delay = 0;
+            jormuSequence.forEach(function(ri) {
+              setTimeout(function() {
+                const re = document.querySelector('.jormu-rune[data-rune="' + ri + '"]');
+                if (re) { re.classList.add('lit'); setTimeout(function() { re.classList.remove('lit'); }, 400); }
+              }, delay);
+              delay += 600;
+            });
+            setTimeout(function() {
+              jormuShowing = false;
+              jormuPlayerTurn = true;
+              document.getElementById('jormu-status').textContent = 'Try again! Repeat the sequence.';
+            }, delay + 100);
+          }, 500);
+        }
+      }
+    }, 100);
+  }, delay + 100);
+}
+
+// Click handler for runes
+document.querySelectorAll('.jormu-rune').forEach(function(rune) {
+  rune.addEventListener('click', function() {
+    if (!jormuStarted || jormuShowing) return;
+    const runeIdx = parseInt(rune.dataset.rune);
+    const expectedIdx = jormuSequence[jormuPlayerIdx];
+
+    if (runeIdx === expectedIdx) {
+      // Correct!
+      rune.classList.add('lit');
+      setTimeout(function() { rune.classList.remove('lit'); }, 300);
+      jormuPlayerIdx++;
+
+      if (jormuPlayerIdx >= jormuSequence.length) {
+        // Round complete!
+        rune.classList.add('done');
+        jormuPlayerTurn = false;
+        if (jormuTimer) clearInterval(jormuTimer);
+        document.getElementById('jormu-status').textContent = 'Round ' + jormuRound + ' complete! ✨';
+        setTimeout(jormuNextRound, 600);
+      }
+    } else {
+      // Wrong!
+      rune.classList.add('wrong');
+      setTimeout(function() { rune.classList.remove('wrong'); }, 400);
+      jormuLives--;
+
+      // Update lives display
+      const livesHtml = [];
+      for (let i = 0; i < jormuLives; i++) livesHtml.push('<span class="lives-dot">❤️</span>');
+      for (let i = jormuLives; i < 3; i++) livesHtml.push('<span class="lives-dot" style="opacity:0.3">🖤</span>');
+      document.getElementById('jormu-lives').innerHTML = livesHtml.join('');
+
+      if (jormuLives <= 0) {
+        jormuShowing = true;
+        document.getElementById('jormu-gameover').classList.add('active');
+        document.getElementById('jormu-status').textContent = '💀 The Serpent closed in...';
+      } else {
+        // Restart current round
+        jormuPlayerIdx = 0;
+        document.getElementById('jormu-status').textContent = 'Wrong! Try this round again.';
+        jormuShowing = true;
+        setTimeout(function() {
+          // Replay the sequence
+          let delay = 0;
+          jormuSequence.forEach(function(ri) {
+            setTimeout(function() {
+              const re = document.querySelector('.jormu-rune[data-rune="' + ri + '"]');
+              if (re) { re.classList.add('lit'); setTimeout(function() { re.classList.remove('lit'); }, 400); }
+            }, delay);
+            delay += 600;
+          });
+          setTimeout(function() {
+            jormuShowing = false;
+            document.getElementById('jormu-status').textContent = 'Your turn! Repeat the sequence.';
+          }, delay + 100);
+        }, 500);
+      }
+    }
+  });
+});
+
+// ===== HEL — SOUL SORTING =====
+const helSouls = [
+  { icon: '📧', desc: 'Client onboarding emails — welcome sequences, credential setup, intro calls', answer: 'auto', explain: 'Repetitive, template-based, rule-driven. Perfect for automation.', difficulty: 'easy' },
+  { icon: '📊', desc: 'Monthly performance report with custom analysis and strategic recommendations', answer: 'manual', explain: 'Requires human judgment, context, and strategic thinking. Keep it human.', difficulty: 'easy' },
+  { icon: '🤖', desc: 'Lead qualification — score inbound leads and route to the right pipeline', answer: 'auto', explain: 'Rules-based scoring is exactly what automation handles best. Fast and consistent.', difficulty: 'easy' },
+  { icon: '💰', desc: 'Invoice reminders for overdue payments — dunning sequence', answer: 'auto', explain: 'Standardized process with clear triggers and templates. Automate it.', difficulty: 'medium' },
+  { icon: '📝', desc: 'RFP response — ingest RFP and generate first draft from templates', answer: 'auto', explain: 'Drafting from templates is automatable — but the final review is always human.', difficulty: 'medium' },
+  { icon: '📅', desc: 'Meeting scheduling — find mutual availability, send invites, add to CRM', answer: 'auto', explain: 'Rule-based coordination with no creative judgment needed. Pure automation territory.', difficulty: 'medium' },
+  { icon: '🎨', desc: 'Creative brief review — requires client strategy understanding and subjective feedback', answer: 'manual', explain: 'Subjective, contextual, relationship-based. A human must own this.', difficulty: 'medium' },
+  { icon: '🤝', desc: 'Difficult client negotiation on contract terms and scope changes', answer: 'manual', explain: 'High-stakes, emotional, strategic. Never automate the human relationship layer.', difficulty: 'medium' },
+  { icon: '💡', desc: 'Strategic planning session — brainstorming quarterly growth initiatives', answer: 'manual', explain: 'Creative thinking and group dynamics cannot be scripted. Keep it human.', difficulty: 'hard' },
+  { icon: '🧠', desc: 'Exit interview with a departing team member — sensitive conversation', answer: 'manual', explain: 'Emotional intelligence, empathy, and trust are uniquely human. Never automate this.', difficulty: 'hard' }
+];
+
+let helScore = 0;
+let helSoulIdx = 0;
+let helLives = 3;
+let helTimer = null;
+let helTimeLeft = 5;
+let helActive = false;
+let helStreak = 0;
+let helMaxStreak = 0;
+let helStarted = false;
+
+function initHel() {
+  helScore = 0;
+  helSoulIdx = 0;
+  helLives = 3;
+  helActive = true;
+
+  // Shuffle souls
+  helSouls.sort(function() { return Math.random() - 0.5; });
+
+  helStreak = 0;
+  helMaxStreak = 0;
+  document.getElementById('hel-streak').textContent = '';
+  document.getElementById('hel-score').textContent = '0';
+  document.getElementById('hel-count').textContent = '0';
+  document.getElementById('hel-progress').style.width = '0%';
+  document.getElementById('hel-done').classList.remove('active');
+  document.getElementById('hel-gameover').classList.remove('active');
+  document.getElementById('hel-lives').innerHTML =
+    '<span class="lives-dot">❤️</span>'.repeat(3);
+  document.getElementById('hel-btn-auto').disabled = false;
+  document.getElementById('hel-btn-manual').disabled = false;
+  document.getElementById('hel-btn-auto').style.opacity = '1';
+  document.getElementById('hel-btn-manual').style.opacity = '1';
+
+  // Reset to start screen
+  document.getElementById('hel-desc').textContent = 'Press ⚖️ Begin Judgment when ready...';
+  document.getElementById('hel-buttons').style.display = 'none';
+  document.getElementById('hel-soul').style.display = 'none';
+  helStarted = false;
+  const startBtn = document.getElementById('hel-start-btn');
+  if (startBtn) { startBtn.style.display = ''; }
+
+  // DON'T auto-start — wait for start button
+  // showNextHelSoul();
+}
+
+function helStart() {
+  if (helStarted) return;
+  helStarted = true;
+  const btn = document.getElementById('hel-start-btn');
+  if (btn) { btn.style.display = 'none'; }
+  document.getElementById('hel-soul').style.display = '';
+  document.getElementById('hel-buttons').style.display = '';
+  showNextHelSoul();
+}
+
+function showNextHelSoul() {
+  if (!helActive) return;
+
+  if (helSoulIdx >= helSouls.length) {
+    // Game complete
+    helActive = false;
+    helFreed = true;
+    document.getElementById('hel-done').classList.add('active');
+    document.getElementById('hel-final-score').textContent = helScore + '/10';
+    const ratings = ['💀 Hel is disappointed...', '⚖️ Mediocre judgment', '🔮 Passing grade', '⚖️ Honorable judgment', '👑 Master of the Realms!'];
+    const ratingIdx = Math.min(4, Math.floor(helScore / 2.5));
+    document.getElementById('hel-rating').textContent = ratings[ratingIdx];
+    return;
+  }
+
+  const soul = helSouls[helSoulIdx];
+  document.getElementById('hel-soul').textContent = soul.icon;
+  document.getElementById('hel-soul').className = 'hel-soul';
+  document.getElementById('hel-desc').textContent = soul.desc;
+  document.getElementById('hel-count').textContent = helSoulIdx + 1;
+
+  // Start timer
+  helTimeLeft = 5;
+  document.getElementById('hel-timer-fill').style.width = '100%';
+  document.getElementById('hel-timer-fill').className = 'hel-timer-fill';
+
+  if (helTimer) clearInterval(helTimer);
+  helTimer = setInterval(function() {
+    helTimeLeft -= 0.1;
+    const pct = (helTimeLeft / 5) * 100;
+    document.getElementById('hel-timer-fill').style.width = Math.max(0, pct) + '%';
+    document.getElementById('hel-timer-fill').className =
+      'hel-timer-fill' +
+      (helTimeLeft < 1.5 ? ' danger' : helTimeLeft < 3 ? ' warning' : '');
+
+    if (helTimeLeft <= 0) {
+      clearInterval(helTimer);
+      // Time's up — count as wrong
+      helSort('timeout');
+    }
+  }, 100);
+}
+
+function showHelFeedback(msg, type) {
+  const el = document.getElementById('hel-feedback');
+  if (!el) return;
+  el.textContent = msg;
+  el.className = 'hel-feedback' + (type ? ' ' + type : '');
+  clearTimeout(el._hide);
+  el._hide = setTimeout(function() { el.className = 'hel-feedback'; el.textContent = ''; }, 2500);
+}
+
+function helSort(choice) {
+  if (!helActive) return;
+  if (helTimer) clearInterval(helTimer);
+
+  const soul = helSouls[helSoulIdx];
+  const correct = soul.answer === choice;
+  const soulEl = document.getElementById('hel-soul');
+
+  if (correct) {
+    helScore++;
+    helStreak++;
+    if (helStreak > helMaxStreak) helMaxStreak = helStreak;
+    document.getElementById('hel-score').textContent = helScore;
+    soulEl.className = 'hel-soul correct';
+    // Streak display
+    if (helStreak >= 3) {
+      document.getElementById('hel-streak').textContent = '🔥 ' + helStreak + ' streak!';
+    } else if (helStreak >= 2) {
+      document.getElementById('hel-streak').textContent = '⚡ x' + helStreak;
+    } else {
+      document.getElementById('hel-streak').textContent = '✓';
+    }
+    // Show explanation
+    showHelFeedback('✅ Correct! ' + soul.explain, 'correct');
+  } else {
+    helStreak = 0;
+    document.getElementById('hel-streak').textContent = '';
+    showHelFeedback('❌ Wrong. ' + soul.explain, 'wrong');
+    helLives--;
+    soulEl.className = 'hel-soul wrong';
+
+    // Update lives
+    const livesHtml = [];
+    for (let i = 0; i < helLives; i++) livesHtml.push('<span class="lives-dot">❤️</span>');
+    for (let i = helLives; i < 3; i++) livesHtml.push('<span class="lives-dot" style="opacity:0.3">🖤</span>');
+    document.getElementById('hel-lives').innerHTML = livesHtml.join('');
+
+    if (helLives <= 0) {
+      helActive = false;
+      document.getElementById('hel-gameover').classList.add('active');
+      return;
+    }
+  }
+
+  // Disable buttons briefly
+  document.getElementById('hel-btn-auto').disabled = true;
+  document.getElementById('hel-btn-manual').disabled = true;
+
+  setTimeout(function() {
+    helSoulIdx++;
+    document.getElementById('hel-btn-auto').disabled = false;
+    document.getElementById('hel-btn-manual').disabled = false;
+    // Clear feedback
+    document.getElementById('hel-feedback').className = 'hel-feedback';
+    document.getElementById('hel-feedback').textContent = '';
+    // Update progress bar
+    const helPct = Math.round((helSoulIdx / helSouls.length) * 100);
+    document.getElementById('hel-progress').style.width = helPct + '%';
+    showNextHelSoul();
+  }, correct ? 500 : 800);
+}
+
+// ===== SLEIPNIR — EIGHT-LEGGED SPRINT =====
+let sleipnirCurrentLane = 2;
+let sleipnirDistance = 0;
+let sleipnirLives = 3;
+let sleipnirCoins = 0;
+let sleipnirRunning = false;
+let sleipnirGameLoop = null;
+let sleipnirSpawner = null;
+let sleipnirSpeed = 1200; // ms between obstacles
+let sleipnirNextMilestone = 50;
+let sleipnirSpawnTimerId = null;
+
+function sleipnirUpdateSpeedMeter() {
+  const el = document.getElementById('sleipnir-speed');
+  if (!el) return;
+  const icon = el.querySelector('.s-speed-icon');
+  if (!icon) return;
+  icon.className = 's-speed-icon';
+  if (sleipnirSpeed <= 600) { icon.textContent = '🐇'; icon.classList.add('blitz'); }
+  else if (sleipnirSpeed <= 800) { icon.textContent = '🐎'; icon.classList.add('gallop'); }
+  else if (sleipnirSpeed <= 1000) { icon.textContent = '🐎'; icon.classList.add('canter'); }
+  else { icon.textContent = '🐢'; }
+}
+
+function sleipnirUpdateSpawner() {
+  if (sleipnirSpawner) clearInterval(sleipnirSpawner);
+  if (!sleipnirRunning) return;
+  // Double obstacles at high speed
+  if (sleipnirSpeed <= 600 && Math.random() < 0.4) {
+    sleipnirSpawnObstacle();
+  }
+  sleipnirSpawner = setInterval(function() {
+    sleipnirSpawnObstacle();
+    if (sleipnirSpeed <= 600 && Math.random() < 0.3) {
+      setTimeout(function() { sleipnirSpawnObstacle(); }, 100);
+    }
+  }, sleipnirSpeed);
+}
+
+function sleipnirShowMilestone() {
+  const el = document.getElementById('sleipnir-milestone');
+  if (!el) return;
+  const msgs = {
+    50: ['50m', 'Halfway to Asgard!'],
+    100: ['100m', 'Sleipnir runs on water!'],
+    150: ['150m', 'The Bifröst shimmers ahead!'],
+    200: ['200m', 'Odin waits at the finish!']
+  };
+  const msg = msgs[sleipnirNextMilestone] || [sleipnirNextMilestone + 'm', 'Eight legs never tire!'];
+  el.innerHTML = '<div>' + msg[0] + '</div><span class="milestone-sub">' + msg[1] + '</span>';
+  el.className = 'sleipnir-milestone';
+  // Force reflow for animation
+  void el.offsetWidth;
+  el.classList.add('pop');
+  clearTimeout(el._hide);
+  el._hide = setTimeout(function() {
+    el.classList.remove('pop');
+  }, 1800);
+  sleipnirNextMilestone += 50;
+}
+
+function sleipnirStart() {
+  if (sleipnirRunning) return;
+  sleipnirCurrentLane = 2;
+  sleipnirDistance = 0;
+  sleipnirLives = 3;
+  sleipnirCoins = 0;
+  sleipnirSpeed = 1200;
+  sleipnirNextMilestone = 50;
+  sleipnirRunning = true;
+
+  document.getElementById('sleipnir-distance').textContent = '0';
+  document.getElementById('sleipnir-coins').textContent = '0';
+  document.getElementById('sleipnir-done').classList.remove('active');
+  document.getElementById('sleipnir-gameover').classList.remove('active');
+  document.getElementById('sleipnir-start-btn').textContent = '🏃 Running...';
+  document.getElementById('sleipnir-start-btn').disabled = true;
+  document.getElementById('sleipnir-lives').innerHTML =
+    '<span class="lives-dot">❤️</span>'.repeat(3);
+  // Add racing class to track for road animation
+  document.getElementById('sleipnir-track').classList.add('racing');
+  sleipnirUpdateSpeedMeter();
+
+  // Clear obstacles from previous runs
+  document.querySelectorAll('.sleipnir-obstacle, .sleipnir-coin').forEach(function(el) {
+    el.remove();
+  });
+
+  // Show runner in lane 2
+  document.querySelectorAll('.sleipnir-lane').forEach(function(l) { l.classList.remove('active-lane'); });
+  document.querySelector('.sleipnir-lane[data-lane="2"]').classList.add('active-lane');
+  document.querySelectorAll('.sleipnir-runner').forEach(function(r) {
+    r.style.display = 'none';
+    r.classList.remove('wreck');
+  });
+  document.getElementById('sleipnir-runner-2').style.display = '';
+
+  // Game loop — increment distance
+  sleipnirGameLoop = setInterval(function() {
+    sleipnirDistance++;
+    document.getElementById('sleipnir-distance').textContent = sleipnirDistance;
+
+    // Milestone check
+    if (sleipnirDistance >= sleipnirNextMilestone) {
+      sleipnirShowMilestone();
+    }
+
+    // Win condition — reached Asgard!
+    if (sleipnirDistance >= 250 && sleipnirRunning) {
+      sleipnirRunning = false;
+      if (sleipnirGameLoop) clearInterval(sleipnirGameLoop);
+      if (sleipnirSpawner) clearInterval(sleipnirSpawner);
+      sleipnirFreed = true;
+      document.getElementById('sleipnir-status').textContent = '🏆 Odin greets you! Sleipnir is free!';
+      document.getElementById('sleipnir-done').classList.add('active');
+      document.getElementById('sleipnir-final-distance').textContent = sleipnirDistance + 'm — Asgard reached! ✨';
+      return;
+    }
+
+    // Speed up every 15m
+    if (sleipnirDistance % 15 === 0 && sleipnirSpeed > 400) {
+      sleipnirSpeed -= 50;
+      sleipnirUpdateSpeedMeter();
+      // Update spawner with new speed
+      if (sleipnirRunning) {
+        if (sleipnirSpawner) clearInterval(sleipnirSpawner);
+        sleipnirSpawner = setInterval(function() {
+          sleipnirSpawnObstacle();
+          if (sleipnirSpeed <= 600 && Math.random() < 0.3) {
+            setTimeout(function() { sleipnirSpawnObstacle(); }, 100);
+          }
+        }, sleipnirSpeed);
+      }
+    }
+  }, 100);
+
+  // Spawn obstacles
+  sleipnirSpawnObstacle();
+  sleipnirSpawner = setInterval(function() {
+    sleipnirSpawnObstacle();
+  }, sleipnirSpeed);
+}
+
+function sleipnirSpawnObstacle() {
+  if (!sleipnirRunning) return;
+  const lane = Math.floor(Math.random() * 4) + 1;
+  const laneEl = document.querySelector('.sleipnir-lane[data-lane="' + lane + '"]');
+  if (!laneEl) return;
+
+  // Random obstacle or coin
+  const isCoin = Math.random() < 0.25;
+  const el = document.createElement('span');
+  el.className = isCoin ? 'sleipnir-coin' : 'sleipnir-obstacle';
+  if (sleipnirSpeed < 600) el.classList.add('fast');
+  el.textContent = isCoin ? '🪙' : '🌲';
+
+  laneEl.appendChild(el);
+
+  // Check if it hits the runner — timing matches obstacle animation duration
+  const hitCheckDelay = el.classList.contains('fast') ? 350 : 600; // midpoint of animation (700ms fast / 1200ms normal)
+  setTimeout(function() {
+    if (!sleipnirRunning) { el.remove(); return; }
+    if (lane === sleipnirCurrentLane) {
+      if (isCoin) {
+        // Bonus score + coin tracking
+        sleipnirDistance += 5;
+        sleipnirCoins++;
+        document.getElementById('sleipnir-distance').textContent = sleipnirDistance;
+        document.getElementById('sleipnir-coins').textContent = sleipnirCoins;
+        el.textContent = '✨';
+
+        // Life-up every 10 coins
+        if (sleipnirCoins % 10 === 0 && sleipnirLives < 5) {
+          sleipnirLives++;
+          const livesHtml = [];
+          for (let i = 0; i < sleipnirLives; i++) livesHtml.push('<span class="lives-dot">❤️</span>');
+          document.getElementById('sleipnir-lives').innerHTML = livesHtml.join('');
+          // Visual feedback
+          document.getElementById('sleipnir-track').style.boxShadow = '0 0 30px #22c55e';
+          setTimeout(function() { document.getElementById('sleipnir-track').style.boxShadow = ''; }, 400);
+        }
+      } else {
+        // Hit!
+        sleipnirLives--;
+        const runnerEl = document.getElementById('sleipnir-runner-' + sleipnirCurrentLane);
+        if (runnerEl) runnerEl.classList.add('wreck');
+
+        // Update lives
+        const livesHtml = [];
+        for (let i = 0; i < sleipnirLives; i++) livesHtml.push('<span class="lives-dot">❤️</span>');
+        for (let i = sleipnirLives; i < 3; i++) livesHtml.push('<span class="lives-dot" style="opacity:0.3">🖤</span>');
+        document.getElementById('sleipnir-lives').innerHTML = livesHtml.join('');
+
+        if (sleipnirLives <= 0) {
+          // Game over
+          sleipnirEnd(false);
+        }
+      }
+    }
+    el.remove();
+  }, hitCheckDelay);
+}
+
+function sleipnirLane(target) {
+  if (!sleipnirRunning) return;
+  if (target === sleipnirCurrentLane) return;
+
+  // Hide old runner, show new one
+  document.getElementById('sleipnir-runner-' + sleipnirCurrentLane).style.display = 'none';
+  sleipnirCurrentLane = target;
+  document.getElementById('sleipnir-runner-' + sleipnirCurrentLane).style.display = '';
+
+  // Update active lane highlight
+  document.querySelectorAll('.sleipnir-lane').forEach(function(l) { l.classList.remove('active-lane'); });
+  document.querySelector('.sleipnir-lane[data-lane="' + target + '"]').classList.add('active-lane');
+
+  // Reset wreck animation
+  document.querySelectorAll('.sleipnir-runner').forEach(function(r) { r.classList.remove('wreck'); });
+}
+
+function sleipnirEnd(won) {
+  sleipnirRunning = false;
+  if (sleipnirGameLoop) clearInterval(sleipnirGameLoop);
+  if (sleipnirSpawner) clearInterval(sleipnirSpawner);
+  document.getElementById('sleipnir-track').classList.remove('racing');
+
+  document.getElementById('sleipnir-start-btn').textContent = '🏁 Start Sprint';
+  document.getElementById('sleipnir-start-btn').disabled = false;
+
+  const extraInfo = ' | 🪙' + sleipnirCoins + ' coins collected';
+  if (won) {
+    document.getElementById('sleipnir-done').classList.add('active');
+    document.getElementById('sleipnir-final-distance').textContent = sleipnirDistance + 'm' + extraInfo;
+  } else {
+    document.getElementById('sleipnir-gameover').classList.add('active');
+    document.getElementById('sleipnir-gameover-distance').textContent = sleipnirDistance + 'm' + extraInfo;
+  }
+}
+
+function sleipnirReset() {
+  document.getElementById('sleipnir-gameover').classList.remove('active');
+  document.getElementById('sleipnir-done').classList.remove('active');
+  document.getElementById('sleipnir-start-btn').textContent = '🏁 Start Sprint';
+  document.getElementById('sleipnir-start-btn').disabled = false;
+  sleipnirRunning = false;
+}
+
+// ===== CANVAS CHARACTER ENGINE =====
+// High-quality canvas-drawn character portraits with full animation
+
+let canvasAnimId = null;
+let canvasTick = 0;
+const canvasPortraits = {};
+
+// Freed/win state for each character (passed to draw functions)
+let fenrirFreed = false;
+let jormuFreed = false;
+let helFreed = false;
+let sleipnirFreed = false;
+
+function initCharCanvas(id, drawFn) {
+  const c = document.getElementById(id);
+  if (!c) return null;
+  const ctx = c.getContext('2d');
+  return { canvas: c, ctx, drawFn, tick: 0 };
+}
+
+function startCanvasAnim() {
+  if (canvasAnimId) return;
+  function loop() {
+    canvasTick++;
+    // Draw all visible canvases
+    Object.values(canvasPortraits).forEach(p => {
+      if (p.canvas && p.canvas.offsetParent !== null) {
+        p.ctx.clearRect(0, 0, 140, 140);
+        p.tick++;
+        // Determine freed state per character
+        const id = p.canvas.id;
+        let freed = false;
+        if (id === 'canvas-fenrir') freed = fenrirFreed;
+        else if (id === 'canvas-jormu') freed = jormuFreed;
+        else if (id === 'canvas-hel') freed = helFreed;
+        else if (id === 'canvas-sleipnir') freed = sleipnirFreed;
+        p.drawFn(p.ctx, 140, 140, p.tick, freed);
+      }
+    });
+    canvasAnimId = requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+function stopCanvasAnim() {
+  if (canvasAnimId) {
+    cancelAnimationFrame(canvasAnimId);
+    canvasAnimId = null;
+  }
+}
+
+// --- FENRIR: The Great Wolf ---
+function drawFenrir(ctx, w, h, t, freed) {
+  const cx = w/2, cy = h/2;
+  
+  // Background cave scene
+  const bg = ctx.createRadialGradient(cx-10, cy-20, 0, cx, cy, 75);
+  bg.addColorStop(0, freed ? '#145A32' : '#1E1B2E');
+  bg.addColorStop(0.5, freed ? '#0D2818' : '#0F0D1A');
+  bg.addColorStop(1, '#000000');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, w, h);
+  
+  // Blood moon
+  const moonColor = freed ? '#22C55E' : '#DC2626';
+  const moonAura = ctx.createRadialGradient(cx, cy-24, 0, cx, cy-24, 22);
+  moonAura.addColorStop(0, freed ? '#22C55E44' : '#DC262644');
+  moonAura.addColorStop(0.5, freed ? '#22C55E22' : '#7F1D1D22');
+  moonAura.addColorStop(1, 'transparent');
+  ctx.fillStyle = moonAura;
+  ctx.beginPath(); ctx.arc(cx, cy-24, 22, 0, Math.PI*2); ctx.fill();
+  
+  ctx.beginPath(); ctx.arc(cx, cy-24, 10, 0, Math.PI*2);
+  ctx.fillStyle = freed ? '#22C55E66' : '#DC262666';
+  ctx.fill();
+  ctx.beginPath(); ctx.arc(cx-3, cy-27, 4, 0, Math.PI*2);
+  ctx.fillStyle = freed ? '#4ADE8066' : '#EF444466';
+  ctx.fill();
+  
+  // Inner ear glow
+  ctx.beginPath(); ctx.ellipse(cx-24, cy-36, 6, 4, -0.3, 0, Math.PI*2);
+  ctx.fillStyle = '#63444466'; ctx.fill();
+  ctx.beginPath(); ctx.ellipse(cx+24, cy-36, 6, 4, 0.3, 0, Math.PI*2);
+  ctx.fillStyle = '#63444466'; ctx.fill();
+  
+  // Ears - left
+  ctx.beginPath();
+  ctx.moveTo(cx-22, cy-14); ctx.lineTo(cx-36, cy-44); ctx.lineTo(cx-10, cy-22); ctx.closePath();
+  const earGradL = ctx.createLinearGradient(cx-30, cy-40, cx-15, cy-20);
+  earGradL.addColorStop(0, '#4A5565'); earGradL.addColorStop(1, '#1F2937');
+  ctx.fillStyle = earGradL; ctx.fill();
+  ctx.strokeStyle = '#374151'; ctx.lineWidth = 1; ctx.stroke();
+  
+  // Ears - right
+  ctx.beginPath();
+  ctx.moveTo(cx+22, cy-14); ctx.lineTo(cx+36, cy-44); ctx.lineTo(cx+10, cy-22); ctx.closePath();
+  const earGradR = ctx.createLinearGradient(cx+30, cy-40, cx+15, cy-20);
+  earGradR.addColorStop(0, '#4A5565'); earGradR.addColorStop(1, '#1F2937');
+  ctx.fillStyle = earGradR; ctx.fill();
+  ctx.strokeStyle = '#374151'; ctx.lineWidth = 1; ctx.stroke();
+  
+  // Fur tufts on cheeks
+  for (let side = -1; side <= 1; side += 2) {
+    for (let i = 0; i < 4; i++) {
+      const fx = cx + side * (32 + i*4);
+      const fy = cy + 4 + i*6;
+      ctx.beginPath();
+      ctx.moveTo(fx, fy); ctx.lineTo(fx + side*6, fy+2); ctx.lineTo(fx - side*2, fy+5);
+      ctx.closePath();
+      ctx.fillStyle = '#1F2937'; ctx.fill();
+    }
+  }
+  
+  // Head
+  ctx.beginPath();
+  ctx.ellipse(cx, cy+4, 36, 30, 0, 0, Math.PI*2);
+  const headGrad = ctx.createRadialGradient(cx-5, cy-5, 0, cx, cy, 32);
+  headGrad.addColorStop(0, '#3A3A4E'); headGrad.addColorStop(0.6, '#2A2A3E'); headGrad.addColorStop(1, '#151520');
+  ctx.fillStyle = headGrad; ctx.fill();
+  ctx.strokeStyle = '#374151'; ctx.lineWidth = 1; ctx.stroke();
+  
+  // Fur texture lines
+  ctx.strokeStyle = 'rgba(255,255,255,0.03)'; ctx.lineWidth = 1;
+  for (let i = 0; i < 8; i++) {
+    const angle = -1 + i * 0.3;
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(angle)*5, cy-20 + Math.sin(angle)*8);
+    ctx.lineTo(cx + Math.cos(angle)*22, cy-16 + Math.sin(angle)*10);
+    ctx.stroke();
+  }
+  
+  // Eyes - glowing
+  const eyeColor = freed ? '#22C55E' : '#EF4444';
+  const eyeBright = freed ? '#4ADE80' : '#FF6B35';
+  const glowSize = 16 + Math.sin(t*0.04)*4;
+  
+  [-1, 1].forEach(side => {
+    const ex = cx + side * 12;
+    const ey = cy - 2;
+    const angle = Math.sin(t*0.03 + side) * 0.1;
+    
+    // Outer glow
+    ctx.shadowBlur = glowSize;
+    ctx.shadowColor = eyeColor;
+    ctx.beginPath();
+    ctx.ellipse(ex, ey, 8 + Math.sin(t*0.05)*0.5, 7, angle, 0, Math.PI*2);
+    ctx.fillStyle = eyeColor + '88'; ctx.fill();
+    ctx.shadowBlur = 0;
+    
+    // Eye white base  
+    ctx.beginPath();
+    ctx.ellipse(ex, ey, 6, 5.5, angle, 0, Math.PI*2);
+    ctx.fillStyle = '#FFFFFF22'; ctx.fill();
+    
+    // Iris
+    ctx.beginPath();
+    ctx.ellipse(ex, ey, 5, 4.5, angle, 0, Math.PI*2);
+    const iris = ctx.createRadialGradient(ex, ey, 0, ex, ey, 5);
+    iris.addColorStop(0, eyeBright); iris.addColorStop(1, eyeColor);
+    ctx.fillStyle = iris; ctx.fill();
+    
+    // Pupil
+    ctx.beginPath();
+    ctx.ellipse(ex + side*0.5, ey, 2.5, 4, angle, 0, Math.PI*2);
+    ctx.fillStyle = '#000'; ctx.fill();
+    
+    // Highlight
+    ctx.beginPath();
+    ctx.arc(ex - side*1.5, ey - 1.5, 1.8, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.fill();
+    ctx.beginPath();
+    ctx.arc(ex - side*0.5, ey + 1.5, 0.8, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.fill();
+    
+    // Eye slit
+    ctx.beginPath();
+    ctx.moveTo(ex - 9, ey + 7);
+    ctx.quadraticCurveTo(ex, ey + 10, ex + 9, ey + 7);
+    ctx.strokeStyle = '#000'; ctx.lineWidth = 1.5; ctx.stroke();
+  });
+  
+  // Snout
+  ctx.beginPath();
+  ctx.ellipse(cx, cy+16, 14, 10, 0, 0, Math.PI*2);
+  ctx.fillStyle = '#151520'; ctx.fill();
+  
+  // Nose
+  ctx.beginPath();
+  ctx.ellipse(cx, cy+13, 5, 3.5, 0, 0, Math.PI*2);
+  ctx.fillStyle = '#000'; ctx.fill();
+  ctx.beginPath();
+  ctx.ellipse(cx-2, cy+12, 1.5, 1, 0, 0, Math.PI*2);
+  ctx.fillStyle = '#333'; ctx.fill();
+  
+  // Mouth line
+  ctx.beginPath();
+  ctx.moveTo(cx-10, cy+22);
+  ctx.quadraticCurveTo(cx, cy+26, cx+10, cy+22);
+  ctx.strokeStyle = '#555'; ctx.lineWidth = 1.5; ctx.stroke();
+  
+  // Fangs
+  const fangColor = freed ? '#4ADE80' : '#EF4444';
+  const fangs = [[-8,23,-6,31],[-3,23,-2,29],[3,23,2,29],[8,23,6,31]];
+  fangs.forEach(([x1,y1,x2,y2]) => {
+    ctx.beginPath();
+    ctx.moveTo(cx+x1, cy+y1);
+    ctx.lineTo(cx+x2, cy+y2);
+    ctx.lineTo(cx+x1+2, cy+y1);
+    ctx.closePath();
+    ctx.fillStyle = fangColor; ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.lineWidth = 0.5; ctx.stroke();
+  });
+  
+  // Between-fang gaps
+  ctx.fillStyle = '#1A1A2E';
+  ctx.beginPath(); ctx.arc(cx-5, cy+24, 1, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx+5, cy+24, 1, 0, Math.PI*2); ctx.fill();
+  
+  // Chain links around Fenrir (8 chains)
+  if (!freed) {
+    ctx.strokeStyle = '#818CF8'; ctx.lineWidth = 2.5;
+    ctx.shadowBlur = 3; ctx.shadowColor = '#6366F144';
+    
+    const chains = [
+      [-38,-14, -18,-30], [38,-14, 18,-30], [-42,6, -24,-6], [42,6, 24,-6],
+      [-38,30, -20,22], [38,30, 20,22], [-6,-36, 6,-30], [-26,34, 26,34]
+    ];
+    
+    chains.forEach(([x1,y1,x2,y2], ci) => {
+      let dx = x2-x1, dy = y2-y1;
+      let dist = Math.sqrt(dx*dx+dy*dy);
+      let links = Math.max(2, Math.round(dist/10));
+      for (let j = 0; j < links; j++) {
+        let frac = j/links;
+        let wobble = Math.sin(t*0.06 + ci*1.5 + j*0.7) * 2;
+        let lx = cx + x1 + dx*frac + wobble;
+        let ly = cy + y1 + dy*frac + Math.cos(t*0.06 + ci*1.5 + j*0.7) * 2;
+        ctx.beginPath();
+        ctx.ellipse(lx, ly, 5, 2.5, Math.atan2(dy,dx), 0, Math.PI*2);
+        ctx.stroke();
+      }
+    });
+    ctx.shadowBlur = 0;
+  }
+}
+
+// --- JÖRMUNGANDR: World Serpent ---
+function drawJormu(ctx, w, h, t, freed) {
+  const cx = w/2, cy = h/2;
+  
+  // Ocean background
+  const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, 75);
+  bg.addColorStop(0, freed ? '#145A32' : '#0A1A1A');
+  bg.addColorStop(0.5, freed ? '#0D2818' : '#050A0A');
+  bg.addColorStop(1, '#000000');
+  ctx.fillStyle = bg; ctx.fillRect(0,0,w,h);
+  
+  // Ripples
+  for (let i = 0; i < 3; i++) {
+    let phase = t*0.02 + i*1.2;
+    let r = 48 + Math.sin(phase)*8;
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2);
+    ctx.strokeStyle = `rgba(5,150,105,${0.05 - i*0.015})`;
+    ctx.lineWidth = 1; ctx.stroke();
+  }
+  
+  // Coil rings with gradient color
+  const coilRadius = [4,3.5,3,2.5,2];
+  const coilScale = [40,34,28,22,16];
+  
+  for (let i = 0; i < 5; i++) {
+    let pr = coilScale[i];
+    let pw = coilRadius[i];
+    let pulse = 1 + Math.sin(t*0.03 + i*0.7) * 0.03;
+    pr *= pulse;
+    
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, pr, pr*0.85, 0, 0, Math.PI*2);
+    
+    if (i === 0) {
+      // Outermost ring: conic-style gradient simulated
+      ctx.strokeStyle = freed ? `rgba(74,222,128,${0.25 + Math.sin(t*0.02)*0.05})` : `rgba(5,150,105,${0.3 + Math.sin(t*0.02)*0.05})`;
+      ctx.lineWidth = pw;
+      // Draw in segments with color variation
+      let segments = 16;
+      for (let s = 0; s < segments; s++) {
+        let a1 = (s/segments)*Math.PI*2;
+        let a2 = ((s+1)/segments)*Math.PI*2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, pr, a1, a2);
+        let hue = freed ? 140 + Math.sin(t*0.02 + s)*20 : 160 + Math.sin(t*0.02 + s)*20;
+        ctx.strokeStyle = freed ? `hsla(${hue},70%,50%,0.25)` : `hsla(${hue},70%,30%,0.3)`;
+        ctx.lineWidth = pw; ctx.stroke();
+      }
+    } else {
+      let op = 0.15 - i*0.02 + Math.sin(t*0.03 + i)*0.03;
+      ctx.strokeStyle = freed ? `rgba(74,222,128,${Math.max(0.06, op)})` : `rgba(5,150,105,${Math.max(0.06, op)})`;
+      ctx.lineWidth = pw;
+      ctx.stroke();
+    }
+  }
+  
+  // Scale dots along outer coil
+  for (let i = 0; i < 24; i++) {
+    let angle = i/24 * Math.PI*2 + t*0.01;
+    let r = 38 + Math.sin(t*0.02 + i)*1;
+    ctx.beginPath();
+    ctx.arc(cx + Math.cos(angle)*r, cy + Math.sin(angle)*r*0.85, 1.5, 0, Math.PI*2);
+    ctx.fillStyle = freed ? `rgba(74,222,128,0.3)` : `rgba(5,150,105,0.25)`;
+    ctx.fill();
+  }
+  
+  // Serpent head
+  let headBobX = Math.sin(t*0.025)*3;
+  let headBobY = Math.sin(t*0.03)*2;
+  
+  // Head shape
+  ctx.beginPath();
+  ctx.ellipse(cx + headBobX, cy - 28 + headBobY, 12, 9, 0, 0, Math.PI*2);
+  const headGrad = ctx.createRadialGradient(cx+headBobX-2, cy-28+headBobY-2, 0, cx+headBobX, cy-28+headBobY, 12);
+  headGrad.addColorStop(0, '#059669'); headGrad.addColorStop(1, '#047857');
+  ctx.fillStyle = headGrad; ctx.fill();
+  ctx.strokeStyle = '#10B981'; ctx.lineWidth = 1; ctx.stroke();
+  
+  // Eyes on head
+  const eyeOff = 5;
+  [-1, 1].forEach(side => {
+    const ex = cx + headBobX + side*eyeOff;
+    const ey = cy - 30 + headBobY;
+    
+    ctx.shadowBlur = 8; ctx.shadowColor = freed ? '#22C55E' : '#10B981';
+    ctx.beginPath(); ctx.arc(ex, ey, 2.5, 0, Math.PI*2);
+    ctx.fillStyle = freed ? '#4ADE80' : '#34D399'; ctx.fill();
+    ctx.shadowBlur = 0;
+    
+    ctx.beginPath(); ctx.arc(ex, ey, 1.2, 0, Math.PI*2);
+    ctx.fillStyle = '#000'; ctx.fill();
+  });
+  
+  // Forked tongue
+  let tongueFlex = Math.sin(t*0.15) * 0.4;
+  ctx.strokeStyle = '#EF4444'; ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(cx + headBobX, cy - 36 + headBobY);
+  ctx.quadraticCurveTo(cx + headBobX + tongueFlex*2, cy - 46 + headBobY, cx + headBobX - 4 + tongueFlex*3, cy - 52 + headBobY);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx + headBobX - 2 + tongueFlex*2, cy - 44 + headBobY);
+  ctx.quadraticCurveTo(cx + headBobX + tongueFlex*4, cy - 52 + headBobY, cx + headBobX - 2 + tongueFlex*5, cy - 56 + headBobY);
+  ctx.stroke();
+}
+
+// --- HEL: Half-Living Half-Dead ---
+function drawHel(ctx, w, h, t, freed) {
+  const cx = w/2, cy = h/2;
+  
+  // Underworld background
+  const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, 75);
+  bg.addColorStop(0, freed ? '#145A32' : '#1A0A2E');
+  bg.addColorStop(0.5, '#0D0520'); bg.addColorStop(1, '#000000');
+  ctx.fillStyle = bg; ctx.fillRect(0,0,w,h);
+  
+  // Floating soul particles
+  for (let i = 0; i < 6; i++) {
+    let px = cx + Math.sin(t*0.02 + i*1.7)*50;
+    let py = cy + Math.cos(t*0.03 + i*2.1)*40;
+    let ps = 2 + Math.sin(t*0.05 + i)*1;
+    ctx.beginPath(); ctx.arc(px, py, ps, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(147,51,234,${0.15 + Math.sin(t*0.04 + i)*0.08})`;
+    ctx.fill();
+  }
+  
+  // Hair base
+  // Left side (dark)
+  ctx.beginPath();
+  ctx.ellipse(cx-4, cy, 40, 44, 0, 0, Math.PI*2);
+  ctx.fillStyle = '#1A1A2E'; ctx.fill();
+  // Right side (darker, decayed)
+  ctx.beginPath();
+  ctx.ellipse(cx+4, cy, 40, 44, 0, 0, Math.PI*2);
+  ctx.fillStyle = '#0A0A14'; ctx.fill();
+  
+  // Hair strands
+  for (let i = 0; i < 10; i++) {
+    let side = i < 5 ? -1 : 1;
+    let idx = i < 5 ? i : i-5;
+    let sx = cx + side*(8 + idx*5);
+    let sy = cy - 28 + Math.sin(t*0.02 + i)*3;
+    
+    ctx.beginPath();
+    ctx.moveTo(sx, sy);
+    ctx.quadraticCurveTo(sx + side*3, sy + 20, sx + side*2, sy + 36);
+    ctx.strokeStyle = side === -1 ? '#2A2A3E' : '#15152A';
+    ctx.lineWidth = 2.5; ctx.stroke();
+  }
+  
+  // Crown
+  for (let i = 0; i < 5; i++) {
+    let angle = -0.3 + i*0.15;
+    let cx2 = cx + Math.sin(angle)*14;
+    ctx.beginPath();
+    ctx.moveTo(cx2 - 5, cy - 34);
+    ctx.lineTo(cx2, cy - 48 + Math.sin(t*0.03 + i)*2);
+    ctx.lineTo(cx2 + 5, cy - 34);
+    ctx.closePath();
+    const crownOp = 0.2 + i*0.03;
+    ctx.fillStyle = `rgba(139,92,246,${crownOp})`;
+    ctx.fill();
+  }
+  
+  // Split face
+  // Left half (living)
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(cx-34, cy-34, 34, 68);
+  ctx.arc(cx-34, cy, 34, -Math.PI/2, Math.PI/2, true);
+  ctx.closePath();
+  const livingGrad = ctx.createLinearGradient(cx-34, cy, cx, cy);
+  livingGrad.addColorStop(0, '#FCD34D'); livingGrad.addColorStop(1, '#F59E0B');
+  ctx.fillStyle = livingGrad; ctx.fill();
+  ctx.restore();
+  
+  // Right half (dead)
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(cx, cy-34, 34, 68);
+  ctx.arc(cx+34, cy, 34, Math.PI/2, -Math.PI/2, true);
+  ctx.closePath();
+  const deadGrad = ctx.createLinearGradient(cx, cy, cx+34, cy);
+  deadGrad.addColorStop(0, '#4A5568'); deadGrad.addColorStop(1, '#2D3748');
+  ctx.fillStyle = deadGrad; ctx.fill();
+  ctx.restore();
+  
+  // Face border
+  ctx.beginPath();
+  ctx.arc(cx, cy, 34, 0, Math.PI*2);
+  ctx.strokeStyle = 'rgba(124,58,237,0.15)'; ctx.lineWidth = 2; ctx.stroke();
+  
+  // Split line down the middle
+  ctx.beginPath();
+  ctx.moveTo(cx, cy-34); ctx.lineTo(cx, cy+34);
+  ctx.strokeStyle = '#7C3AED44'; ctx.lineWidth = 1; ctx.stroke();
+  
+  // LEFT EYE (living - warm)
+  ctx.beginPath(); ctx.ellipse(cx-12, cy-6, 7, 5, 0, 0, Math.PI*2);
+  ctx.fillStyle = '#FFFEF0'; ctx.fill();
+  ctx.beginPath(); ctx.arc(cx-11, cy-6, 4.5, 0, Math.PI*2);
+  const irisL = ctx.createRadialGradient(cx-11, cy-6, 0, cx-11, cy-6, 4.5);
+  irisL.addColorStop(0, '#92400E'); irisL.addColorStop(1, '#78350F');
+  ctx.fillStyle = irisL; ctx.fill();
+  ctx.beginPath(); ctx.arc(cx-11, cy-6, 2.5, 0, Math.PI*2);
+  ctx.fillStyle = '#000'; ctx.fill();
+  ctx.beginPath(); ctx.arc(cx-13, cy-8, 1.5, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.fill();
+  // Eye line
+  ctx.beginPath();
+  ctx.moveTo(cx-19, cy-10); ctx.quadraticCurveTo(cx-12, cy-13, cx-5, cy-10);
+  ctx.strokeStyle = '#92400E'; ctx.lineWidth = 1.5; ctx.stroke();
+  
+  // RIGHT EYE (dead - hollow)
+  ctx.beginPath(); ctx.ellipse(cx+12, cy-6, 7, 5, 0, 0, Math.PI*2);
+  ctx.fillStyle = '#1A1A2E'; ctx.fill();
+  ctx.beginPath(); ctx.arc(cx+12, cy-6, 4, 0, Math.PI*2);
+  ctx.fillStyle = '#000'; ctx.fill();
+  ctx.strokeStyle = '#555'; ctx.lineWidth = 0.5;
+  ctx.beginPath(); ctx.ellipse(cx+12, cy-6, 6, 4, 0, 0, Math.PI*2);
+  ctx.stroke();
+  // Eye socket shadow
+  ctx.beginPath(); ctx.arc(cx+12, cy-2, 6, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.fill();
+  
+  // LEFT MOUTH (warm, slight smile)
+  ctx.beginPath();
+  ctx.moveTo(cx-22, cy+12);
+  ctx.quadraticCurveTo(cx-14, cy+18, cx-4, cy+14);
+  ctx.strokeStyle = '#92400E'; ctx.lineWidth = 2; ctx.stroke();
+  
+  // RIGHT MOUTH (dead, droop)
+  ctx.beginPath();
+  ctx.moveTo(cx+4, cy+14);
+  ctx.quadraticCurveTo(cx+14, cy+22, cx+22, cy+12);
+  ctx.strokeStyle = '#555'; ctx.lineWidth = 2; ctx.stroke();
+  
+  // Cheek shadows
+  ctx.beginPath(); ctx.arc(cx-20, cy+4, 6, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(146,64,14,0.1)'; ctx.fill();
+  ctx.beginPath(); ctx.arc(cx+20, cy+4, 6, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(0,0,0,0.15)'; ctx.fill();
+}
+
+// --- SLEIPNIR: Eight-Legged Horse ---
+function drawSleipnir(ctx, w, h, t, freed) {
+  const cx = w/2, cy = h/2 + 8;
+  
+  // Plains background
+  const bg = ctx.createRadialGradient(cx, cy+10, 0, cx, cy, 75);
+  bg.addColorStop(0, freed ? '#145A32' : '#1A1410');
+  bg.addColorStop(0.5, '#0A0A14'); bg.addColorStop(1, '#000000');
+  ctx.fillStyle = bg; ctx.fillRect(0,0,w,h);
+  
+  // Ground line
+  ctx.beginPath();
+  ctx.moveTo(0, cy+36 + Math.sin(t*0.02)*2);
+  ctx.lineTo(w, cy+36 + Math.sin(t*0.02+1)*3);
+  ctx.strokeStyle = 'rgba(255,255,255,0.03)'; ctx.lineWidth = 1; ctx.stroke();
+  
+  // Speed lines
+  for (let i = 0; i < 5; i++) {
+    let ly = cy - 10 + i*8 + Math.sin(t*0.03 + i)*3;
+    let lx = w - 20 - Math.sin(t*0.05 + i)*10;
+    ctx.beginPath();
+    ctx.moveTo(lx, ly);
+    ctx.lineTo(lx + 20 + Math.sin(t*0.04 + i*2)*5, ly);
+    ctx.strokeStyle = `rgba(245,158,11,${0.04 + Math.sin(t*0.03 + i)*0.02})`;
+    ctx.lineWidth = 1.5; ctx.stroke();
+  }
+  
+  // Dust particles
+  for (let i = 0; i < 8; i++) {
+    let phase = t*0.04 + i*0.8;
+    let dx = Math.sin(phase) * 20 + 10;
+    let dy = -Math.abs(Math.sin(phase)) * 15;
+    let dp = Math.sin(phase)*0.5 + 0.5;
+    ctx.beginPath(); ctx.arc(cx - 20 + dx, cy + 30 + dy, 2 * dp, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(245,158,11,${dp * 0.12})`;
+    ctx.fill();
+  }
+  
+  // Body
+  let gallop = Math.sin(t*0.12) * 3;
+  ctx.beginPath();
+  ctx.ellipse(cx + gallop*0.5, cy + 2, 26, 14, -0.1, 0, Math.PI*2);
+  ctx.fillStyle = freed ? '#6B7280' : '#5C4A3A';
+  ctx.fill();
+  ctx.strokeStyle = '#7C6B5A'; ctx.lineWidth = 1; ctx.stroke();
+  
+  // Neck
+  ctx.beginPath();
+  ctx.moveTo(cx + 24, cy - 2);
+  ctx.quadraticCurveTo(cx + 40, cy - 16, cx + 48, cy - 28);
+  ctx.lineTo(cx + 40, cy - 30);
+  ctx.quadraticCurveTo(cx + 36, cy - 18, cx + 20, cy - 6);
+  ctx.closePath();
+  ctx.fillStyle = freed ? '#6B7280' : '#5C4A3A';
+  ctx.fill();
+  ctx.strokeStyle = '#7C6B5A'; ctx.lineWidth = 1; ctx.stroke();
+  
+  // Head
+  ctx.beginPath();
+  ctx.ellipse(cx + 52, cy - 30, 8, 6, 0.2, 0, Math.PI*2);
+  ctx.fillStyle = freed ? '#6B7280' : '#5C4A3A';
+  ctx.fill();
+  ctx.strokeStyle = '#7C6B5A'; ctx.lineWidth = 1; ctx.stroke();
+  
+  // Ear
+  ctx.beginPath();
+  ctx.moveTo(cx + 48, cy - 36);
+  ctx.lineTo(cx + 46, cy - 44);
+  ctx.lineTo(cx + 52, cy - 38);
+  ctx.closePath();
+  ctx.fillStyle = '#4A3A2A'; ctx.fill();
+  
+  // Eye
+  ctx.beginPath(); ctx.arc(cx + 54, cy - 31, 2, 0, Math.PI*2);
+  ctx.fillStyle = '#000'; ctx.fill();
+  ctx.beginPath(); ctx.arc(cx + 53, cy - 32, 0.8, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.fill();
+  
+  // Mouth / muzzle
+  ctx.beginPath();
+  ctx.ellipse(cx + 58, cy - 28, 4, 3, 0, 0, Math.PI*2);
+  ctx.fillStyle = '#3A2A1A'; ctx.fill();
+  
+  // Nostril
+  ctx.beginPath(); ctx.arc(cx + 60, cy - 28, 0.8, 0, Math.PI*2);
+  ctx.fillStyle = '#000'; ctx.fill();
+  
+  // Mane
+  const maneColor = freed ? '#22C55E' : '#F59E0B';
+  for (let i = 0; i < 8; i++) {
+    let mx = cx + 44 - i*4 + Math.sin(t*0.08 + i)*2;
+    let my = cy - 22 - i*3 + Math.sin(t*0.06 + i*1.2)*3;
+    ctx.beginPath();
+    ctx.moveTo(mx, cy - 8 + i*1.5);
+    ctx.quadraticCurveTo(mx - 4, my + 4, mx + 2, my - 10);
+    ctx.strokeStyle = maneColor;
+    ctx.lineWidth = 2.5 - i*0.15;
+    ctx.stroke();
+  }
+  
+  // Tail
+  for (let i = 0; i < 6; i++) {
+    let tx = cx - 30 - i*2 + Math.sin(t*0.07 + i)*2;
+    let ty = cy + i*2 + Math.sin(t*0.05 + i*0.5)*3;
+    ctx.beginPath();
+    ctx.moveTo(cx - 26, cy + 4);
+    ctx.quadraticCurveTo(tx - 2, ty + 2, tx - 4, ty + 6);
+    ctx.strokeStyle = maneColor;
+    ctx.lineWidth = 2; ctx.stroke();
+  }
+  
+  // 8 legs
+  const legPositions = [
+    [-12, 0, -16, 30], [-6, 2, -10, 32], [0, 4, -4, 34], [6, 2, 2, 32],
+    [12, 0, 16, 30], [18, -2, 22, 28], [24, -4, 28, 26], [30, -6, 34, 24]
+  ];
+  
+  legPositions.forEach(([x1, y1, x2, y2], i) => {
+    let legSwing = Math.sin(t*0.12 + i*0.7) * 4;
+    let lift = Math.abs(Math.sin(t*0.12 + i*0.7)) * 4;
+    ctx.beginPath();
+    ctx.moveTo(cx + x1, cy + y1);
+    ctx.lineTo(cx + (x1+x2)/2 + legSwing, cy + (y1+y2)/2 - lift);
+    ctx.lineTo(cx + x2 + legSwing, cy + y2 - lift);
+    ctx.strokeStyle = freed ? '#4B5563' : '#6B5B45';
+    ctx.lineWidth = 3.5; ctx.stroke({round: true});
+    // Hoof
+    ctx.fillStyle = '#3A2A1A';
+    ctx.fillRect(cx + x2 + legSwing - 2, cy + y2 - lift - 2, 4, 4);
+  });
+}
+function toggleInstr(name) {
+  const panel = document.getElementById('instr-' + name);
+  const btn = panel.previousElementSibling;
+  if (panel) {
+    panel.classList.toggle('active');
+    if (btn && btn.classList.contains('game-instr-toggle')) btn.classList.toggle('active');
+  }
+}
+
+// ===== OPEN / CLOSE GAMES =====
+function openGame(name) {
+  const overlay = document.getElementById('game-' + name);
+  if (overlay) {
+    overlay.classList.add('active');
+    if (name === 'fenrir') initFenrir();
+    if (name === 'jormungandr') initJormungandr();
+    if (name === 'hel') initHel();
+    if (name === 'sleipnir') sleipnirReset();
+    // Initialize canvas portraits
+    const canvasId = 'canvas-' + name.replace('jormungandr','jormu');
+    if (!canvasPortraits[canvasId]) {
+      const fnName = name === 'fenrir' ? drawFenrir
+        : name === 'jormungandr' ? drawJormu
+        : name === 'hel' ? drawHel
+        : name === 'sleipnir' ? drawSleipnir
+        : drawFenrir;
+      const p = initCharCanvas(canvasId, fnName);
+      if (p) canvasPortraits[canvasId] = p;
+    }
+    startCanvasAnim();
+  }
+}
+
+function closeGame(name) {
+  const overlay = document.getElementById('game-' + name);
+  if (overlay) overlay.classList.remove('active');
+  // Stop Fenrir animation loop
+  if (name === 'fenrir') fenrirGameActive = false;
+  // Stop Jörmungandr showing state
+  if (name === 'jormungandr') jormuShowing = true;
+  // Stop Hel timer
+  if (name === 'hel') { if (helTimer) clearInterval(helTimer); helActive = false; }
+  // Stop Sleipnir game
+  if (name === 'sleipnir') { sleipnirRunning = false; if (sleipnirGameLoop) clearInterval(sleipnirGameLoop); if (sleipnirSpawner) clearInterval(sleipnirSpawner); }
+  // Stop canvas anim if no games are open
+  let anyOpen = false;
+  document.querySelectorAll('.game-modal-overlay.active').forEach(() => { anyOpen = true; });
+  if (!anyOpen) stopCanvasAnim();
+}
+
+// Close game modal on overlay click
+document.querySelectorAll('.game-modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      overlay.classList.remove('active');
+    }
+  });
+});
+</script>
+</body>
+</html>
