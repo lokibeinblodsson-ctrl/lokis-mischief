@@ -1,0 +1,15 @@
+# Scratch / working artifacts (not deliverables)
+lokis-assets/_staging/
+lokis-assets/_cartoon_batch/*.jpg
+compare-fix.html
+.deity_descriptions.json
+free-tools-discovery/_ddg_final.*
+free-tools-discovery/_verify.py
+free-tools-discovery/_mine.py
+free-tools-discovery/_search*.py
+free-tools-discovery/_brave_test.py
+free-tools-discovery/_probe.py
+free-tools-discovery/_gh.*
+free-tools-discovery/_hits*.txt
+free-tools-discovery/_raw.html
+free-tools-discovery/_nc_memory.md
