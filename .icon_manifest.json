@@ -1,0 +1,34 @@
+{
+  "glyphs": [
+    "angrboda.svg",
+    "bragi.svg",
+    "fenrir.svg",
+    "freya.svg",
+    "freyr.svg",
+    "gerd.svg",
+    "heimdall.svg",
+    "hel.svg",
+    "hermod.svg",
+    "hymir.svg",
+    "jormungandr.svg",
+    "loki.svg",
+    "odin.svg",
+    "sigyn.svg",
+    "thor.svg",
+    "tyr.svg",
+    "utgardaloki.svg"
+  ],
+  "ui": [
+    "home.svg",
+    "back.svg",
+    "games.svg",
+    "products.svg",
+    "share.svg",
+    "download.svg",
+    "nav-arrow.svg",
+    "sound.svg",
+    "close.svg",
+    "heart.svg"
+  ],
+  "favicon": "favicon.svg"
+}
