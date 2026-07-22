@@ -63,6 +63,22 @@ nav .links a:hover{color:#fff}
 .back a{color:var(--gold)}
 .tag{display:inline-block;background:#f59e0b15;border:1px solid #f59e0b33;color:var(--gold);
   border-radius:999px;padding:3px 12px;font-size:12px;letter-spacing:.5px;margin-bottom:8px}
+
+  @media (max-width:640px){
+    nav{gap:10px;padding:10px 12px}
+    nav .logo{font-size:15px}
+    nav .links{flex-wrap:nowrap;overflow-x:auto;gap:14px;margin-left:auto;
+      -webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
+    nav .links::-webkit-scrollbar{display:none}
+    nav .links a{white-space:nowrap;font-size:13px}
+    .wrap{padding:0 14px}
+    .hero{padding:32px 0 16px}
+    .runes{font-size:24px;letter-spacing:6px}
+    h1{font-size:30px}
+    .portrait{max-width:240px;margin:14px auto}
+    .saga,.verse,.lesson,.product{padding:18px 14px}
+    .verse{font-size:15px}
+  }
 </style>
 </head>
 <body>

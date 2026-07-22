@@ -1470,7 +1470,16 @@
     .playbook-banner { grid-template-columns: 1fr; }
     .featured-grid { grid-template-columns: 1fr 1fr; }
     .roi-grid { grid-template-columns: 1fr; }
-    nav .links a:not(.btn-nav) { display: none; }
+    nav { gap: 8px; padding: 0 12px; }
+    nav .links {
+      flex-wrap: nowrap; overflow-x: auto; gap: 16px;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    nav .links::-webkit-scrollbar { display: none; }
+    nav .links a { white-space: nowrap; font-size: 13px; }
+    nav .links #streak-badge, nav .links #mute-btn { display: none; }
+    .pantheon-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .deity-card { padding: 16px 14px; }
     .playbook-banner { padding: 24px; }
     .ent-tab { min-width: 100px; padding: 10px 14px; }
     .meter-wrap { flex-direction: column; }
