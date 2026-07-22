@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loki Blodsson — Agency Automation Workflows</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background: #07070a;
+    color: #e4e4e7;
+    line-height: 1.6;
+  }
+  .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+  /* Hero / Profile header */
+  .profile {
+    padding: 60px 0 40px;
+    text-align: center;
+    border-bottom: 1px solid #1a1a24;
+  }
+  .avatar {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 32px; font-weight: 800; color: #fff;
+    margin-bottom: 16px;
+    box-shadow: 0 0 0 3px #1a1a24;
+  }
+  .profile h1 {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+  .profile .tagline {
+    font-size: 16px;
+    color: #64748b;
+    margin-bottom: 12px;
+  }
+  .profile .bio {
+    max-width: 520px;
+    margin: 0 auto;
+    font-size: 15px;
+    color: #94a3b8;
+  }
+  .stats {
+    display: flex; justify-content: center; gap: 32px;
+    margin-top: 20px;
+    font-size: 13px;
+    color: #64748b;
+  }
+  .stats strong {
+    display: block;
+    font-size: 20px;
+    font-weight: 700;
+    color: #f1f5f9;
+  }
+
+  /* Product grid */
+  .products-section {
+    padding: 40px 0;
+  }
+  .products-section h2 {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #475569;
+    margin-bottom: 20px;
+  }
+  .product-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .product-card {
+    display: flex;
+    gap: 20px;
+    background: #0d0d14;
+    border: 1px solid #1e1e2a;
+    border-radius: 14px;
+    padding: 24px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color .2s, transform .15s;
+  }
+  .product-card:active { transform: scale(.99); }
+  .product-card:hover { border-color: #6366f144; }
+  .product-icon {
+    min-width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .product-info { flex: 1; }
+  .product-info h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: #f1f5f9;
+  }
+  .product-info p {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 10px;
+  }
+  .product-meta {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 13px;
+  }
+  .product-price {
+    font-weight: 700;
+    font-size: 15px;
+    color: #a5b4fc;
+  }
+  .product-tag {
+    background: #6366f122;
+    color: #818cf8;
+    padding: 2px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .product-badge {
+    background: #22c55e22;
+    color: #4ade80;
+    padding: 2px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  /* Platform badges */
+  .platform-badges {
+    display: flex; gap: 6px; margin-top: 8px;
+  }
+  .platform-badges span {
+    font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 5px;
+    text-transform: uppercase; letter-spacing: .5px;
+  }
+  .badge-make {
+    background: #6366f122; color: #818cf8; border: 1px solid #6366f144;
+  }
+  .badge-n8n {
+    background: #ea580c22; color: #fb923c; border: 1px solid #ea580c44;
+  }
+
+  /* Bundle section */
+  .bundle-section {
+    margin-top: 8px;
+    background: linear-gradient(135deg, #0f0f1a, #1a1028);
+    border: 1px solid #2a1a4a;
+    border-radius: 14px;
+    padding: 28px 24px;
+    text-align: center;
+  }
+  .bundle-section h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    background: linear-gradient(135deg, #a5b4fc, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .bundle-section p {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-bottom: 16px;
+  }
+  .bundle-price {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    margin-bottom: 16px;
+  }
+  .bundle-price .old { font-size: 18px; color: #64748b; text-decoration: line-through; }
+  .bundle-price .new { font-size: 28px; font-weight: 800; color: #fff; }
+  .bundle-price .save { font-size: 13px; color: #4ade80; font-weight: 600; }
+
+  /* Buttons */
+  .btn {
+    display: inline-block;
+    padding: 14px 40px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform .15s, box-shadow .2s;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn-primary {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff;
+  }
+  .btn-bundle {
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    color: #fff;
+    box-shadow: 0 4px 24px #7c3aed33;
+  }
+  .btn-outline {
+    border: 1px solid #6366f144;
+    color: #a5b4fc;
+    padding: 10px 20px;
+    font-size: 13px;
+    border-radius: 8px;
+  }
+  .btn-outline:hover { background: #6366f111; }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 32px 0;
+    font-size: 13px;
+    color: #475569;
+    border-top: 1px solid #1a1a24;
+  }
+  footer a { color: #64748b; text-decoration: none; }
+  footer a:hover { color: #94a3b8; }
+
+  /* Test mode banner */
+  .test-banner {
+    background: #f59e0b11;
+    border: 1px solid #f59e0b33;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: #fbbf24;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 640px) {
+    .product-card { flex-direction: column; gap: 12px; }
+    .stats { gap: 20px; }
+    .bundle-price { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<div class="profile">
+  <div class="container">
+    <div class="avatar">LB</div>
+    <h1>Loki Blodsson</h1>
+    <p class="tagline">Agency automation workflows &raquo; Save hours, impress clients</p>
+    <p class="bio">
+      I build ready-to-import <strong>Make.com</strong> and <strong>n8n</strong> workflows for agency owners who don't have time to
+      build automations from scratch. Just connect your accounts. Done.<br>
+      <span style="color:#6366f1;">🔷 Make.com</span> &nbsp; <span style="color:#fb923c;">🔶 n8n</span>
+    </p>
+    <div class="stats">
+      <div><strong>11</strong> workflows</div>
+      <div><strong>$39–$97</strong></div>
+      <div><strong>15 min</strong> setup</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="test-banner">
+    ⚠ Test mode — all purchases use test (fake) credit cards. Swap to live Stripe keys for real charges.
+  </div>
+</div>
+
+<div class="products-section">
+  <div class="container">
+    <h2>All Workflows</h2>
+    <div class="product-grid">
+
+      <!-- Product 1: Client Onboarding -->
+      <a href="client-onboarding.html" class="product-card">
+        <div class="product-icon" style="background:#6366f122;">🚀</div>
+        <div class="product-info">
+          <h3>Agency Client Onboarding Agent</h3>
+          <p>3-5 hours per client &rarr; 60 seconds. Intake form triggers Drive folders, email, Slack channel, and tracking sheet — automatically.</p>
+          <div class="product-meta">
+            <span class="product-price">$39</span>
+            <span class="product-tag">Best Seller</span>
+            <span class="product-badge">Live</span>
+          </div>
+          <div class="platform-badges">
+            <span class="badge-make">Make.com</span>
+            <span class="badge-n8n">n8n</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Product 2: Monthly Report Builder -->
+      <a href="monthly-report-builder.html" class="product-card">
+        <div class="product-icon" style="background:#22c55e22;">📊</div>
+        <div class="product-info">
+          <h3>Narrative Monthly Report Builder</h3>
+          <p>4+ hours of report writing &rarr; 5 minutes. Pulls metrics from your tools, writes the narrative, builds client-ready slides.</p>
+          <div class="product-meta">
+            <span class="product-price">$39</span>
+            <span class="product-tag">New</span>
+          </div>
+          <div class="platform-badges">
+            <span class="badge-make">Make.com</span>
+            <span class="badge-n8n">n8n</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Product 3: RFP Response -->
+      <a href="rfp-response-drafter.html" class="product-card">
+        <div class="product-icon" style="background:#f59e0b22;">📝</div>
+        <div class="product-info">
+          <h3>RFP / RFI Response Drafter</h3>
+          <p>Win more proposals. Paste an RFP &rarr; AI researches your knowledge base &rarr; drafts a response &rarr; notifies your team.</p>
+          <div class="product-meta">
+            <span class="product-price">$39</span>
+            <span class="product-tag">New</span>
+          </div>
+          <div class="platform-badges">
+            <span class="badge-make">Make.com</span>
+            <span class="badge-n8n">n8n</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Product 4: Invoice Dunning -->
+      <a href="invoice-dunning.html" class="product-card">
+        <div class="product-icon" style="background:#ef444422;">💰</div>
+        <div class="product-info">
+          <h3>Invoice Dunning &amp; Payment Reminder</h3>
+          <p>Get paid faster. Tiered email sequence — Friendly reminder &rarr; Gentle nudge &rarr; Final notice. Works with any invoicing system.</p>
+          <div class="product-meta">
+            <span class="product-price">$39</span>
+            <span class="product-tag">New</span>
+          </div>
+          <div class="platform-badges">
+            <span class="badge-make">Make.com</span>
+            <span class="badge-n8n">n8n</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Product 5: Meeting Tracker -->
+      <a href="meeting-action-tracker.html" class="product-card">
+        <div class="product-icon" style="background:#06b6d422;">🎯</div>
+        <div class="product-info">
+          <h3>Meeting-to-Action Tracker</h3>
+          <p>Never lose action items. Transcribe meetings &rarr; AI extracts decisions &rarr; creates a shared tracker &rarr; emails everyone.</p>
+          <div class="product-meta">
+            <span class="product-price">$39</span>
+            <span class="product-tag">New</span>
+          </div>
+          <div class="platform-badges">
+            <span class="badge-make">Make.com</span>
+            <span class="badge-n8n">n8n</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Product 6: AI Concierge -->
+      <a href="ai-concierge.html" class="product-card">
+        <div class="product-icon" style="background:#8b5cf622;">🤖</div>
+        <div class="product-info">
+          <h3>AI Client Concierge System</h3>
+          <p>Your 24/7 intake assistant — qualifies leads, schedules calls, sends personalized responses, logs CRM, notifies Slack. 10+ automations in one system.</p>
+          <div class="product-meta">
+            <span class="product-price">$97</span>
+            <span class="product-tag" style="background:#8b5cf622;color:#a78bfa;">Premium</span>
+          </div>
+          <div class="platform-badges">
+            <span class="badge-make">Make.com</span>
+            <span class="badge-n8n">n8n</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- Bundle -->
+    <div class="bundle-section">
+      <h3>The Complete Agency Ops Bundle</h3>
+      <p>All 5 workflows + the AI Concierge System. One download. Everything your agency needs to run on autopilot.</p>
+      <div class="bundle-price">
+        <span class="old">$292</span>
+        <span class="new">$147</span>
+        <span class="save">Save $145</span>
+      </div>
+      <a href="#" class="btn btn-bundle">Coming Soon &mdash; $97</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <a href="https://blodsson.gumroad.com">Gumroad</a>
+    &nbsp;&middot;&nbsp;
+    <a href="#">Twitter / X</a>
+    &nbsp;&middot;&nbsp;
+    <a href="mailto:loki.bein.blodsson@gmail.com">Email</a>
+    <br><br>
+    &copy; 2026 Loki Blodsson &middot; Digital products for agency owners
+  </div>
+</footer>
+
+</body>
+</html>

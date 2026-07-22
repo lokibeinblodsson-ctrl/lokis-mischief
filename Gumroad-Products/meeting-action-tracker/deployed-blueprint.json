@@ -1,0 +1,315 @@
+{
+  "name": "Meeting-to-Action Tracker",
+  "metadata": {
+    "version": 1,
+    "scenario": {
+      "roundtrips": {},
+      "flowControl": false
+    },
+    "tags": [
+      "meetings",
+      "productivity",
+      "agency"
+    ]
+  },
+  "modules": [
+    {
+      "id": 1,
+      "module": "webhook:receive",
+      "version": 1,
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        },
+        "expect": [
+          {
+            "name": "meetingTitle",
+            "type": "text",
+            "label": "Meeting Title",
+            "required": true
+          },
+          {
+            "name": "meetingDate",
+            "type": "text",
+            "label": "Meeting Date (YYYY-MM-DD)",
+            "required": true
+          },
+          {
+            "name": "audioUrl",
+            "type": "text",
+            "label": "Audio Recording URL (publicly accessible)",
+            "required": true
+          },
+          {
+            "name": "attendees",
+            "type": "collection",
+            "label": "Attendees",
+            "spec": [
+              {
+                "name": "name",
+                "type": "text",
+                "label": "Attendee Name"
+              },
+              {
+                "name": "email",
+                "type": "text",
+                "label": "Attendee Email"
+              }
+            ],
+            "required": true
+          },
+          {
+            "name": "organizerEmail",
+            "type": "text",
+            "label": "Organizer Email (receives full summary)",
+            "required": true
+          },
+          {
+            "name": "organizerName",
+            "type": "text",
+            "label": "Organizer Name",
+            "required": false
+          }
+        ]
+      },
+      "parameters": {
+        "hook": "your-webhook-id-here"
+      },
+      "mapper": {}
+    },
+    {
+      "id": 2,
+      "module": "http:MakeRequest",
+      "version": 4,
+      "metadata": {
+        "designer": {
+          "x": 180,
+          "y": 0
+        }
+      },
+      "parameters": {
+        "url": "https://api.openai.com/v1/audio/transcriptions",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{connection.openai.apiKey}}",
+          "Content-Type": "multipart/form-data; boundary=---BoundaryMarker"
+        },
+        "bodyType": "form-data",
+        "parseResponse": true
+      },
+      "mapper": {
+        "url": "https://api.openai.com/v1/audio/transcriptions",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{connection.openai.apiKey}}",
+          "Content-Type": "multipart/form-data; boundary=---BoundaryMarker"
+        },
+        "bodyType": "form-data",
+        "parseResponse": true,
+        "formData": {
+          "model": "whisper-1",
+          "file": "{{1.audioUrl}}",
+          "response_format": "json",
+          "language": "en"
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "http:MakeRequest",
+      "version": 4,
+      "metadata": {
+        "designer": {
+          "x": 360,
+          "y": 0
+        }
+      },
+      "parameters": {
+        "url": "https://api.openai.com/v1/chat/completions",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{connection.openai.apiKey}}",
+          "Content-Type": "application/json"
+        },
+        "bodyType": "json",
+        "parseResponse": true
+      },
+      "mapper": {
+        "url": "https://api.openai.com/v1/chat/completions",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{connection.openai.apiKey}}",
+          "Content-Type": "application/json"
+        },
+        "bodyType": "json",
+        "parseResponse": true,
+        "body": {
+          "model": "gpt-4",
+          "temperature": 0.2,
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are an expert meeting analyst. Extract structured action items, decisions, owners, and deadlines from the following meeting transcript. Return your answer as valid JSON with four keys: meetingSummary (string), decisions (array of objects with {decision, madeBy}), actionItems (array of objects with {actionItem, owner, deadline, priority}), and keyDiscussionPoints (array of strings)."
+            },
+            {
+              "role": "user",
+              "content": "Meeting: {{1.meetingTitle}}\nDate: {{1.meetingDate}}\n\nTranscript:\n{{2.text}}"
+            }
+          ],
+          "max_tokens": 2000
+        }
+      }
+    },
+    {
+      "id": 4,
+      "module": "google-sheets:addRow",
+      "version": 2,
+      "metadata": {
+        "designer": {
+          "x": 540,
+          "y": 0
+        }
+      },
+      "parameters": {
+        "connection": "google-sheets-connection-id",
+        "spreadsheetId": "your-spreadsheet-id-here",
+        "sheetName": "Action Items"
+      },
+      "mapper": {
+        "connection": "google-sheets-connection-id",
+        "spreadsheetId": "your-spreadsheet-id-here",
+        "sheetName": "Action Items",
+        "values": {
+          "0": "{{1.meetingTitle}}",
+          "1": "{{1.meetingDate}}",
+          "2": "{{3.choices[0].message.content.parsed.meetingSummary}}",
+          "3": "{{3.choices[0].message.content.parsed.decisions}}",
+          "4": "{{3.choices[0].message.content.parsed.actionItems}}",
+          "5": "{{3.choices[0].message.content.parsed.keyDiscussionPoints}}",
+          "6": "{{now}}",
+          "7": "{{1.organizerEmail}}"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "module": "google-email:ActionSendEmail",
+      "version": 4,
+      "metadata": {
+        "designer": {
+          "x": 720,
+          "y": 0
+        }
+      },
+      "parameters": {
+        "connection": "gmail-connection-id",
+        "to": "{{item.email}}",
+        "subject": "Your Action Items from: {{1.meetingTitle}}",
+        "bodyType": "html"
+      },
+      "mapper": {
+        "connection": "gmail-connection-id",
+        "to": "{{item.email}}",
+        "subject": "Your Action Items from: {{1.meetingTitle}}",
+        "bodyType": "html",
+        "htmlBody": "<html><body style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;\"><h2 style=\"color: #1a73e8;\">Action Items: {{1.meetingTitle}}</h2><p>Hi {{item.name}},</p><p>Thanks for attending <strong>{{1.meetingTitle}}</strong> on {{1.meetingDate}}. Below are the action items assigned to you from this meeting.</p><h3 style=\"color: #333;\">Your Action Items:</h3><ul>{{#each item.actions}}<li><strong>{{this.actionItem}}</strong> — <em>Due: {{this.deadline}}</em> (Priority: {{this.priority}})</li>{{/each}}</ul><h3 style=\"color: #333;\">Key Decisions Made:</h3><ul>{{#each 3.choices[0].message.content.parsed.decisions}}<li><strong>{{this.decision}}</strong> (by {{this.madeBy}})</li>{{/each}}</ul><hr><p style=\"color: #777; font-size: 12px;\">Automatically generated by Meeting-to-Action Tracker.</p></body></html>",
+        "fromName": "Meeting Action Tracker"
+      }
+    },
+    {
+      "id": 6,
+      "module": "google-email:ActionSendEmail",
+      "version": 4,
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": 0
+        }
+      },
+      "parameters": {
+        "connection": "gmail-connection-id",
+        "to": "{{1.organizerEmail}}",
+        "subject": "Meeting Summary & Action Log: {{1.meetingTitle}}",
+        "bodyType": "html"
+      },
+      "mapper": {
+        "connection": "gmail-connection-id",
+        "to": "{{1.organizerEmail}}",
+        "subject": "Meeting Summary & Action Log: {{1.meetingTitle}}",
+        "bodyType": "html",
+        "htmlBody": "<html><body style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;\"><h2 style=\"color: #1a73e8;\">Meeting Summary & Action Log</h2><h3>{{1.meetingTitle}} — {{1.meetingDate}}</h3><h4 style=\"color: #333;\">Meeting Summary</h4><p>{{3.choices[0].message.content.parsed.meetingSummary}}</p><h4 style=\"color: #333;\">Key Discussion Points</h4><ul>{{#each 3.choices[0].message.content.parsed.keyDiscussionPoints}}<li>{{this}}</li>{{/each}}</ul><h4 style=\"color: #333;\">Decisions Made</h4><ul>{{#each 3.choices[0].message.content.parsed.decisions}}<li><strong>{{this.decision}}</strong> — {{this.madeBy}}</li>{{/each}}</ul><h4 style=\"color: #333;\">All Action Items</h4><table border=\"1\" cellpadding=\"8\" cellspacing=\"0\" style=\"border-collapse: collapse; width: 100%;\"><thead style=\"background: #f0f0f0;\"><tr><th>Action Item</th><th>Owner</th><th>Deadline</th><th>Priority</th></tr></thead><tbody>{{#each 3.choices[0].message.content.parsed.actionItems}}<tr><td>{{this.actionItem}}</td><td>{{this.owner}}</td><td>{{this.deadline}}</td><td>{{this.priority}}</td></tr>{{/each}}</tbody></table><hr><p style=\"color: #777; font-size: 12px;\">Automatically generated by Meeting-to-Action Tracker.</p></body></html>",
+        "fromName": "Meeting Action Tracker"
+      }
+    },
+    {
+      "id": 7,
+      "module": "slack:CreateChannel",
+      "version": 4,
+      "metadata": {
+        "designer": {
+          "x": 1080,
+          "y": 0
+        }
+      },
+      "parameters": {
+        "connection": "slack-connection-id",
+        "name": "meeting-actions-{{slugify 1.meetingTitle}}",
+        "isPrivate": true,
+        "teamId": ""
+      },
+      "mapper": {
+        "connection": "slack-connection-id",
+        "name": "meeting-actions-{{slugify 1.meetingTitle}}",
+        "isPrivate": true,
+        "teamId": "",
+        "purpose": "Action items and decisions from {{1.meetingTitle}} on {{1.meetingDate}}",
+        "topic": "Meeting: {{1.meetingTitle}}",
+        "initialMessage": ":memo: *Meeting-to-Action Tracker*\n*Meeting:* {{1.meetingTitle}}\n*Date:* {{1.meetingDate}}\n*Summary:* {{3.choices[0].message.content.parsed.meetingSummary}}\n\n*Action Items:*\n{{#each 3.choices[0].message.content.parsed.actionItems}}:ballot_box_with_check: *{{this.actionItem}}* — Assigned to: {{this.owner}}, Due: {{this.deadline}}, Priority: {{this.priority}}\n{{/each}}\n\n*Decisions Made:*\n{{#each 3.choices[0].message.content.parsed.decisions}}:white_check_mark: {{this.decision}} ({{this.madeBy}})\n{{/each}}\n\n_Sheet: https://docs.google.com/spreadsheets/d/your-spreadsheet-id-here_"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "id": "1-2",
+      "from": 1,
+      "to": 2,
+      "parameters": {}
+    },
+    {
+      "id": "2-3",
+      "from": 2,
+      "to": 3,
+      "parameters": {}
+    },
+    {
+      "id": "3-4",
+      "from": 3,
+      "to": 4,
+      "parameters": {}
+    },
+    {
+      "id": "3-5",
+      "from": 3,
+      "to": 5,
+      "parameters": {
+        "routing": {
+          "type": "conditional",
+          "condition": "{{3.choices[0].message.content.parsed.actionItems.length > 0}}"
+        }
+      }
+    },
+    {
+      "id": "3-6",
+      "from": 3,
+      "to": 6,
+      "parameters": {}
+    },
+    {
+      "id": "3-7",
+      "from": 3,
+      "to": 7,
+      "parameters": {}
+    }
+  ]
+}

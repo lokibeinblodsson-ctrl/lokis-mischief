@@ -1,0 +1,10 @@
+{
+  "meta": {"product":"Hel Boundary","platform":["n8n"],"version":"1.0.0"},
+  "flow": [
+    { "id":"1", "module":"Schedule", "action":"Trigger", "fields": { "cron":"0 8 * * *" } },
+    { "id":"2", "module":"HTTP", "action":"Make a request", "fields": { "endpoint":"YOUR_QUEUE_API", "method":"GET" } },
+    { "id":"3", "module":"Tools", "action":"Text Parser", "fields": { "mode":"regex", "pattern":"(violate|boundary|threshold|exception)" } },
+    { "id":"4", "module":"Flow Control", "action":"Router", "routing": [ { "name":"Enforce", "patterns":["violate","threshold"] }, { "name":"Review", "patterns":["exception","boundary"] } ] },
+    { "id":"5", "module":"Slack", "action":"Send message", "fields": { "channel":"#ops", "text":"Boundary status: {{3.name}}" } }
+  ]
+}

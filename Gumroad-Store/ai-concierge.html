@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Client Concierge System — $97</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background: #07070a;
+    color: #e4e4e7;
+    line-height: 1.6;
+  }
+  .container { max-width: 800px; margin: 0 auto; padding: 0 20px; }
+
+  .test-badge {
+    background: #f59e0b11; border: 1px solid #f59e0b33;
+    color: #fbbf24; text-align: center; padding: 10px; font-size: 13px;
+    margin-bottom: 0;
+  }
+
+  .hero {
+    padding: 60px 0 40px;
+    text-align: center;
+    border-bottom: 1px solid #1a1a24;
+  }
+  .hero .icon { font-size: 48px; margin-bottom: 16px; }
+  .hero h1 {
+    font-size: 32px; font-weight: 800;
+    background: linear-gradient(135deg, #f1f5f9, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+  .hero .tagline {
+    font-size: 18px; color: #94a3b8; margin-bottom: 16px;
+  }
+  .hero .price {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: #0d0d14; border: 1px solid #1e1e2a;
+    padding: 12px 24px; border-radius: 12px;
+    margin-bottom: 20px;
+  }
+  .hero .price .amount { font-size: 28px; font-weight: 800; color: #fff; }
+  .hero .price .label { font-size: 13px; color: #64748b; }
+  .hero .price .badge {
+    background: #22c55e22; color: #4ade80;
+    padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700;
+  }
+  .btn {
+    display: inline-block;
+    padding: 16px 48px;
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform .15s;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn-primary {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff;
+  }
+  .platform-badges {
+    display: flex; justify-content: center; gap: 10px; margin-top: 12px;
+  }
+  .platform-badges span {
+    font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 6px;
+    text-transform: uppercase; letter-spacing: .5px;
+  }
+  .badge-make { background: #6366f122; color: #818cf8; border: 1px solid #6366f144; }
+  .badge-n8n { background: #ea580c22; color: #fb923c; border: 1px solid #ea580c44; }
+
+  .section {
+    padding: 40px 0;
+    border-bottom: 1px solid #1a1a24;
+  }
+  .section h2 {
+    font-size: 13px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 1.5px; color: #475569; margin-bottom: 20px;
+  }
+
+  .problem-box {
+    background: #0d0d14; border: 1px solid #1e1e2a; border-left: 3px solid #ef4444;
+    padding: 20px; border-radius: 10px; margin-bottom: 20px;
+  }
+  .problem-box p { font-size: 15px; color: #94a3b8; }
+
+  .features { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .feature-card {
+    background: #0d0d14; border: 1px solid #1e1e2a;
+    padding: 20px; border-radius: 10px;
+  }
+  .feature-card .f-icon { font-size: 24px; margin-bottom: 8px; }
+  .feature-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .feature-card p { font-size: 13px; color: #64748b; }
+
+  .steps { display: flex; flex-direction: column; gap: 16px; }
+  .step {
+    display: flex; gap: 16px; align-items: flex-start;
+    background: #0d0d14; border: 1px solid #1e1e2a;
+    padding: 20px; border-radius: 10px;
+  }
+  .step-num {
+    min-width: 32px; height: 32px; border-radius: 8px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 14px; color: #fff;
+  }
+  .step-content h4 { font-size: 15px; font-weight: 700; }
+  .step-content p { font-size: 13px; color: #64748b; }
+
+  .cta-box {
+    background: linear-gradient(135deg, #0f0f1a, #1a1028);
+    border: 1px solid #2a1a4a; border-radius: 14px;
+    padding: 36px 24px; text-align: center;
+  }
+  .cta-box h3 {
+    font-size: 22px; font-weight: 800;
+    background: linear-gradient(135deg, #a5b4fc, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .cta-box p { font-size: 14px; color: #94a3b8; margin-bottom: 16px; }
+
+  footer {
+    text-align: center; padding: 32px 0; font-size: 13px; color: #475569;
+  }
+  footer a { color: #64748b; text-decoration: none; }
+  footer a:hover { color: #94a3b8; }
+
+  @media (max-width: 640px) {
+    .features { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="test-badge">⚠ Test Mode — no real charges. Swap to live Stripe keys for production.</div>
+
+<div class="hero">
+  <div class="container">
+    <div class="icon">🤖</div>
+    <h1>AI Client Concierge System</h1>
+    <p class="tagline">Your agency's 24/7 intake &amp; communication assistant — on autopilot</p>
+    <div class="price">
+      <span class="amount">$97</span>
+      <span class="label">one-time · lifetime access</span>
+      <span class="badge">Instant Download</span>
+    </div>
+    <a href="https://buy.stripe.com/test_dRm5kwf6e347dVq0LV9Zm06" class="btn btn-primary">Buy Now — $97</a>
+    <div class="platform-badges">
+      <span class="badge-make">Make.com</span>
+      <span class="badge-n8n">n8n</span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="container">
+    <h2>The Problem</h2>
+    <div class="problem-box">
+      <p>Every new client inquiry means 30 minutes of email ping-pong. Scheduling. Qualifying. Sending the same info packet. Following up. For 10 leads a week, that's 5+ hours of pure administrative overhead — time you should be spending on client work.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="container">
+    <h2>What It Does</h2>
+    <div class="features">
+      <div class="feature-card">
+        <div class="f-icon">🎯</div>
+        <h4>Smart Lead Qualification</h4>
+        <p>AI analyzes budget, scope, and fit — instantly categorizes as hot, warm, or not a fit</p>
+      </div>
+      <div class="feature-card">
+        <div class="f-icon">📅</div>
+        <h4>Auto-Scheduling</h4>
+        <p>Qualified leads get a discovery call invite sent automatically — no back-and-forth</p>
+      </div>
+      <div class="feature-card">
+        <div class="f-icon">✉️</div>
+        <h4>Personalized Responses</h4>
+        <p>AI writes tailored replies based on the inquiry — warm, professional, on-brand</p>
+      </div>
+      <div class="feature-card">
+        <div class="f-icon">📊</div>
+        <h4>CRM Logging</h4>
+        <p>Every lead logged to Google Sheets with full context — no data loss, ever</p>
+      </div>
+      <div class="feature-card">
+        <div class="f-icon">🔔</div>
+        <h4>Team Notifications</h4>
+        <p>Slack alert with lead summary the moment a qualified inquiry comes in</p>
+      </div>
+      <div class="feature-card">
+        <div class="f-icon">🔄</div>
+        <h4>Follow-Up Automation</h4>
+        <p>Recurring scheduler checks lead status and sends gentle follow-up reminders</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="container">
+    <h2>How It Works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Client Submits Inquiry</h4>
+          <p>Webform, email, or any channel sends the lead info to the concierge webhook</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>AI Analyzes &amp; Qualifies</h4>
+          <p>GPT-4o reads the inquiry, checks budget/scope/fit, and decides the next action</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Qualified → Full Concierge Flow</h4>
+          <p>Calendar invite sent, confirmation email with onboarding info, CRM logged, team notified on Slack</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>Not Qualified → Helpful Response</h4>
+          <p>Polite decline sent with recommendations and referrals. Lead saved for future nurture.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="container">
+    <h2>What You Get</h2>
+    <div style="background:#0d0d14;border:1px solid #1e1e2a;border-radius:10px;padding:20px;">
+      <ul style="list-style:none;font-size:14px;color:#94a3b8;">
+        <li style="padding:8px0;">✅ <strong style="color:#e4e4e7;">Make.com Blueprint</strong> — fully configured with 10+ modules</li>
+        <li style="padding:8px0;">✅ <strong style="color:#e4e4e7;">n8n Workflow</strong> — importable JSON, drop into your instance</li>
+        <li style="padding:8px0;">✅ <strong style="color:#e4e4e7;">Setup Guide</strong> — step-by-step configuration walkthrough</li>
+        <li style="padding:8px0;">✅ <strong style="color:#e4e4e7;">Email Templates</strong> — pre-written HTML emails (welcome, follow-up, decline)</li>
+        <li style="padding:8px0;">✅ <strong style="color:#e4e4e7;">Free Updates</strong> — all future versions and improvements</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="container">
+    <h2>Requirements</h2>
+    <div class="features" style="grid-template-columns:1fr 1fr 1fr;">
+      <div style="background:#0d0d14;border:1px solid #1e1e2a;border-radius:10px;padding:16px;text-align:center;">
+        <div style="font-size:20px;margin-bottom:4px;">🔷</div>
+        <div style="font-size:13px;font-weight:700;">Make.com</div>
+        <div style="font-size:11px;color:#64748b;">or n8n instance</div>
+      </div>
+      <div style="background:#0d0d14;border:1px solid #1e1e2a;border-radius:10px;padding:16px;text-align:center;">
+        <div style="font-size:20px;margin-bottom:4px;">🔑</div>
+        <div style="font-size:13px;font-weight:700;">OpenAI API Key</div>
+        <div style="font-size:11px;color:#64748b;">GPT-4o access</div>
+      </div>
+      <div style="background:#0d0d14;border:1px solid #1e1e2a;border-radius:10px;padding:16px;text-align:center;">
+        <div style="font-size:20px;margin-bottom:4px;">📧</div>
+        <div style="font-size:13px;font-weight:700;">Google / Gmail</div>
+        <div style="font-size:11px;color:#64748b;">Calendar + Sheets + Email</div>
+      </div>
+      <div style="background:#0d0d14;border:1px solid #1e1e2a;border-radius:10px;padding:16px;text-align:center;">
+        <div style="font-size:20px;margin-bottom:4px;">⏱️</div>
+        <div style="font-size:13px;font-weight:700;">20 min setup</div>
+        <div style="font-size:11px;color:#64748b;">Connect accounts → go live</div>
+      </div>
+      <div style="background:#0d0d14;border:1px solid #1e1e2a;border-radius:10px;padding:16px;text-align:center;">
+        <div style="font-size:20px;margin-bottom:4px;">💬</div>
+        <div style="font-size:13px;font-weight:700;">Slack Workspace</div>
+        <div style="font-size:11px;color:#64748b;">For team notifications</div>
+      </div>
+      <div style="background:#0d0d14;border:1px solid #1e1e2a;border-radius:10px;padding:16px;text-align:center;">
+        <div style="font-size:20px;margin-bottom:4px;">🌐</div>
+        <div style="font-size:13px;font-weight:700;">Webform</div>
+        <div style="font-size:11px;color:#64748b;">Any form tool works</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="container">
+    <div class="cta-box">
+      <h3>Your Clients Deserve a Concierge</h3>
+      <p>Stop losing leads to slow response times. The AI Concierge works 24/7 — responding, qualifying, scheduling, and logging while you sleep.</p>
+      <a href="https://buy.stripe.com/test_dRm5kwf6e347dVq0LV9Zm06" class="btn btn-primary">Buy Now — $97</a>
+      <div class="test-badge" style="margin-top:16px;">⚠ Test mode — use live Stripe keys for actual charges</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <a href="index.html">&larr; Back to all products</a>
+    <br><br>
+    &copy; 2026 Loki Blodsson &middot; <a href="https://blodsson.gumroad.com">blodsson.gumroad.com</a>
+  </div>
+</footer>
+
+</body>
+</html>

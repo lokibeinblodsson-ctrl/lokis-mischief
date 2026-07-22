@@ -1,0 +1,136 @@
+{
+  "flow": [
+    {
+      "id": 1,
+      "module": "http:MakeRequest",
+      "version": 4,
+      "parameters": {
+        "url": "https://example.com/webhook",
+        "method": "POST",
+        "bodyType": "json"
+      },
+      "metadata": {
+        "designer": {
+          "x": 100,
+          "y": 200,
+          "name": "1. Client Intake Webhook"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "util:SetMultipleVariablesAgent",
+      "version": 1,
+      "parameters": {
+        "variables": [
+          {
+            "name": "clientName",
+            "value": "{{1.data.client_name}}"
+          },
+          {
+            "name": "companyName",
+            "value": "{{1.data.company_name}}"
+          },
+          {
+            "name": "clientEmail",
+            "value": "{{1.data.email}}"
+          },
+          {
+            "name": "serviceType",
+            "value": "{{1.data.service}}"
+          }
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 350,
+          "y": 200,
+          "name": "2. Set Client Variables"
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "google-sheets:addRow",
+      "version": 2,
+      "parameters": {
+        "spreadsheetId": "YOUR_SPREADSHEET_ID",
+        "sheetName": "Clients",
+        "values": [
+          "{{1.data.client_name}}",
+          "{{1.data.company_name}}",
+          "{{1.data.email}}",
+          "{{1.data.service}}",
+          "{{timestamp}}",
+          "Active"
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 200,
+          "name": "3. Log Client to Sheet"
+        }
+      }
+    },
+    {
+      "id": 4,
+      "module": "google-drive:createAFolder",
+      "version": 4,
+      "parameters": {
+        "name": "{{1.data.company_name}} - {{1.data.client_name}}",
+        "parentFolderId": "YOUR_PARENT_FOLDER_ID"
+      },
+      "metadata": {
+        "designer": {
+          "x": 850,
+          "y": 200,
+          "name": "4. Create Client Drive Folder"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "module": "google-email:ActionSendEmail",
+      "version": 1,
+      "parameters": {
+        "to": "{{1.data.email}}",
+        "subject": "Welcome to {{1.data.company_name}} - Onboarding Kit",
+        "body": "Hi {{1.data.client_name}},\n\nWelcome! We're thrilled to have you onboard.\n\nHere's what happens next:\n1. We've created your project folder\n2. Your onboarding checklist is being prepared\n3. Your dedicated project manager will reach out within 24 hours\n\nIn the meantime, feel free to reply to this email with any questions.\n\nBest,\nThe Team",
+        "isBodyHtml": false
+      },
+      "metadata": {
+        "designer": {
+          "x": 1100,
+          "y": 200,
+          "name": "5. Send Welcome Email"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "module": "slack:CreateChannel",
+      "version": 4,
+      "parameters": {
+        "name": "client-{{1.data.company_name}}",
+        "isPrivate": true
+      },
+      "metadata": {
+        "designer": {
+          "x": 1350,
+          "y": 200,
+          "name": "6. Create Slack Channel"
+        }
+      }
+    }
+  ],
+  "name": "Agency Client Onboarding Agent",
+  "metadata": {
+    "version": 1,
+    "scenario": {
+      "maxErrors": 3,
+      "autoCommit": true,
+      "roundtrips": 1
+    }
+  }
+}

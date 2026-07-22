@@ -1,0 +1,9 @@
+{
+  "meta": {"product":"Hel Flow","platform":["make.com","n8n"],"version":"1.0.0"},
+  "flow": [
+    { "id":"1", "module":"HTTP", "action":"Make a request", "fields": { "endpoint":"YOUR_INTAKE_WEBHOOK", "method":"POST" } },
+    { "id":"2", "module":"Tools", "action":"Text Parser", "fields": { "mode":"regex", "pattern":"(human|bot|urgent|standard)" } },
+    { "id":"3", "module":"Flow Control", "action":"Router", "routing": [ { "name":"Human", "patterns":["human"] }, { "name":"Automate", "patterns":["bot"] }, { "name":"Escalation", "patterns":["urgent"] } ] },
+    { "id":"4", "module":"Email", "action":"Send email", "fields": { "to":"ops@company.com", "subject":"Hel route: {{3.name}}" } }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "metrics": {
+    "lead_to_opportunity": ">=25%",
+    "nurture_touches": 5,
+    "revenue_multiple": ">=3x per quarter",
+    "renewal_window_days": 14,
+    "expansion_attach_rate": ">=20%"
+  }
+}

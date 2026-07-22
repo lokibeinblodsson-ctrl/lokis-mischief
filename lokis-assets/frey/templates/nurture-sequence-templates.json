@@ -1,0 +1,7 @@
+{
+  "templates": {
+    "cold": ["Day 1: quick win insight", "Day 3: case study", "Day 7: offer"],
+    "warm": ["Day 1: audit", "Day 3: proposal teaser", "Day 5: bonus"],
+    "enterprise": ["Day 1: exec summary", "Day 3: ROI", "Day 5: video proposal"]
+  }
+}

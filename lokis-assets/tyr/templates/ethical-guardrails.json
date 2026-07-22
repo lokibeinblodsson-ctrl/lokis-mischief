@@ -1,0 +1,7 @@
+{
+  "guardrails": [
+    "Never auto-send to legal without human review.",
+    "Store contract versions with immutable audit timestamps.",
+    "Block automated renewals that exceed 20% price change without approval."
+  ]
+}

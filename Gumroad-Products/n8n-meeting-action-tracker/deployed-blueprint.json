@@ -1,0 +1,249 @@
+{
+  "name": "Meeting-to-Action Tracker",
+  "nodes": [
+    {
+      "id": "1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+      "name": "Receive Meeting Notes",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "meeting-tracker",
+        "options": {
+          "response": {
+            "responseMode": "onReceived",
+            "responseCode": 200,
+            "responseData": "={{ $json }}",
+            "responseContentType": "application/json",
+            "noResponseBody": false
+          },
+          "rawBody": false
+        }
+      },
+      "credentials": {},
+      "webhookId": "meeting-tracker-uuid"
+    },
+    {
+      "id": "2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e",
+      "name": "Extract Action Items",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 2,
+      "position": [480, 300],
+      "parameters": {
+        "model": "gpt-4o",
+        "temperature": 0.3,
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a precise meeting analysis assistant. Extract structured information from meeting transcripts and return ONLY valid JSON (no markdown fences, no commentary). Use this exact schema:\n\n{\n  \"meetingTitle\": \"string\",\n  \"meetingDate\": \"string (ISO 8601)\",\n  \"organizer\": {\n    \"name\": \"string\",\n    \"email\": \"string\"\n  },\n  \"attendees\": [\n    {\n      \"name\": \"string\",\n      \"email\": \"string\",\n      \"actionItems\": [\n        {\n          \"action\": \"string describing the task\",\n          \"deadline\": \"string (ISO 8601 date or 'No deadline')\",\n          \"notes\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"decisions\": [\n    {\n      \"description\": \"string\"\n    }\n  ],\n  \"summary\": \"string (one-paragraph meeting summary)\"\n}\n\nIf any field is missing in the transcript, use null or an empty array. Be thorough — capture every action item and decision explicitly mentioned."
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.body.transcript }}"
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 4096,
+          "frequencyPenalty": 0,
+          "presencePenalty": 0,
+          "responseFormat": "json_object"
+        }
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "OpenAI API Key"
+        }
+      }
+    },
+    {
+      "id": "3c4d5e6f-7a8b-9c0d-1e2f-3a4b5c6d7e8f",
+      "name": "Append to Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [720, 130],
+      "parameters": {
+        "operation": "append",
+        "documentId": "={{ $json.body.sheetId || $params.sheetId }}",
+        "sheetName": "Action Items",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "values": [
+              {
+                "column": "A",
+                "columnName": "Meeting Title",
+                "value": "={{ $json.parsedData?.meetingTitle || $json.choices?.[0]?.message?.content }}"
+              },
+              {
+                "column": "B",
+                "columnName": "Date Captured",
+                "value": "={{ $json.parsedData?.meetingDate || $json.choices?.[0]?.message?.content }}"
+              },
+              {
+                "column": "C",
+                "columnName": "Owner",
+                "value": "={{ $json.parsedData?.attendees?.[0]?.name }}"
+              },
+              {
+                "column": "D",
+                "columnName": "Action",
+                "value": "={{ $json.parsedData?.attendees?.[0]?.actionItems?.[0]?.action }}"
+              },
+              {
+                "column": "E",
+                "columnName": "Deadline",
+                "value": "={{ $json.parsedData?.attendees?.[0]?.actionItems?.[0]?.deadline }}"
+              },
+              {
+                "column": "F",
+                "columnName": "Decision Summary",
+                "value": "={{ $json.parsedData?.decisions?.[0]?.description }}"
+              }
+            ]
+          }
+        },
+        "options": {
+          "mode": "rows",
+          "cellFormat": "USER_ENTERED",
+          "dateTimeRenderOption": "FORMATTED_STRING",
+          "valueInputOption": "USER_ENTERED",
+          "handlingExtraDataOnColumnMismatch": "INSERT_TO_EMPTY_CELLS"
+        }
+      },
+      "credentials": {
+        "googleSheetsApi": {
+          "id": null,
+          "name": "Google Sheets Account"
+        }
+      }
+    },
+    {
+      "id": "4d5e6f7a-8b9c-0d1e-2f3a-4b5c6d7e8f9a",
+      "name": "Email Attendees",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [720, 300],
+      "parameters": {
+        "operation": "send",
+        "to": "={{ $json.parsedData?.attendees?.[0]?.email || $json.body.attendeeEmail }}",
+        "subject": "Action Items: {{ $json.parsedData?.meetingTitle || 'Meeting Follow-Up' }}",
+        "htmlBody": "<html><body style=\"font-family: Arial, sans-serif; font-size: 14px; color: #333;\"><h2 style=\"color: #1a73e8;\">Your Action Items</h2><p>Hi <strong>{{ $json.parsedData?.attendees?.[0]?.name }}</strong>,</p><p>Thank you for participating in <strong>{{ $json.parsedData?.meetingTitle }}</strong>. Below are your assigned action items:</p><table border=\"1\" cellpadding=\"8\" cellspacing=\"0\" style=\"border-collapse: collapse; width: 100%; max-width: 600px; margin: 16px 0;\"><thead><tr style=\"background-color: #f8f9fa;\"><th style=\"text-align: left; border: 1px solid #dadce0;\">Action</th><th style=\"text-align: left; border: 1px solid #dadce0;\">Deadline</th><th style=\"text-align: left; border: 1px solid #dadce0;\">Notes</th></tr></thead><tbody><tr><td style=\"border: 1px solid #dadce0;\">{{ $json.parsedData?.attendees?.[0]?.actionItems?.[0]?.action }}</td><td style=\"border: 1px solid #dadce0;\">{{ $json.parsedData?.attendees?.[0]?.actionItems?.[0]?.deadline }}</td><td style=\"border: 1px solid #dadce0;\">{{ $json.parsedData?.attendees?.[0]?.actionItems?.[0]?.notes }}</td></tr></tbody></table><p style=\"margin-top: 16px;\">Please complete these items by the stated deadlines. Reach out if you have questions.</p><p>Best regards,<br>{{ $json.parsedData?.organizer?.name || 'Meeting Organizer' }}</p></body></html>",
+        "options": {
+          "sendSingleEmail": true,
+          "replyTo": "={{ $json.parsedData?.organizer?.email || '' }}",
+          "attachments": []
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": null,
+          "name": "Gmail Account"
+        }
+      }
+    },
+    {
+      "id": "5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b",
+      "name": "Email Organizer",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [720, 470],
+      "parameters": {
+        "operation": "send",
+        "to": "={{ $json.parsedData?.organizer?.email || $json.body.organizerEmail }}",
+        "subject": "Meeting Summary: {{ $json.parsedData?.meetingTitle || 'Meeting Follow-Up' }}",
+        "htmlBody": "<html><body style=\"font-family: Arial, sans-serif; font-size: 14px; color: #333;\"><h2 style=\"color: #1a73e8;\">Meeting Summary & Action Tracker</h2><h3>{{ $json.parsedData?.meetingTitle }}</h3><p><strong>Date:</strong> {{ $json.parsedData?.meetingDate }}</p><h3>Decisions Made</h3><ul>{{#each $json.parsedData?.decisions}}<li>{{this.description}}</li>{{/each}}</ul><h3>Attendee Action Items</h3><table border=\"1\" cellpadding=\"8\" cellspacing=\"0\" style=\"border-collapse: collapse; width: 100%; max-width: 700px; margin: 16px 0;\"><thead><tr style=\"background-color: #f8f9fa;\"><th style=\"text-align: left; border: 1px solid #dadce0;\">Attendee</th><th style=\"text-align: left; border: 1px solid #dadce0;\">Action</th><th style=\"text-align: left; border: 1px solid #dadce0;\">Deadline</th></tr></thead><tbody>{{#each $json.parsedData?.attendees}}{{#each this.actionItems}}<tr><td style=\"border: 1px solid #dadce0;\">{{../this.name}}</td><td style=\"border: 1px solid #dadce0;\">{{this.action}}</td><td style=\"border: 1px solid #dadce0;\">{{this.deadline}}</td></tr>{{/each}}{{/each}}</tbody></table><h3>Summary</h3><p>{{ $json.parsedData?.summary }}</p><p style=\"margin-top: 16px;\">This summary was auto-generated by the Meeting-to-Action Tracker.</p></body></html>",
+        "options": {
+          "sendSingleEmail": true,
+          "attachments": []
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": null,
+          "name": "Gmail Account"
+        }
+      }
+    },
+    {
+      "id": "6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c",
+      "name": "Post to Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [720, 610],
+      "parameters": {
+        "channel": "={{ $json.body.slackChannel || $params.slackChannel }}",
+        "text": "📋 *Meeting Summary: {{ $json.parsedData?.meetingTitle }}*\n📅 *Date:* {{ $json.parsedData?.meetingDate }}\n\n*Decisions:*\n{{#each $json.parsedData?.decisions}}• {{this.description}}\n{{/each}}\n\n*Action Items:*\n{{#each $json.parsedData?.attendees}}{{#each this.actionItems}}• *{{../this.name}}* → {{this.action}} (due: {{this.deadline}})\n{{/each}}{{/each}}\n\n*Summary:* {{ $json.parsedData?.summary }}",
+        "otherOptions": {
+          "mrkdwn": true,
+          "username": "Meeting Bot",
+          "icon_emoji": ":memo:"
+        },
+        "attachments": {
+          "values": [
+            {
+              "color": "#1a73e8",
+              "title": "View Action Items",
+              "title_link": "={{ $json.body.sheetUrl || '' }}",
+              "text": "Full action items have been logged in the tracker spreadsheet."
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "slackApi": {
+          "id": null,
+          "name": "Slack Workspace"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Receive Meeting Notes": {
+      "main": [
+        [
+          {
+            "node": "Extract Action Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Action Items": {
+      "main": [
+        [
+          {
+            "node": "Append to Sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Email Attendees",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Email Organizer",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Post to Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "tagIds": [],
+  "triggerCount": 0
+}

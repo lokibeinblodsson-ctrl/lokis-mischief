@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200" viewBox="0 0 900 1200">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="35%" r="75%">
+      <stop offset="0%" stop-color="#1a2330"/>
+      <stop offset="100%" stop-color="#07070a"/>
+    </radialGradient>
+    <linearGradient id="coat" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#cfd6dd"/>
+      <stop offset="55%" stop-color="#9aa4ad"/>
+      <stop offset="100%" stop-color="#6b7480"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fcd34d"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="1200" fill="url(#bg)"/>
+  <!-- mist -->
+  <ellipse cx="450" cy="1050" rx="430" ry="120" fill="#0d1118" opacity="0.7"/>
+  <!-- ground -->
+  <rect x="0" y="1010" width="900" height="190" fill="#0b0e14"/>
+
+  <!-- horse silhouette: body, neck, head, tail, mane -->
+  <g stroke="#3a424c" stroke-width="2">
+    <!-- body -->
+    <path d="M250 720 Q450 640 650 720 Q700 760 660 820 Q450 880 280 820 Q230 770 250 720 Z" fill="url(#coat)"/>
+    <!-- chest/neck -->
+    <path d="M620 760 Q700 660 720 540 Q740 470 700 430 Q660 470 640 560 Q610 680 600 760 Z" fill="url(#coat)"/>
+    <!-- head -->
+    <path d="M700 430 Q690 360 720 330 Q770 310 800 350 Q820 400 790 470 Q740 500 700 430 Z" fill="url(#coat)"/>
+    <!-- ear -->
+    <path d="M735 335 L745 285 L770 330 Z" fill="url(#coat)"/>
+    <!-- mane -->
+    <path d="M640 560 Q660 470 700 430 Q720 470 700 560 Q680 660 660 760 Q645 660 640 560 Z" fill="#e9eef3"/>
+    <!-- tail -->
+    <path d="M255 760 Q180 820 200 980 Q230 1010 250 960 Q235 860 280 800 Z" fill="#e9eef3"/>
+  </g>
+
+  <!-- EIGHT LEGS: 4 on each side, slightly offset, drawn as tapering shapes -->
+  <g fill="url(#coat)" stroke="#3a424c" stroke-width="2">
+    <!-- viewer-left side (4 legs) -->
+    <path d="M300 800 q-8 90 -10 180 q14 12 30 0 q4 -90 12 -178 Z"/>
+    <path d="M345 805 q-6 95 -8 188 q14 12 30 0 q3 -95 8 -184 Z"/>
+    <path d="M520 805 q-6 95 -8 188 q14 12 30 0 q3 -95 8 -184 Z"/>
+    <path d="M565 800 q-8 90 -10 180 q14 12 30 0 q4 -90 12 -178 Z"/>
+    <!-- viewer-right side (4 legs, slightly behind) -->
+    <path d="M320 810 q-6 95 -8 190 q12 10 26 0 q3 -95 7 -186 Z"/>
+    <path d="M365 815 q-6 95 -8 190 q12 10 26 0 q3 -95 7 -186 Z"/>
+    <path d="M540 815 q-6 95 -8 190 q12 10 26 0 q3 -95 7 -186 Z"/>
+    <path d="M585 810 q-6 95 -8 190 q12 10 26 0 q3 -95 7 -186 Z"/>
+  </g>
+  <!-- hooves -->
+  <g fill="#2a2f37">
+    <rect x="282" y="978" width="40" height="20" rx="6"/>
+    <rect x="327" y="982" width="40" height="20" rx="6"/>
+    <rect x="502" y="982" width="40" height="20" rx="6"/>
+    <rect x="547" y="978" width="40" height="20" rx="6"/>
+    <rect x="302" y="996" width="36" height="18" rx="6"/>
+    <rect x="347" y="1000" width="36" height="18" rx="6"/>
+    <rect x="522" y="1000" width="36" height="18" rx="6"/>
+    <rect x="567" y="996" width="36" height="18" rx="6"/>
+  </g>
+
+  <!-- glowing eye -->
+  <circle cx="760" cy="400" r="7" fill="#fde68a"/>
+  <circle cx="760" cy="400" r="3" fill="#fff7da"/>
+
+  <!-- gold rim accents -->
+  <path d="M250 720 Q450 640 650 720" fill="none" stroke="url(#gold)" stroke-width="3" opacity="0.5"/>
+  <text x="450" y="1150" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#f59e0b" letter-spacing="3">SLEIPNIR · EIGHT-FOOTED</text>
+</svg>

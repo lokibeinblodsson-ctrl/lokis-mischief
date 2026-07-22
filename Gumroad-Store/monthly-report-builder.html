@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Narrative Monthly Report Builder — Agency Automation Workflows</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background: #07070a;
+    color: #e4e4e7;
+    line-height: 1.6;
+  }
+  .container { max-width: 820px; margin: 0 auto; padding: 0 20px; }
+
+  /* ── Test mode banner ── */
+  .test-banner {
+    background: #f59e0b11;
+    border: 1px solid #f59e0b33;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: #fbbf24;
+    text-align: center;
+    margin: 24px 0 0;
+  }
+
+  /* ── Nav bar ── */
+  .top-nav {
+    padding: 20px 0 0;
+    text-align: center;
+  }
+  .top-nav a {
+    color: #64748b;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: color .2s;
+  }
+  .top-nav a:hover { color: #94a3b8; }
+
+  /* ── Hero ── */
+  .hero {
+    padding: 60px 0 40px;
+    text-align: center;
+  }
+  .hero-icon {
+    width: 72px; height: 72px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #22c55e33, #22c55e11);
+    border: 1px solid #22c55e33;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 34px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 12px;
+    color: #f1f5f9;
+  }
+  .hero .tagline {
+    font-size: clamp(16px, 2.5vw, 19px);
+    color: #94a3b8;
+    max-width: 580px;
+    margin: 0 auto 16px;
+  }
+  .hero .description {
+    font-size: 15px;
+    color: #64748b;
+    max-width: 540px;
+    margin: 0 auto 24px;
+    line-height: 1.7;
+  }
+  .hero-meta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+  .hero-meta .price {
+    font-size: 28px;
+    font-weight: 800;
+    color: #a5b4fc;
+  }
+  .hero-meta .badge {
+    background: #22c55e22;
+    color: #4ade80;
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .hero-meta .tag {
+    background: #6366f122;
+    color: #818cf8;
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-block;
+    padding: 16px 44px;
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform .15s, box-shadow .2s;
+    cursor: pointer;
+    border: none;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn-primary {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff;
+  }
+  .btn-primary:hover {
+    box-shadow: 0 4px 24px #6366f144;
+  }
+  .btn-outline {
+    border: 1px solid #6366f144;
+    color: #a5b4fc;
+    padding: 12px 24px;
+    font-size: 14px;
+    border-radius: 8px;
+    background: transparent;
+    text-decoration: none;
+    display: inline-block;
+    transition: background .2s;
+  }
+  .btn-outline:hover { background: #6366f111; }
+
+  /* ── Section headers ── */
+  .section {
+    padding: 48px 0;
+  }
+  .section-header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .section-header h2 {
+    font-size: 22px;
+    font-weight: 800;
+    color: #f1f5f9;
+    margin-bottom: 8px;
+  }
+  .section-header p {
+    font-size: 15px;
+    color: #64748b;
+  }
+
+  /* ── Results / Value Prop bar ── */
+  .results-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    background: #0d0d14;
+    border: 1px solid #1e1e2a;
+    border-radius: 14px;
+    padding: 28px 20px;
+    margin-bottom: 40px;
+    text-align: center;
+  }
+  .results-bar .stat strong {
+    display: block;
+    font-size: 22px;
+    font-weight: 800;
+    color: #f1f5f9;
+    margin-bottom: 2px;
+  }
+  .results-bar .stat span {
+    font-size: 13px;
+    color: #64748b;
+  }
+
+  /* ── Features grid ── */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .feature-card {
+    background: #0d0d14;
+    border: 1px solid #1e1e2a;
+    border-radius: 14px;
+    padding: 24px;
+    transition: border-color .2s;
+  }
+  .feature-card:hover { border-color: #6366f133; }
+  .feature-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    margin-bottom: 14px;
+  }
+  .feature-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 6px;
+  }
+  .feature-card p {
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.6;
+  }
+
+  /* ── How It Works steps ── */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .step {
+    display: flex;
+    gap: 18px;
+    background: #0d0d14;
+    border: 1px solid #1e1e2a;
+    border-radius: 14px;
+    padding: 24px;
+    align-items: flex-start;
+  }
+  .step-number {
+    min-width: 36px; height: 36px;
+    border-radius: 50%;
+    background: #6366f122;
+    color: #818cf8;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800;
+    flex-shrink: 0;
+  }
+  .step-content { flex: 1; }
+  .step-content h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 4px;
+  }
+  .step-content p {
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.6;
+  }
+
+  /* ── Tech requirements ── */
+  .requirements-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .req-item {
+    background: #0d0d14;
+    border: 1px solid #1e1e2a;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+  .req-item .req-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  .req-item h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 4px;
+  }
+  .req-item p {
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.5;
+  }
+  .req-divider {
+    text-align: center;
+    font-size: 13px;
+    color: #475569;
+    padding: 8px 0;
+    font-weight: 600;
+  }
+
+  /* ── CTA ── */
+  .cta-section {
+    padding: 56px 0 48px;
+    text-align: center;
+  }
+  .cta-box {
+    background: linear-gradient(135deg, #0d0d14, #12101e);
+    border: 1px solid #2a1a4a;
+    border-radius: 18px;
+    padding: 48px 24px;
+  }
+  .cta-box h2 {
+    font-size: clamp(22px, 4vw, 32px);
+    font-weight: 800;
+    color: #f1f5f9;
+    margin-bottom: 8px;
+  }
+  .cta-box p {
+    font-size: 15px;
+    color: #94a3b8;
+    margin-bottom: 28px;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .cta-box .price-display {
+    font-size: 18px;
+    color: #64748b;
+    margin-bottom: 20px;
+  }
+  .cta-box .price-display strong {
+    font-size: 32px;
+    font-weight: 800;
+    color: #a5b4fc;
+  }
+  .cta-box .guarantee {
+    margin-top: 16px;
+    font-size: 13px;
+    color: #64748b;
+  }
+  .cta-box .guarantee span { color: #4ade80; }
+
+  /* ── Divider ── */
+  .divider {
+    height: 1px;
+    background: #1a1a24;
+    margin: 0;
+  }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    padding: 32px 0;
+    font-size: 13px;
+    color: #475569;
+  }
+  footer a {
+    color: #64748b;
+    text-decoration: none;
+    transition: color .2s;
+  }
+  footer a:hover { color: #94a3b8; }
+  footer .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 1px solid #1e1e2a;
+    margin-bottom: 16px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  footer .back-link:hover {
+    background: #0d0d14;
+  }
+
+  /* ── FAQ mini ── */
+  .faq-item {
+    background: #0d0d14;
+    border: 1px solid #1e1e2a;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+  }
+  .faq-item h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 4px;
+  }
+  .faq-item p {
+    font-size: 13px;
+    color: #64748b;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .hero { padding: 40px 0 24px; }
+    .results-bar { grid-template-columns: 1fr; gap: 16px; }
+    .features-grid { grid-template-columns: 1fr; }
+    .requirements-grid { grid-template-columns: 1fr; }
+    .step { flex-direction: column; gap: 12px; }
+    .step-number { min-width: 32px; height: 32px; font-size: 13px; }
+    .hero-meta .price { font-size: 22px; }
+    .cta-box { padding: 32px 20px; }
+    .top-nav { padding: 16px 0 0; }
+  }
+
+  @media (min-width: 641px) and (max-width: 900px) {
+    .features-grid { gap: 14px; }
+    .requirements-grid { gap: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<div class="top-nav">
+  <div class="container">
+    <a href="index.html">&larr; Back to all workflows</a>
+  </div>
+</div>
+
+<!-- ── Test mode banner ── -->
+<div class="container">
+  <div class="test-banner">
+    ⚠ Test mode — all purchases use test (fake) credit cards. Swap to live Stripe keys for real charges.
+  </div>
+</div>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-icon">📊</div>
+    <h1>Narrative Monthly<br>Report Builder</h1>
+    <p class="tagline">From 4+ hours of grind to a 5-minute workflow. Pulls metrics, writes the narrative, builds client-ready slides.</p>
+    <p class="description">Stop spending half your day compiling monthly reports. This ready-to-import Make.com workflow connects your tools, extracts the data, crafts a compelling narrative, and generates polished slides — automatically. You just review and send.</p>
+    <div class="hero-meta">
+      <span class="price">$39</span>
+      <span class="badge">Lifetime Access</span>
+      <span class="tag">New</span>
+    </div>
+    <a href="https://buy.stripe.com/test_dRm4gs9LUeMP8B60LV9Zm01" class="btn btn-primary" target="_blank" rel="noopener">Buy Now — $39</a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── Results bar ── -->
+<section class="section">
+  <div class="container">
+    <div class="results-bar">
+      <div class="stat">
+        <strong>4+ hrs</strong>
+        <span>Saved per report</span>
+      </div>
+      <div class="stat">
+        <strong>5 min</strong>
+        <span>Report generation</span>
+      </div>
+      <div class="stat">
+        <strong>100%</strong>
+        <span>Client-ready output</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── What's Included / Features ── -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-header">
+      <h2>What's Included</h2>
+      <p>Everything you need to automate monthly reporting from day one.</p>
+    </div>
+    <div class="features-grid">
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#6366f122;">🔗</div>
+        <h3>Tool Integrations</h3>
+        <p>Pre-built connectors for Google Analytics, Search Console, social platforms, email marketing, and more. Pull data from anywhere.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#22c55e22;">📝</div>
+        <h3>AI Narrative Writer</h3>
+        <p>Transforms raw numbers into a compelling story. Highlights wins, flags declines, and explains the "why" behind every metric.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#f59e0b22;">📽️</div>
+        <h3>Slide Builder</h3>
+        <p>Auto-generates client-ready Google Slides or PowerPoint decks with charts, headers, and formatted narrative — no design work needed.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#ef444422;">📅</div>
+        <h3>Scheduled Delivery</h3>
+        <p>Set it and forget it. The workflow runs on your chosen cadence (monthly, weekly, quarterly) and delivers the report to your inbox.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#06b6d422;">📊</div>
+        <h3>Custom Dashboards</h3>
+        <p>Choose which metrics matter for each client. The report adapts to your KPIs — no one-size-fits-all templates.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#a855f722;">🔒</div>
+        <h3>White Label Ready</h3>
+        <p>Brand the reports with your agency's logo, colors, and domain. Clients see your brand, not a third-party tool.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── How It Works ── -->
+<section class="section" id="how-it-works">
+  <div class="container">
+    <div class="section-header">
+      <h2>How It Works</h2>
+      <p>Set up once. Impress clients every month.</p>
+    </div>
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h3>Connect Your Tools</h3>
+          <p>Link your analytics, ads, social, and email accounts using the pre-configured Make.com modules. No coding or complex setup required.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h3>Set Your Template</h3>
+          <p>Choose which metrics to track, select a slide theme, and customize the narrative tone. Save once — the workflow remembers everything.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h3>Run &amp; Review</h3>
+          <p>Trigger the workflow manually or schedule it. In ~5 minutes you'll get a complete report with slides, narrative, and data visualizations. Review, polish, send.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── Tech Requirements ── -->
+<section class="section" id="requirements">
+  <div class="container">
+    <div class="section-header">
+      <h2>Tech Requirements</h2>
+      <p>Everything you need to run the workflow.</p>
+    </div>
+    <div class="requirements-grid">
+
+      <div class="req-item">
+        <div class="req-icon">⚡</div>
+        <h4>Make.com Account</h4>
+        <p>Free or paid. The workflow runs on Make.com (formerly Integromat). You'll import the blueprint and connect your accounts.</p>
+      </div>
+
+      <div class="req-item">
+        <div class="req-icon">🤖</div>
+        <h4>OpenAI API Key</h4>
+        <p>Required for the AI narrative writer module. Costs ~$0.10–$0.50 per report depending on data volume.</p>
+      </div>
+
+      <div class="req-item">
+        <div class="req-icon">📁</div>
+        <h4>Google Workspace</h4>
+        <p>For auto-generated Slides and Drive storage. A free Google account works for smaller agencies.</p>
+      </div>
+
+      <div class="req-item">
+        <div class="req-icon">📈</div>
+        <h4>Data Sources</h4>
+        <p>Google Analytics, Search Console, Facebook Ads, LinkedIn, Mailchimp, or any API-based tool. Custom connectors available.</p>
+      </div>
+
+    </div>
+    <p style="text-align:center; font-size:13px; color:#475569; margin-top:20px;">
+      Don't have one of these? Reach out — I can help adapt the workflow to your stack.
+    </p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── FAQ ── -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Frequently Asked Questions</h2>
+    </div>
+
+    <div class="faq-item">
+      <h4>Do I need to know how to use Make.com?</h4>
+      <p>Basic familiarity helps, but the workflow comes with detailed setup instructions and video walkthroughs. If you can connect accounts, you can handle it.</p>
+    </div>
+
+    <div class="faq-item">
+      <h4>Can I customize the reports?</h4>
+      <p>Absolutely. You choose the metrics, the narrative tone, the brand colors, and the slide layout. Every client can have a unique report template.</p>
+    </div>
+
+    <div class="faq-item">
+      <h4>Is this a SaaS subscription or a one-time purchase?</h4>
+      <p>One-time purchase. You own the workflow forever. No monthly fees, no usage caps. You only pay for your Make.com plan and OpenAI API usage.</p>
+    </div>
+
+    <div class="faq-item">
+      <h4>What if something breaks?</h4>
+      <p>The workflow is built with error handling and retry logic. If an API changes or a module fails, the workflow logs the issue and retries. I also provide email support.</p>
+    </div>
+
+    <div class="faq-item">
+      <h4>Can I get a refund?</h4>
+      <p>Yes — full refund within 30 days if the workflow doesn't work as described. Just email me with your purchase details.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── CTA ── -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-box">
+      <h2>Stop grinding on monthly reports.</h2>
+      <p>Get the Narrative Monthly Report Builder and turn 4+ hours of work into a 5-minute review session. Your clients will love the quality. You'll love the time back.</p>
+      <div class="price-display">
+        <strong>$39</strong> &nbsp;—&nbsp; one-time payment
+      </div>
+      <a href="https://buy.stripe.com/test_dRm4gs9LUeMP8B60LV9Zm01" class="btn btn-primary" target="_blank" rel="noopener">
+        Buy Now — $39
+      </a>
+      <div class="guarantee">
+        <span>✓</span> 30-day money-back guarantee &nbsp;·&nbsp; <span>✓</span> Lifetime access &nbsp;·&nbsp; <span>✓</span> Instant download
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <div class="container">
+    <a href="index.html" class="back-link">
+      &larr; Back to all workflows
+    </a>
+    <br>
+    <a href="https://blodsson.gumroad.com">Gumroad</a>
+    &nbsp;&middot;&nbsp;
+    <a href="#">Twitter / X</a>
+    &nbsp;&middot;&nbsp;
+    <a href="mailto:loki.bein.blodsson@gmail.com">Email</a>
+    <br><br>
+    &copy; 2026 Loki Blodsson &middot; Digital products for agency owners
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "product": "Green Harvest Engine",
+    "price": "$69",
+    "platform": ["make.com", "n8n"],
+    "version": "1.0.0",
+    "author": "Loki's Mischief",
+    "description": "Lead generation and revenue pipeline automation with nurture templates and abundance metrics.",
+    "usage": "Import JSON, connect CRM and email, map lead scoring thresholds."
+  },
+  "scenario": {
+    "name": "Harvest Funnel",
+    "flow": [
+      { "id": "1", "module": "HTTP", "action": "Make a request", "fields": { "endpoint": "YOUR_LEAD_WEBHOOK", "method": "POST", "headers": { "Content-Type": "application/json" } } },
+      { "id": "2", "module": "Tools", "action": "Text Parser", "fields": { "mode": "regex", "pattern": "(trial|demo|pricing|partnership|enterprise)" } },
+      { "id": "3", "module": "Flow Control", "action": "Router", "routing": [ { "name": "Hot", "patterns": ["demo","enterprise"] }, { "name": "Warm", "patterns": ["trial","pricing"] }, { "name": "Cold", "patterns": ["partnership"] } ] },
+      { "id": "4", "module": "Email", "action": "Send email", "fields": { "to": "sales@company.com", "subject": "New harvest lead: {{3.name}}" } },
+      { "id": "5", "module": "CRM", "action": "Create or update", "fields": { "score": "{{3.name}}", "source": "Harvest Funnel" } }
+    ]
+  }
+}

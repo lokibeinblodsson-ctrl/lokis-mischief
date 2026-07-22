@@ -1,0 +1,347 @@
+{
+  "name": "Agency Client Onboarding Agent",
+  "nodes": [
+    {
+      "id": "2f6c9b1a-7d3e-4f8a-9b1c-2d3e4f5a6b7c",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "client-onboarding",
+        "options": {
+          "responseData": "allEntries",
+          "responseMode": "onReceived",
+          "responseStatusCode": 200,
+          "rawBody": false
+        }
+      },
+      "webhookId": "client-onboarding",
+      "credentials": {}
+    },
+    {
+      "id": "3a7d0e2f-8b4c-4f9a-0b1c-2d3e4f5a6b7d",
+      "name": "Format Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [450, 300],
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "clientName",
+              "value": "={{ $json.body.name }}"
+            },
+            {
+              "name": "clientEmail",
+              "value": "={{ $json.body.email }}"
+            },
+            {
+              "name": "clientCompany",
+              "value": "={{ $json.body.company }}"
+            },
+            {
+              "name": "services",
+              "value": "={{ $json.body.services }}"
+            },
+            {
+              "name": "onboardingDate",
+              "value": "={{ $now.toISOFormat('yyyy-MM-dd') }}"
+            },
+            {
+              "name": "leadSource",
+              "value": "={{ $json.body.leadSource || 'Website' }}"
+            },
+            {
+              "name": "status",
+              "value": "Active"
+            },
+            {
+              "name": "ticketId",
+              "value": "={{ $json.body.ticketId || '' }}"
+            }
+          ]
+        },
+        "options": {
+          "keepOnlySet": true
+        }
+      },
+      "credentials": {}
+    },
+    {
+      "id": "4b8e1f3a-9c5d-4a0b-1c2d-3e4f5a6b7c8e",
+      "name": "Add Row to Client Tracker",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 2,
+      "position": [650, 80],
+      "parameters": {
+        "operation": "append",
+        "documentId": "{{ $params.googleSheetId || 'YOUR_GOOGLE_SHEET_ID' }}",
+        "sheetName": "Clients",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": [
+            {
+              "key": "Name",
+              "value": "={{ $json.clientName }}"
+            },
+            {
+              "key": "Email",
+              "value": "={{ $json.clientEmail }}"
+            },
+            {
+              "key": "Company",
+              "value": "={{ $json.clientCompany }}"
+            },
+            {
+              "key": "Services",
+              "value": "={{ $json.services }}"
+            },
+            {
+              "key": "Onboarding Date",
+              "value": "={{ $json.onboardingDate }}"
+            },
+            {
+              "key": "Status",
+              "value": "={{ $json.status }}"
+            },
+            {
+              "key": "Lead Source",
+              "value": "={{ $json.leadSource }}"
+            },
+            {
+              "key": "Ticket ID",
+              "value": "={{ $json.ticketId }}"
+            }
+          ]
+        },
+        "options": {
+          "cellFormat": "userEntered",
+          "handlingExtraData": "insertInNewColumn"
+        }
+      },
+      "credentials": {
+        "googleSheetsApi": {
+          "id": null,
+          "name": "Google Sheets Account"
+        }
+      }
+    },
+    {
+      "id": "5c9f2a4b-0d6e-4b1c-2d3e-4f5a6b7c8d9f",
+      "name": "Create Client Folder",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 2,
+      "position": [650, 210],
+      "parameters": {
+        "operation": "create",
+        "type": "folder",
+        "name": "={{ $json.clientCompany + ' — ' + $json.clientName }}",
+        "parentFolder": "{{ $params.parentFolderId || 'YOUR_DRIVE_PARENT_FOLDER_ID' }}",
+        "options": {
+          "appProperties": {
+            "appPropertiesValues": [
+              {
+                "key": "clientEmail",
+                "value": "={{ $json.clientEmail }}"
+              },
+              {
+                "key": "clientName",
+                "value": "={{ $json.clientName }}"
+              }
+            ]
+          },
+          "fields": "id,name,webViewLink"
+        }
+      },
+      "credentials": {
+        "googleDriveApi": {
+          "id": null,
+          "name": "Google Drive Account"
+        }
+      }
+    },
+    {
+      "id": "6d0a3b5c-1e7f-4c2d-3e4f-5a6b7c8d9e0a",
+      "name": "Send Welcome Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [650, 340],
+      "parameters": {
+        "operation": "send",
+        "to": "={{ $json.clientEmail }}",
+        "subject": "Welcome to the Agency — Next Steps for {{ $json.clientCompany }}",
+        "emailType": "html",
+        "message": "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body style=\"font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f4f7fc; margin: 0; padding: 0;\"><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background: #f4f7fc; padding: 40px 0;\"><tr><td align=\"center\"><table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" style=\"background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.06);\"><tr><td style=\"background: linear-gradient(135deg, #6366f1, #8b5cf6); padding: 40px 48px; text-align: center;\"><h1 style=\"color: #ffffff; font-size: 28px; margin: 0 0 8px;\">Welcome to the Agency!</h1><p style=\"color: rgba(255,255,255,0.85); font-size: 16px; margin: 0;\">We're thrilled to have you on board</p></td></tr><tr><td style=\"padding: 40px 48px;\"><p style=\"color: #1e293b; font-size: 16px; line-height: 1.6; margin: 0 0 8px;\">Hi <strong>{{ $json.clientName }}</strong>,</p><p style=\"color: #475569; font-size: 15px; line-height: 1.7; margin: 0 0 24px;\">Thank you for choosing our agency for your <strong>{{ $json.services }}</strong> needs. Your onboarding is now in progress, and we've set up everything on our end to hit the ground running.</p><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background: #f8fafc; border-radius: 8px; padding: 24px; margin-bottom: 24px;\"><tr><td><h3 style=\"color: #1e293b; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 16px;\">What's Next</h3><table cellpadding=\"0\" cellspacing=\"0\"><tr><td style=\"width: 24px; vertical-align: top; color: #6366f1; font-size: 14px; line-height: 1.8;\">1.</td><td style=\"color: #475569; font-size: 14px; line-height: 1.8;\">Kickoff call scheduled within the first week</td></tr><tr><td style=\"width: 24px; vertical-align: top; color: #6366f1; font-size: 14px; line-height: 1.8;\">2.</td><td style=\"color: #475569; font-size: 14px; line-height: 1.8;\">Access to your dedicated client dashboard</td></tr><tr><td style=\"width: 24px; vertical-align: top; color: #6366f1; font-size: 14px; line-height: 1.8;\">3.</td><td style=\"color: #475569; font-size: 14px; line-height: 1.8;\">A strategy questionnaire tailored to your goals</td></tr><tr><td style=\"width: 24px; vertical-align: top; color: #6366f1; font-size: 14px; line-height: 1.8;\">4.</td><td style=\"color: #475569; font-size: 14px; line-height: 1.8;\">Your dedicated account manager introduction</td></tr></table></td></tr></table><p style=\"color: #475569; font-size: 15px; line-height: 1.7; margin: 0 0 24px;\">If you have any questions in the meantime, simply reply to this email or reach out to your account team directly. We're here to help.</p><p style=\"color: #1e293b; font-size: 15px; line-height: 1.6; margin: 0 0 4px;\">Best regards,</p><p style=\"color: #6366f1; font-weight: 600; font-size: 15px; margin: 0;\">The Agency Team</p></td></tr><tr><td style=\"background: #f1f5f9; padding: 24px 48px; text-align: center;\"><p style=\"color: #94a3b8; font-size: 12px; margin: 0 0 4px;\">© 2025 Your Agency. All rights reserved.</p><p style=\"color: #94a3b8; font-size: 12px; margin: 0;\">123 Business Ave, Suite 400, San Francisco, CA 94102</p></td></tr></table></td></tr></table></body></html>",
+        "options": {
+          "sendAttachments": false
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": null,
+          "name": "Gmail Account"
+        }
+      }
+    },
+    {
+      "id": "7e1b4c6d-2f8a-4d3e-4f5a-6b7c8d9e0f1b",
+      "name": "Create Slack Channel",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [650, 470],
+      "parameters": {
+        "operation": "create",
+        "channel": "={{ 'client-' + $json.clientCompany.toLowerCase().replace(/[^a-z0-9]/g, '-').slice(0, 60) }}",
+        "isPrivate": false,
+        "options": {}
+      },
+      "credentials": {
+        "slackApi": {
+          "id": null,
+          "name": "Slack Account"
+        }
+      }
+    },
+    {
+      "id": "8f2c5d7e-3a9b-4e4f-5a6b-7c8d9e0f1a2c",
+      "name": "Send CRM Summary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [650, 600],
+      "parameters": {
+        "method": "POST",
+        "url": "{{ $params.crmWebhookUrl || 'https://your-crm.example.com/api/onboarding' }}",
+        "authentication": "genericCredentialType",
+        "contentType": "json",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event",
+              "value": "client_onboarding"
+            },
+            {
+              "name": "name",
+              "value": "={{ $json.clientName }}"
+            },
+            {
+              "name": "email",
+              "value": "={{ $json.clientEmail }}"
+            },
+            {
+              "name": "company",
+              "value": "={{ $json.clientCompany }}"
+            },
+            {
+              "name": "services",
+              "value": "={{ $json.services }}"
+            },
+            {
+              "name": "onboardingDate",
+              "value": "={{ $json.onboardingDate }}"
+            },
+            {
+              "name": "leadSource",
+              "value": "={{ $json.leadSource }}"
+            },
+            {
+              "name": "status",
+              "value": "={{ $json.status }}"
+            },
+            {
+              "name": "source",
+              "value": "n8n-client-onboarding"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000,
+          "allowUnauthorizedCerts": false,
+          "redirect": {
+            "redirect": {}
+          },
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "credentials": {
+        "httpRequest": {
+          "id": null,
+          "name": "Generic Webhook Credentials"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Format Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Data": {
+      "main": [
+        [
+          {
+            "node": "Add Row to Client Tracker",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Client Folder",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Welcome Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Slack Channel",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send CRM Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "timezone": "America/New_York",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "onboarding",
+      "id": "tag-onboarding"
+    },
+    {
+      "name": "client-management",
+      "id": "tag-client-mgmt"
+    },
+    {
+      "name": "agency",
+      "id": "tag-agency"
+    }
+  ]
+}

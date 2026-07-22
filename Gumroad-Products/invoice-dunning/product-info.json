@@ -1,0 +1,87 @@
+{
+  "product_name": "Invoice Dunning & Payment Reminder",
+  "price": 39,
+  "currency": "USD",
+  "purchase_url": "https://buy.stripe.com/test_bJe4gs8HQ0VZaJe1PZ9Zm03",
+  "version": "1.0.0",
+  "release_date": "2026-07-20",
+  "short_description": "Automated three-tier invoice dunning workflow — sends friendly reminders, gentle nudges, and final notices via Gmail, logs everything to Google Sheets, and alerts your team on Slack when a payment escalates.",
+  "full_description": "Stop chasing invoices manually. The Invoice Dunning & Payment Reminder blueprint handles your entire collections follow-up process automatically.\n\nWhen a Stripe invoice becomes past due, this Make.com scenario triggers instantly and routes it through a three-tier email sequence:\n- Days 1–3: A friendly, branded reminder email\n- Days 4–10: A polite but direct nudge\n- Day 11+: A final notice with escalation warning\n\nEvery action is logged to Google Sheets for a complete audit trail. On the final notice, your team gets an instant Slack alert in #collections-alerts so nothing falls through the cracks.",
+  "features": [
+    "Stripe webhook trigger — fires automatically when an invoice goes past due",
+    "Three-tier email sequence with distinct styles (friendly → nudge → final notice)",
+    "HTML email templates with inline CSS and responsive design",
+    "Google Sheets logging for full audit trail of all dunning actions",
+    "Slack notification on final notice with invoice details and payment link button",
+    "Configurable day thresholds to match your payment terms",
+    "Router-based branching — easy to add more tiers or custom logic",
+    "Works in Stripe test mode for safe experimentation",
+    "HMAC webhook verification support for production security",
+    "All connections reusable — one-click auth for Gmail, Sheets, and Slack"
+  ],
+  "requirements": [
+    "Make.com account (any paid plan supporting Webhooks, Gmail, Google Sheets, and Slack modules)",
+    "Stripe account with invoices enabled",
+    "Google account (for Gmail sending and Google Sheets)",
+    "Slack workspace (optional, only needed for team notifications)"
+  ],
+  "file_manifest": [
+    "deployed-blueprint.json",
+    "setup-guide.md",
+    "product-info.json"
+  ],
+  "workflow_modules": {
+    "total": 8,
+    "apps_used": [
+      "Webhook",
+      "Router",
+      "Gmail",
+      "Google Sheets",
+      "Slack"
+    ],
+    "trigger_type": "Webhook (instant)",
+    "schedule": "Real-time — triggered by Stripe webhook events"
+  },
+  "reminder_tiers": [
+    {
+      "tier": 1,
+      "label": "Friendly Reminder",
+      "days_past_due": "1–3",
+      "channels": ["Gmail"],
+      "description": "Light-touch, friendly tone. Reassures the customer and provides a single payment CTA."
+    },
+    {
+      "tier": 2,
+      "label": "Gentle Nudge",
+      "days_past_due": "4–10",
+      "channels": ["Gmail"],
+      "description": "Polite but more direct. Notes the number of days overdue and encourages prompt payment."
+    },
+    {
+      "tier": 3,
+      "label": "Final Notice",
+      "days_past_due": "11+",
+      "channels": ["Gmail", "Google Sheets", "Slack"],
+      "description": "Urgent red-themed email warning of escalation. Logs to Sheets and sends Slack alert to the team."
+    }
+  ],
+  "tags": [
+    "stripe",
+    "invoicing",
+    "dunning",
+    "payment-reminders",
+    "accounts-receivable",
+    "automation",
+    "make-com",
+    "gmail",
+    "google-sheets",
+    "slack",
+    "collections"
+  ],
+  "changelog": {
+    "1.0.0": {
+      "date": "2026-07-20",
+      "changes": ["Initial release"]
+    }
+  }
+}

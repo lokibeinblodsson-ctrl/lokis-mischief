@@ -1,0 +1,313 @@
+{
+  "name": "Invoice Dunning & Payment Reminder",
+  "nodes": [
+    {
+      "id": "79270c13-b2d3-49c5-99b2-04f78a595451",
+      "name": "Receive Invoice",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "invoice-dunning",
+        "responseMode": "onReceived",
+        "response": {
+          "content": "OK",
+          "headers": {}
+        },
+        "options": {}
+      },
+      "credentials": {}
+    },
+    {
+      "id": "7c50117a-eccb-4bec-ac51-580841370c33",
+      "name": "Check Days Past Due",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 300],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "cond-days-lte-3",
+              "leftValue": "={{ $json.daysPastDue }}",
+              "rightValue": "3",
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
+            }
+          ]
+        }
+      },
+      "credentials": {}
+    },
+    {
+      "id": "e2d94c6b-4857-4d51-81be-71d2559ad647",
+      "name": "Check Extended Past Due",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 600],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "cond-days-lte-10",
+              "leftValue": "={{ $json.daysPastDue }}",
+              "rightValue": "10",
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
+            }
+          ]
+        }
+      },
+      "credentials": {}
+    },
+    {
+      "id": "fd056f84-4221-42f6-a6b4-bc1d501686d1",
+      "name": "Send Friendly Reminder",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [700, 100],
+      "parameters": {
+        "operation": "send",
+        "to": "={{ $json.email }}",
+        "subject": "Friendly Reminder: Invoice {{ $json.invoiceNumber }} is Due Soon",
+        "htmlBody": "<p>Dear {{ $json.customerName }},</p><p>This is a friendly reminder that Invoice <strong>{{ $json.invoiceNumber }}</strong> for <strong>{{ $json.amount }}</strong> is <strong>{{ $json.daysPastDue }} days</strong> past due.</p><p>We kindly ask you to arrange payment at your earliest convenience.</p><p>Thank you for your business!</p><p>Best regards,<br>Accounts Receivable</p>",
+        "options": {}
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": null,
+          "name": "Gmail Account"
+        }
+      }
+    },
+    {
+      "id": "11d7cb6f-405c-4a5b-8d60-f49adf0794eb",
+      "name": "Send Gentle Nudge",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [700, 400],
+      "parameters": {
+        "operation": "send",
+        "to": "={{ $json.email }}",
+        "subject": "Gentle Nudge: Invoice {{ $json.invoiceNumber }} is {{ $json.daysPastDue }} Days Overdue",
+        "htmlBody": "<p>Dear {{ $json.customerName }},</p><p>We noticed that Invoice <strong>{{ $json.invoiceNumber }}</strong> for <strong>{{ $json.amount }}</strong> is now <strong>{{ $json.daysPastDue }} days</strong> past due.</p><p>We would greatly appreciate it if you could process the payment at your earliest convenience to avoid any service interruptions.</p><p>If you have any questions about this invoice, please contact us immediately.</p><p>Best regards,<br>Accounts Receivable</p>",
+        "options": {}
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": null,
+          "name": "Gmail Account"
+        }
+      }
+    },
+    {
+      "id": "46aadfa1-5493-470c-b10f-35c7ceb9586f",
+      "name": "Send Final Notice",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [700, 700],
+      "parameters": {
+        "operation": "send",
+        "to": "={{ $json.email }}",
+        "subject": "FINAL NOTICE: Invoice {{ $json.invoiceNumber }} - {{ $json.daysPastDue }} Days Past Due",
+        "htmlBody": "<p>Dear {{ $json.customerName }},</p><p><strong>FINAL NOTICE</strong></p><p>Invoice <strong>{{ $json.invoiceNumber }}</strong> for <strong>{{ $json.amount }}</strong> is now <strong>{{ $json.daysPastDue }} days</strong> past due.</p><p>This is your final reminder. Please remit payment immediately to avoid escalation procedures, including account suspension and referral to our collections department.</p><p>If payment has already been sent, please disregard this notice.</p><p>Best regards,<br>Accounts Receivable</p>",
+        "options": {}
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": null,
+          "name": "Gmail Account"
+        }
+      }
+    },
+    {
+      "id": "8f078b82-f36a-43fc-9ff2-13ff28250e5f",
+      "name": "Notify Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [950, 850],
+      "parameters": {
+        "channel": "={{ $json.slackChannel || '#finance-alerts' }}",
+        "text": "🚨 *Final Notice Sent* 🚨\nCustomer: {{ $json.customerName }}\nInvoice: {{ $json.invoiceNumber }}\nAmount: {{ $json.amount }}\nDays Overdue: {{ $json.daysPastDue }}\nAction: Final payment notice sent via email.",
+        "otherOptions": {},
+        "jsonParameters": false
+      },
+      "credentials": {
+        "slackApi": {
+          "id": null,
+          "name": "Slack Workspace"
+        }
+      }
+    },
+    {
+      "id": "803dde15-774b-4a28-b885-369e0a309103",
+      "name": "Log Reminder",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [950, 300],
+      "parameters": {
+        "operation": "append",
+        "documentId": "={{ $json.spreadsheetId }}",
+        "sheetName": "Sheet1",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "0": {
+              "columnName": "Timestamp",
+              "columnValue": "={{ $now.toISOString() }}"
+            },
+            "1": {
+              "columnName": "Invoice Number",
+              "columnValue": "={{ $json.invoiceNumber }}"
+            },
+            "2": {
+              "columnName": "Customer Name",
+              "columnValue": "={{ $json.customerName }}"
+            },
+            "3": {
+              "columnName": "Customer Email",
+              "columnValue": "={{ $json.email }}"
+            },
+            "4": {
+              "columnName": "Amount",
+              "columnValue": "={{ $json.amount }}"
+            },
+            "5": {
+              "columnName": "Days Past Due",
+              "columnValue": "={{ $json.daysPastDue }}"
+            },
+            "6": {
+              "columnName": "Reminder Type",
+              "columnValue": "={{ $json.reminderType || 'Email Sent' }}"
+            },
+            "7": {
+              "columnName": "Status",
+              "columnValue": "Sent"
+            }
+          }
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsApi": {
+          "id": null,
+          "name": "Google Sheets Account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Receive Invoice": {
+      "main": [
+        [
+          {
+            "node": "Check Days Past Due",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Days Past Due": {
+      "main": [
+        [
+          {
+            "node": "Send Friendly Reminder",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check Extended Past Due",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Extended Past Due": {
+      "main": [
+        [
+          {
+            "node": "Send Gentle Nudge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Final Notice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Friendly Reminder": {
+      "main": [
+        [
+          {
+            "node": "Log Reminder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Gentle Nudge": {
+      "main": [
+        [
+          {
+            "node": "Log Reminder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Final Notice": {
+      "main": [
+        [
+          {
+            "node": "Notify Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Slack": {
+      "main": [
+        [
+          {
+            "node": "Log Reminder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "tags": [],
+  "pinData": {}
+}

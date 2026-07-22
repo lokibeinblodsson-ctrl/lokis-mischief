@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "product": "Green Harvest Engine — Revenue Pipe",
+    "price": "$69",
+    "platform": ["n8n"],
+    "version": "1.0.0",
+    "author": "Loki's Mischief",
+    "description": "Nurture sequences, renewal triggers, and abundance metrics for sustained revenue.",
+    "usage": "Import into n8n, connect calendar and billing tools."
+  },
+  "scenario": {
+    "name": "Renewal and Nurture",
+    "flow": [
+      { "id": "1", "module": "Schedule", "action": "Trigger", "fields": { "cron": "0 9 * * *" } },
+      { "id": "2", "module": "HTTP", "action": "Make a request", "fields": { "endpoint": "YOUR_BILLING_API", "method": "GET" } },
+      { "id": "3", "module": "Tools", "action": "Text Parser", "fields": { "mode": "regex", "pattern": "(renew|cancel|past due|upgrade)" } },
+      { "id": "4", "module": "Flow Control", "action": "Router", "routing": [ { "name": "Renew", "patterns": ["renew"] }, { "name": "At Risk", "patterns": ["cancel","past due"] }, { "name": "Expand", "patterns": ["upgrade"] } ] },
+      { "id": "5", "module": "Email", "action": "Send email", "fields": { "to": "success@company.com", "subject": "Harvest action: {{3.name}}" } }
+    ]
+  }
+}

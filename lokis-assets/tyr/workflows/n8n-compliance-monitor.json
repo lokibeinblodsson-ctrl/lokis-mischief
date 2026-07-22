@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "product": "Týr's Code — Compliance Monitor",
+    "price": "$59",
+    "platform": ["n8n"],
+    "version": "1.0.0",
+    "author": "Loki's Mischief",
+    "description": "Automated compliance checks and ethical guardrails in automation flows.",
+    "usage": "Import in n8n, connect policy docs and ticketing."
+  },
+  "scenario": {
+    "name": "Compliance Watch",
+    "flow": [
+      { "id": "1", "module": "Schedule", "action": "Trigger", "fields": { "cron": "0 8 * * *" } },
+      { "id": "2", "module": "HTTP", "action": "Make a request", "fields": { "endpoint": "YOUR_POLICY_SOURCE", "method": "GET" } },
+      { "id": "3", "module": "Tools", "action": "Text Parser", "fields": { "mode": "regex", "pattern": "(violation|exception|drift|change)" } },
+      { "id": "4", "module": "Flow Control", "action": "Router", "routing": [ { "name": "Incident", "patterns": ["violation","exception"] }, { "name": "Review", "patterns": ["drift","change"] } ] },
+      { "id": "5", "module": "Slack", "action": "Send message", "fields": { "channel": "#legal", "text": "Týr status: {{3.name}}" } }
+    ]
+  }
+}

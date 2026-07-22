@@ -1,0 +1,430 @@
+{
+  "name": "AI Client Concierge System",
+  "active": false,
+  "nodes": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440001",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "client-concierge",
+        "options": {},
+        "responseMode": "onReceived",
+        "responseData": "={{ {\n  \"success\": true,\n  \"message\": \"Inquiry received. Our AI concierge is reviewing your request.\",\n  \"submitted_at\": new Date().toISOString()\n} }}"
+      },
+      "credentials": {}
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440002",
+      "name": "AI Lead Analysis",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [480, 300],
+      "parameters": {
+        "resource": "chat",
+        "model": "gpt-4o",
+        "temperature": 0.5,
+        "maxTokens": 2000,
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are an AI concierge for a digital agency. Analyze the client inquiry below and output a JSON object with exactly these keys:\n- lead_qualified (boolean, true if the client has a legitimate budget, clear project scope, and fits our services)\n- confidence_score (number 0-100 indicating how confident you are in the qualification)\n- service_matched (string, one of: web_development, mobile_app, ui_ux_design, digital_marketing, consulting, other)\n- intent_summary (string, 2-3 sentences summarizing what the client wants)\n- response_email (string, a personalized, professional email response addressed to the client by name, including a thank you and next steps)\n- reason (string, 1-2 sentences explaining the qualification decision)\n\nRespond with ONLY valid JSON. No markdown, no code fences, no extra text."
+            },
+            {
+              "role": "user",
+              "content": "Client Name: {{ $json.body.name }}\nEmail: {{ $json.body.email }}\nCompany: {{ $json.body.company }}\nService Interest: {{ $json.body.service_interest }}\nBudget: {{ $json.body.budget }}\nMessage: {{ $json.body.message }}"
+            }
+          ]
+        },
+        "options": {
+          "response_format": {
+            "type": "json_object"
+          }
+        }
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "OpenAI Account"
+        }
+      }
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440003",
+      "name": "Qualification Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [710, 300],
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ JSON.parse($json.choices[0].message.content).lead_qualified }}",
+              "operation": "equal",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "credentials": {}
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440004",
+      "name": "Create Calendar Event",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 2,
+      "position": [940, 150],
+      "parameters": {
+        "operation": "create",
+        "calendar": {
+          "__rl": true,
+          "value": "primary",
+          "mode": "id"
+        },
+        "title": "Discovery Call: {{ $node['Webhook'].json.body.company }}",
+        "startTime": "={{ $now.plus({days: 2}).toISO().substring(0, 10) + 'T10:00:00.000Z' }}",
+        "endTime": "={{ $now.plus({days: 2}).toISO().substring(0, 10) + 'T10:30:00.000Z' }}",
+        "timeZone": "America/New_York",
+        "description": "Discovery Call with {{ $node['Webhook'].json.body.name }} from {{ $node['Webhook'].json.body.company }}\n\nService Interest: {{ $node['Webhook'].json.body.service_interest }}\nBudget: {{ $node['Webhook'].json.body.budget }}\nOriginal Message: {{ $node['Webhook'].json.body.message }}",
+        "location": "Google Meet Video Call",
+        "attendees": [
+          {
+            "email": "={{ $node['Webhook'].json.body.email }}",
+            "displayName": "={{ $node['Webhook'].json.body.name }}"
+          }
+        ],
+        "conferenceData": {
+          "createRequest": {
+            "requestId": "={{ Date.now().toString() }}",
+            "conferenceSolutionKey": {
+              "type": "hangoutsMeet"
+            }
+          }
+        }
+      },
+      "credentials": {
+        "googleCalendarApi": {
+          "id": null,
+          "name": "Google Calendar Account"
+        }
+      }
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440005",
+      "name": "Confirmation Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [1170, 150],
+      "parameters": {
+        "operation": "send",
+        "to": "={{ $node['Webhook'].json.body.email }}",
+        "subject": "Your Discovery Call is Confirmed – {{ $node['Webhook'].json.body.company }}",
+        "htmlBody": "<html><body style='font-family: Arial, Helvetica, sans-serif; max-width: 600px; margin: 0 auto;'><h2 style='color: #2563eb;'>Hi {{ $node['Webhook'].json.body.name }},</h2><p>Thank you for reaching out! We're excited to learn more about your project at <strong>{{ $node['Webhook'].json.body.company }}</strong>.</p><div style='background: #f0f9ff; border-left: 4px solid #2563eb; padding: 16px; margin: 16px 0;'><h3 style='margin-top: 0;'>Your Discovery Call</h3><p><strong>Date:</strong> {{ new Date($node['Create Calendar Event'].json.start.dateTime || $now.plus({days: 2})).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) }}<br><strong>Time:</strong> 10:00 AM – 10:30 AM (Eastern)<br><strong>Duration:</strong> 30 minutes<br><strong>Format:</strong> Google Meet video call</p><p><a href='{{ $node['Create Calendar Event'].json.hangoutLink || '#' }}' style='display: inline-block; background: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;'>Join Google Meet</a></p><p><a href='{{ $node['Create Calendar Event'].json.htmlLink || '#' }}' style='color: #2563eb;'>Add to Google Calendar</a></p></div><h3>What We'll Cover</h3><ul><li>Understanding your project goals and requirements</li><li>Discussing timeline and budget expectations</li><li>Outlining how we can deliver value for {{ $node['Webhook'].json.body.service_interest }}</li></ul><p>Best regards,<br><strong>The Concierge Team</strong></p></body></html>",
+        "sendAs": "me"
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": null,
+          "name": "Gmail Account"
+        }
+      }
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440006",
+      "name": "Append to Lead Tracker",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [1400, 150],
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "sheetId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list"
+        },
+        "range": "Lead Tracker!A:F",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "0": {
+              "column": {
+                "__rl": true,
+                "value": "A",
+                "mode": "column"
+              },
+              "value": "={{ $node['Webhook'].json.body.name }}"
+            },
+            "1": {
+              "column": {
+                "__rl": true,
+                "value": "B",
+                "mode": "column"
+              },
+              "value": "={{ $node['Webhook'].json.body.email }}"
+            },
+            "2": {
+              "column": {
+                "__rl": true,
+                "value": "C",
+                "mode": "column"
+              },
+              "value": "={{ $node['Webhook'].json.body.company }}"
+            },
+            "3": {
+              "column": {
+                "__rl": true,
+                "value": "D",
+                "mode": "column"
+              },
+              "value": "={{ $node['Webhook'].json.body.service_interest }}"
+            },
+            "4": {
+              "column": {
+                "__rl": true,
+                "value": "E",
+                "mode": "column"
+              },
+              "value": "={{ $node['Webhook'].json.body.budget }}"
+            },
+            "5": {
+              "column": {
+                "__rl": true,
+                "value": "F",
+                "mode": "column"
+              },
+              "value": "={{ JSON.parse($node['AI Lead Analysis'].json.choices[0].message.content).response_email }}"
+            }
+          }
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsApi": {
+          "id": null,
+          "name": "Google Sheets Account"
+        }
+      }
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440007",
+      "name": "Slack Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [1630, 150],
+      "parameters": {
+        "channel": "leads",
+        "text": "🚀 *New Qualified Lead!*\n\n*Name:* {{ $node['Webhook'].json.body.name }}\n*Email:* {{ $node['Webhook'].json.body.email }}\n*Company:* {{ $node['Webhook'].json.body.company }}\n*Service:* {{ $node['Webhook'].json.body.service_interest }}\n*Budget:* {{ $node['Webhook'].json.body.budget }}\n*AI Summary:* {{ JSON.parse($node['AI Lead Analysis'].json.choices[0].message.content).intent_summary }}\n*Confidence:* {{ JSON.parse($node['AI Lead Analysis'].json.choices[0].message.content).confidence_score }}%\n*Service Matched:* {{ JSON.parse($node['AI Lead Analysis'].json.choices[0].message.content).service_matched }}"
+      },
+      "credentials": {
+        "slackApi": {
+          "id": null,
+          "name": "Slack Account"
+        }
+      }
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440008",
+      "name": "Polite Decline Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [940, 500],
+      "parameters": {
+        "operation": "send",
+        "to": "={{ $node['Webhook'].json.body.email }}",
+        "subject": "Thank You for Your Interest – {{ $node['Webhook'].json.body.company }}",
+        "htmlBody": "<html><body style='font-family: Arial, Helvetica, sans-serif; max-width: 600px; margin: 0 auto;'><h2 style='color: #2563eb;'>Dear {{ $node['Webhook'].json.body.name }},</h2><p>Thank you so much for reaching out to us about your project at <strong>{{ $node['Webhook'].json.body.company }}</strong>.</p><p>After careful review, we feel that our current services may not be the ideal fit for your specific needs at this time. We value transparency and want to ensure you get the best outcome possible.</p><p><strong>AI Assessment:</strong> {{ JSON.parse($node['AI Lead Analysis'].json.choices[0].message.content).reason }}</p><div style='background: #fef9f0; border-left: 4px solid #f59e0b; padding: 16px; margin: 16px 0;'><h3 style='margin-top: 0;'>Helpful Recommendations</h3><ul><li>Explore specialized agencies on <strong>Clutch</strong> or <strong>Upwork</strong> for {{ $node['Webhook'].json.body.service_interest }} projects</li><li>Freelance platforms like <strong>Toptal</strong> offer vetted talent for custom engagements</li><li>Tools like <strong>Webflow</strong>, <strong>Squarespace</strong>, or <strong>Wix</strong> can help you start quickly with limited budgets</li></ul></div><p>We wish you the very best with your project and hope our paths cross in the future.</p><p>Warm regards,<br><strong>The Concierge Team</strong></p></body></html>",
+        "sendAs": "me"
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": null,
+          "name": "Gmail Account"
+        }
+      }
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440009",
+      "name": "Append to Future Follow-up",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [1170, 500],
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "sheetId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list"
+        },
+        "range": "Future Follow-up!A:F",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "0": {
+              "column": {
+                "__rl": true,
+                "value": "A",
+                "mode": "column"
+              },
+              "value": "={{ $node['Webhook'].json.body.name }}"
+            },
+            "1": {
+              "column": {
+                "__rl": true,
+                "value": "B",
+                "mode": "column"
+              },
+              "value": "={{ $node['Webhook'].json.body.email }}"
+            },
+            "2": {
+              "column": {
+                "__rl": true,
+                "value": "C",
+                "mode": "column"
+              },
+              "value": "={{ $node['Webhook'].json.body.company }}"
+            },
+            "3": {
+              "column": {
+                "__rl": true,
+                "value": "D",
+                "mode": "column"
+              },
+              "value": "={{ $node['Webhook'].json.body.service_interest }}"
+            },
+            "4": {
+              "column": {
+                "__rl": true,
+                "value": "E",
+                "mode": "column"
+              },
+              "value": "={{ $node['Webhook'].json.body.budget }}"
+            },
+            "5": {
+              "column": {
+                "__rl": true,
+                "value": "F",
+                "mode": "column"
+              },
+              "value": "={{ JSON.parse($node['AI Lead Analysis'].json.choices[0].message.content).reason }}"
+            }
+          }
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsApi": {
+          "id": null,
+          "name": "Google Sheets Account"
+        }
+      }
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440010",
+      "name": "Status Check Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 600],
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "client-status",
+        "options": {},
+        "responseMode": "onReceived",
+        "responseData": "={{ {\n  \"status\": \"operational\",\n  \"service\": \"AI Client Concierge System\",\n  \"version\": \"1.0.0\",\n  \"endpoints\": [\n    {\n      \"method\": \"POST\",\n      \"path\": \"/webhook/client-concierge\",\n      \"description\": \"Submit a client inquiry for AI qualification and scheduling\"\n    },\n    {\n      \"method\": \"GET\",\n      \"path\": \"/webhook/client-status\",\n      \"description\": \"Check system status\"\n    }\n  ],\n  \"timestamp\": new Date().toISOString()\n} }}"
+      },
+      "credentials": {}
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Lead Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Lead Analysis": {
+      "main": [
+        [
+          {
+            "node": "Qualification Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qualification Check": {
+      "main": [
+        [
+          {
+            "node": "Create Calendar Event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Polite Decline Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Calendar Event": {
+      "main": [
+        [
+          {
+            "node": "Confirmation Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmation Email": {
+      "main": [
+        [
+          {
+            "node": "Append to Lead Tracker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append to Lead Tracker": {
+      "main": [
+        [
+          {
+            "node": "Slack Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Polite Decline Email": {
+      "main": [
+        [
+          {
+            "node": "Append to Future Follow-up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {},
+  "tags": []
+}

@@ -1,0 +1,94 @@
+{
+  "meta": {
+    "product": "Runecraft OS",
+    "price": "$79",
+    "platform": ["make.com", "n8n"],
+    "version": "1.0.0",
+    "author": "Loki's Mischief",
+    "description": "Founder-grade decision stack with runic priority routing, research automation, and recall agents.",
+    "usage": "Import this JSON in Make.com as a blueprint, then map your tools.",
+    "history": "Importing this creates one scenario. Rename before activating."
+  },
+  "scenario": {
+    "name": "RuneKey Priority Router",
+    "flow": [
+      {
+        "id": "1",
+        "module": "Utilities",
+        "action": "Set variable",
+        "fields": {
+          "runes": ["Fehu","Uruz","Thurisaz","Ansuz","Raido","Kenaz","Gebo","Wunjo","Hagalaz","Nauthiz","Isa","Jara","Eihwaz","Perthro","Algiz","Sowilo","Tiwaz","Berkano","Ehwaz","Mannaz","Laguz","Ingwaz","Dagaz","Othala"],
+          "priority_map": {
+            "Fehu": "Revenue / Acquisition",
+            "Uruz": "Strength / Operations",
+            "Thurisaz": "Defense / Risk",
+            "Ansuz": "Strategy / Narrative",
+            "Raido": "Movement / Growth",
+            "Kenaz": " Craft / Execution",
+            "Gebo": "Partnership / Integration",
+            "Wunjo": "Client Delight / Retention",
+            "Hagalaz": "Disruption / Transformation",
+            "Nauthiz": "Scarcity / Constraints",
+            "Isa": "Pause / Investigation",
+            "Jara": "Completion / Harvest",
+            "Eihwaz": "Baseline / Protection",
+            "Perthro": "Experimentation / Insight",
+            "Algiz": "Defense / Guardrail",
+            "Sowilo": "Visibility / Scale",
+            "Tiwaz": "Justice / Compliance",
+            "Berkano": "Growth / Care",
+            "Ehwaz": "Transport / Delivery",
+            "Mannaz": "People / Org",
+            "Laguz": "Flow / Automation",
+            "Ingwaz": "Seed / Launch",
+            "Dagaz": "Breakthrough / Dawn",
+            "Othala": "Inheritance / Legacy"
+          }
+        }
+      },
+      {
+        "id": "2",
+        "module": "HTTP",
+        "action": "Make a request",
+        "fields": {
+          "endpoint": "YOUR_INTAKE_WEBHOOK",
+          "method": "POST",
+          "headers": {
+            "Content-Type": "application/json",
+            "X-RuneKey": "true"
+          }
+        }
+      },
+      {
+        "id": "3",
+        "module": "Tools",
+        "action": "Text Parser",
+        "fields": {
+          "mode": "regex",
+          "pattern": "(?i)(invoice|proposal|follow up|report|support|lead)"
+        }
+      },
+      {
+        "id": "4",
+        "module": "Flow Control",
+        "action": "Router",
+        "routing": [
+          { "name": "Revenue", "runes": ["Fehu","Jara","Sowilo"] },
+          { "name": "Operations", "runes": ["Uruz","Kenaz","Laguz"] },
+          { "name": "Risk", "runes": ["Thurisaz","Algiz","Eihwaz"] },
+          { "name": "Strategy", "runes": ["Ansuz","Raido","Dagaz"] }
+        ]
+      },
+      {
+        "id": "5",
+        "module": "Email",
+        "action": "Send email",
+        "fields": {
+          "to": "founder@company.com",
+          "subject": "RuneKey decision: {{4.name}}",
+          "body": "Task routed by rune priority.\nRunes: {{2.fields.priority_map}}"
+        }
+      }
+    ]
+  }
+}

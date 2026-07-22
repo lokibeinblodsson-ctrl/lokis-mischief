@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sigyn — Loki's Mischief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#f59e0b; --gold2:#d97706; --bg:#07070a; --panel:#0d0d14;
+  --line:#1a1a24; --text:#e4e4e7; --muted:#94a3b8; --dim:#475569;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:var(--gold);text-decoration:none}
+.wrap{max-width:880px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;
+  padding:12px 18px;background:#07070acc;backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .logo{font-family:'Cinzel',Georgia,serif;font-weight:900;color:var(--gold);letter-spacing:.5px}
+nav .links{display:flex;gap:12px;flex-wrap:wrap;margin-left:auto}
+nav .links a{color:var(--muted);font-size:14px}
+nav .links a:hover{color:#fff}
+.hero{padding:56px 0 24px;text-align:center}
+.hero .eyebrow{color:var(--gold);letter-spacing:2px;text-transform:uppercase;font-size:12px}
+.hero h1{font-family:'Cinzel',Georgia,serif;font-size:44px;font-weight:900;margin:8px 0;
+  background:linear-gradient(135deg,#f59e0b,#d97706);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero .sub{color:var(--muted);font-size:16px}
+.runes{font-size:34px;letter-spacing:10px;color:var(--gold);margin:14px 0;text-shadow:0 0 24px rgba(245,158,11,.35)}
+.portrait{max-width:320px;width:100%;border-radius:18px;border:1px solid var(--line);
+  box-shadow:0 30px 70px rgba(0,0,0,.6);margin:18px auto;display:block}
+.saga{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px;margin:26px 0}
+.saga h2{font-family:'Cinzel',Georgia,serif;color:var(--gold);font-size:20px;margin-bottom:10px}
+.saga p{color:#cbd5e1;margin:10px 0}
+.verse{background:linear-gradient(180deg,#0d0d14,#0a0a10);border-left:3px solid var(--gold);
+  border-radius:8px;padding:18px 20px;margin:22px 0;color:#cbd5e1;font-style:italic}
+.verse .src{display:block;margin-top:8px;font-style:normal;color:var(--dim);font-size:12px;letter-spacing:.5px}
+.lesson{background:linear-gradient(135deg,#0d0d14,#101018);border:1px solid var(--gold);
+  border-radius:16px;padding:24px;margin:22px 0;box-shadow:0 0 40px rgba(245,158,11,.08)}
+.lesson .ltag{display:inline-block;background:#f59e0b;color:#07070a;font-weight:800;font-size:11px;
+  letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:999px;margin-bottom:10px}
+.lesson h2{font-family:'Cinzel',Georgia,serif;color:var(--gold);font-size:20px;margin-bottom:8px}
+.lesson p{color:#cbd5e1;margin:8px 0}
+.lesson .takeaway{margin-top:12px;padding:12px 14px;background:#f59e0b12;border-radius:10px;
+  border:1px solid #f59e0b33;color:#fde68a;font-weight:600;font-size:14px}
+.product{display:flex;gap:18px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);
+  border-radius:16px;padding:24px;margin:22px 0;align-items:center}
+.product .picon{font-size:40px}
+.product .pbody{flex:1;min-width:220px}
+.product h3{font-family:'Cinzel',Georgia,serif;color:#fff;font-size:20px}
+.product .price{color:var(--gold);font-weight:800;font-size:22px;margin:4px 0}
+.product .desc{color:var(--muted);font-size:14px;margin-bottom:12px}
+.btn{display:inline-block;padding:10px 18px;border-radius:10px;font-weight:700;font-size:14px}
+.btn-primary{background:linear-gradient(135deg,#f59e0b,#d97706);color:#07070a}
+.btn-ghost{border:1px solid var(--line);color:var(--muted);margin-left:8px}
+.assets{list-style:none;padding:0;margin:12px 0 0}
+.assets li{padding:8px 0;border-bottom:1px solid var(--line);color:var(--muted);font-size:14px}
+.assets li a{font-weight:600}
+.section-h{font-family:'Cinzel',Georgia,serif;color:var(--gold);font-size:18px;margin:28px 0 6px}
+.back{text-align:center;padding:30px 0 60px;color:var(--dim);font-size:13px}
+.back a{color:var(--gold)}
+.tag{display:inline-block;background:#f59e0b15;border:1px solid #f59e0b33;color:var(--gold);
+  border-radius:999px;padding:3px 12px;font-size:12px;letter-spacing:.5px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">✦ LOKI'S MISCHIEF</a>
+  <div class="links">
+    <a href="index.html#games">Games</a>
+    <a href="index.html#products">Products</a>
+    <a href="odin.html">Óðinn</a>
+    <a href="thor.html">Þórr</a>
+    <a href="freyr.html">Freyr</a>
+    <a href="freya.html">Freyja</a>
+    <a href="tyr.html">Týr</a>
+    <a href="heimdall.html">Heimdallr</a>
+    <a href="bragi.html">Bragi</a>
+    <a href="hel.html">Hel</a>
+    <a href="loki.html">Loki</a>
+    <a href="fenrir.html">Fenrir</a>
+    <a href="jormungandr.html">Jörmungandr</a>
+    <a href="angrboda.html">Angrboða</a>
+    <a href="sigyn.html">Sigyn</a>
+    <a href="gerd.html">Gerðr</a>
+    <a href="hermod.html">Hermóðr</a>
+    <a href="hymir.html">Hymir</a>
+    <a href="utgardaloki.html">Útgarða-Loki</a>
+  </div>
+</nav>
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow">The Steadfast Wife · Reliability Under Drip</div>
+    <div class="runes" title="Sigyn in Elder Futhark">ᛋᛁ</div>
+    <h1>Sigyn</h1>
+    <p class="sub">Reliability and error-catching automation — the bowl you never stop holding.</p>
+    <img class="portrait" src="lokis-assets/sigyn/sigyn-hero.png" alt="Sigyn">
+  </section>
+
+  <div class="saga">
+    <span class="tag">The Saga — traditional sources</span>
+    <h2>📖 Sigyn's Lore</h2>
+    <p><strong>Friend of Victory</strong> — Sigyn (Old Norse <em>Sigyn</em>, "friend of victory") is Loki's wife, attested in Snorri's <em>Gylfaginning</em> and present at the feast in <em>Lokasenna</em>. After Baldr's death, the Æsir seized Loki and bound him: they transformed his son Váli into a wolf so that he tore his brother Nari (Narfi) apart, and they bound Loki with the dead son's entrails — one of the bonds becoming iron. Above Loki's face they set a serpent that drips venom.</p>
+    <p>Sigyn's role is the one act the whole myth turns on: she stands by the bound Loki and holds a bowl to catch the venom. Only when she turns aside to empty the bowl does the poison fall on Loki's face, and he shudders so violently that the earth quakes — these are the tremors mortals feel. She stays at her post until Ragnarök. (Nuance: "transformed into iron chains" in some retellings — more precisely the entrails became the binding, with one strand said to turn to iron. No Christian framing is present in the sources; this is a tale of binding and endurance, not of guilt or penalty.)</p>
+  </div>
+
+  <div class="verse">
+    "Sigyn his wife stands by him and catches the venom in a bowl; but when she goes to empty the bowl, the venom falls on Loki's face, and he shrinks from it, and the earth trembles."
+    <span class="src">Snorri Sturluson, Gylfaginning 50 (Byock, tr.) — Sigyn holding the bowl</span>
+  </div>
+
+  <div class="lesson">
+    <span class="ltag">The Business Lesson</span>
+    <h2>💡 Never lower the bowl — reliability is the catch, not the feature</h2>
+    <p>Sigyn's whole myth is a single act of steadfastness: she stands by the bound Loki and catches the venom, over and over, until Ragnarök. The instant she turns away to empty the bowl, the poison lands and the earth shakes. The agency lesson is brutal and exact: reliability is not a feature you bolt on, it is the bowl you never stop holding. One lapse in monitoring, one unhandled error, one missed alert — and the whole system shudders in front of the client.</p>
+    <p>Sigyn's fix is an always-on catch system that intercepts failures before they land: uptime monitoring, error-catching, and alert routing that never looks away. The venom never reaches the client because something is always there to hold the bowl.</p>
+    <div class="takeaway">Never lower the bowl: an always-on error-catch and monitoring layer that intercepts failures before they reach the client is what steadfast service actually is.</div>
+  </div>
+
+  <div class="section-h">⚡ Sigyn's Automation Gift</div>
+  <div class="product">
+    <div class="picon">🥣</div>
+    <div class="pbody">
+      <h3>Steadfast Catch</h3>
+      <div class="price">$39</div>
+      <p class="desc">Reliability and error-catching automation — monitoring, alert routing, and failure interception for agencies that never look away. Make.com + n8n ready.</p>
+      <a class="btn btn-primary" href="index.html#products">Buy on the Marketplace →</a>
+      <a class="btn btn-ghost" href="index.html#products">View all products</a>
+    </div>
+  </div>
+
+  <div class="section-h">📦 Digital Assets Included</div>
+  <ul class="assets">
+      <li><a href="lokis-assets/sigyn/guide/steadfast-catch-guide.md">Steadfast Catch — Guide</a> — Placeholder guide (expand on deploy)</li>
+      <li><a href="lokis-assets/sigyn/templates/steadfast-catch-framework.md">Catch & Alert Frames</a> — Monitoring and routing structures</li>
+      <li><a href="lokis-assets/sigyn/workflows/make-steadfast-catch.json">Make.com — Error Catch</a> — Import-ready automation blueprint</li>
+      <li><a href="lokis-assets/sigyn/workflows/n8n-steadfast-catch.json">n8n — Alert Router</a> — Import-ready automation blueprint</li>
+  </ul>
+
+  <div class="back">
+    Part of <a href="index.html">Loki's Mischief</a> — clever automations for serious agencies.<br>
+    © 2026 Loki's Mischief. All rights reserved.
+  </div>
+</div>
+</body>
+</html>

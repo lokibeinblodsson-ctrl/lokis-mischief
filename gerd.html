@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerðr — Loki's Mischief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#f59e0b; --gold2:#d97706; --bg:#07070a; --panel:#0d0d14;
+  --line:#1a1a24; --text:#e4e4e7; --muted:#94a3b8; --dim:#475569;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:var(--gold);text-decoration:none}
+.wrap{max-width:880px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;
+  padding:12px 18px;background:#07070acc;backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .logo{font-family:'Cinzel',Georgia,serif;font-weight:900;color:var(--gold);letter-spacing:.5px}
+nav .links{display:flex;gap:12px;flex-wrap:wrap;margin-left:auto}
+nav .links a{color:var(--muted);font-size:14px}
+nav .links a:hover{color:#fff}
+.hero{padding:56px 0 24px;text-align:center}
+.hero .eyebrow{color:var(--gold);letter-spacing:2px;text-transform:uppercase;font-size:12px}
+.hero h1{font-family:'Cinzel',Georgia,serif;font-size:44px;font-weight:900;margin:8px 0;
+  background:linear-gradient(135deg,#f59e0b,#d97706);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero .sub{color:var(--muted);font-size:16px}
+.runes{font-size:34px;letter-spacing:10px;color:var(--gold);margin:14px 0;text-shadow:0 0 24px rgba(245,158,11,.35)}
+.portrait{max-width:320px;width:100%;border-radius:18px;border:1px solid var(--line);
+  box-shadow:0 30px 70px rgba(0,0,0,.6);margin:18px auto;display:block}
+.saga{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px;margin:26px 0}
+.saga h2{font-family:'Cinzel',Georgia,serif;color:var(--gold);font-size:20px;margin-bottom:10px}
+.saga p{color:#cbd5e1;margin:10px 0}
+.verse{background:linear-gradient(180deg,#0d0d14,#0a0a10);border-left:3px solid var(--gold);
+  border-radius:8px;padding:18px 20px;margin:22px 0;color:#cbd5e1;font-style:italic}
+.verse .src{display:block;margin-top:8px;font-style:normal;color:var(--dim);font-size:12px;letter-spacing:.5px}
+.lesson{background:linear-gradient(135deg,#0d0d14,#101018);border:1px solid var(--gold);
+  border-radius:16px;padding:24px;margin:22px 0;box-shadow:0 0 40px rgba(245,158,11,.08)}
+.lesson .ltag{display:inline-block;background:#f59e0b;color:#07070a;font-weight:800;font-size:11px;
+  letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:999px;margin-bottom:10px}
+.lesson h2{font-family:'Cinzel',Georgia,serif;color:var(--gold);font-size:20px;margin-bottom:8px}
+.lesson p{color:#cbd5e1;margin:8px 0}
+.lesson .takeaway{margin-top:12px;padding:12px 14px;background:#f59e0b12;border-radius:10px;
+  border:1px solid #f59e0b33;color:#fde68a;font-weight:600;font-size:14px}
+.product{display:flex;gap:18px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);
+  border-radius:16px;padding:24px;margin:22px 0;align-items:center}
+.product .picon{font-size:40px}
+.product .pbody{flex:1;min-width:220px}
+.product h3{font-family:'Cinzel',Georgia,serif;color:#fff;font-size:20px}
+.product .price{color:var(--gold);font-weight:800;font-size:22px;margin:4px 0}
+.product .desc{color:var(--muted);font-size:14px;margin-bottom:12px}
+.btn{display:inline-block;padding:10px 18px;border-radius:10px;font-weight:700;font-size:14px}
+.btn-primary{background:linear-gradient(135deg,#f59e0b,#d97706);color:#07070a}
+.btn-ghost{border:1px solid var(--line);color:var(--muted);margin-left:8px}
+.assets{list-style:none;padding:0;margin:12px 0 0}
+.assets li{padding:8px 0;border-bottom:1px solid var(--line);color:var(--muted);font-size:14px}
+.assets li a{font-weight:600}
+.section-h{font-family:'Cinzel',Georgia,serif;color:var(--gold);font-size:18px;margin:28px 0 6px}
+.back{text-align:center;padding:30px 0 60px;color:var(--dim);font-size:13px}
+.back a{color:var(--gold)}
+.tag{display:inline-block;background:#f59e0b15;border:1px solid #f59e0b33;color:var(--gold);
+  border-radius:999px;padding:3px 12px;font-size:12px;letter-spacing:.5px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">✦ LOKI'S MISCHIEF</a>
+  <div class="links">
+    <a href="index.html#games">Games</a>
+    <a href="index.html#products">Products</a>
+    <a href="odin.html">Óðinn</a>
+    <a href="thor.html">Þórr</a>
+    <a href="freyr.html">Freyr</a>
+    <a href="freya.html">Freyja</a>
+    <a href="tyr.html">Týr</a>
+    <a href="heimdall.html">Heimdallr</a>
+    <a href="bragi.html">Bragi</a>
+    <a href="hel.html">Hel</a>
+    <a href="loki.html">Loki</a>
+    <a href="fenrir.html">Fenrir</a>
+    <a href="jormungandr.html">Jörmungandr</a>
+    <a href="angrboda.html">Angrboða</a>
+    <a href="sigyn.html">Sigyn</a>
+    <a href="gerd.html">Gerðr</a>
+    <a href="hermod.html">Hermóðr</a>
+    <a href="hymir.html">Hymir</a>
+    <a href="utgardaloki.html">Útgarða-Loki</a>
+  </div>
+</nav>
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow">The Golden Bride · Outreach With Leverage</div>
+    <div class="runes" title="Gerðr in Elder Futhark">ᚷᛖ</div>
+    <h1>Gerðr</h1>
+    <p class="sub">Outreach and nurture automation that closes — leverage, not gentle waiting.</p>
+    <img class="portrait" src="lokis-assets/gerd/gerd-hero.png" alt="Gerðr">
+  </section>
+
+  <div class="saga">
+    <span class="tag">The Saga — traditional sources</span>
+    <h2>📖 Gerðr's Lore</h2>
+    <p><strong>The Enclosed One</strong> — Gerðr (Old Norse <em>Gerðr</em>, "enclosure") is a jötunn, daughter of Gymir, and the wife of the Vanir god Freyr. The tale is told in the <em>Poetic Edda</em>'s <em>Skírnismál</em>. Freyr, seated on Óðinn's high seat Hliðskjálf, glimpsed Gerðr in Jötunheimr and fell love-sick. He sent his servant Skírnir to woo her, lending his sword and his horse.</p>
+    <p>The corrected saga matters: this was no gentle "persistence and patience." Skírnir first offered gold and the precious apples of youth; Gerðr refused. Only when Skírnir threatened her with ritual curses — isolation, a life without joy, mead mixed with venom, and the company of horrors — did she consent, agreeing to meet Freyr at the grove Barri in nine nights' time. The wooing is a negotiated, coercive suit (Skírnismál), not patient devotion. Gerðr is the prize won by leverage, and the lesson for outreach is exactly that.</p>
+  </div>
+
+  <div class="verse">
+    "Gerðr consented — but only after Skírnir backed his suit with gold, the apples of youth, and the threat of curse: she agreed to meet Freyr at Barri in nine nights' time."
+    <span class="src">Skírnismál (Poetic Edda) — Gerðr's negotiated, coercive wooing (Larrington, tr.)</span>
+  </div>
+
+  <div class="lesson">
+    <span class="ltag">The Business Lesson</span>
+    <h2>💡 Outreach is negotiation, not patience — bring real leverage to the nurture</h2>
+    <p>Freyr did not win Gerðr with patience. He won her through Skírnir's suit — a negotiation backed by real leverage: gold, the apples of youth, and, when the soft asks failed, the credible threat of curse and isolation. The site's old copy called it "persistence and patience"; the sources call it a coercive, negotiated wooing. The agency lesson is the same shape: outreach that converts is leverage, not wishful waiting.</p>
+    <p>Nurture sequences that merely "persist" get ignored; sequences that bring a genuine offer and a credible edge get the meeting. Gerðr's fix is outreach automation that leads with real value and a clear close, rather than gentle hovering that never asks.</p>
+    <div class="takeaway">Outreach is negotiation, not patience: bring real leverage (offer + edge + clear close) to the nurture, or the jötunn says no.</div>
+  </div>
+
+  <div class="section-h">⚡ Gerðr's Automation Gift</div>
+  <div class="product">
+    <div class="picon">🌾</div>
+    <div class="pbody">
+      <h3>Golden Harvest Wooing</h3>
+      <div class="price">$49</div>
+      <p class="desc">Outreach and nurture automation with real leverage — offer-led sequences that close. Make.com + n8n ready.</p>
+      <a class="btn btn-primary" href="index.html#products">Buy on the Marketplace →</a>
+      <a class="btn btn-ghost" href="index.html#products">View all products</a>
+    </div>
+  </div>
+
+  <div class="section-h">📦 Digital Assets Included</div>
+  <ul class="assets">
+      <li><a href="lokis-assets/gerd/guide/golden-harvest-wooing-guide.md">Golden Harvest Wooing — Guide</a> — Placeholder guide (expand on deploy)</li>
+      <li><a href="lokis-assets/gerd/templates/golden-harvest-wooing-framework.md">Offer-Led Nurture Frames</a> — Sequence structures with leverage</li>
+      <li><a href="lokis-assets/gerd/workflows/make-golden-harvest-wooing.json">Make.com — Outreach Engine</a> — Import-ready automation blueprint</li>
+      <li><a href="lokis-assets/gerd/workflows/n8n-golden-harvest-wooing.json">n8n — Nurture Builder</a> — Import-ready automation blueprint</li>
+  </ul>
+
+  <div class="back">
+    Part of <a href="index.html">Loki's Mischief</a> — clever automations for serious agencies.<br>
+    © 2026 Loki's Mischief. All rights reserved.
+  </div>
+</div>
+</body>
+</html>

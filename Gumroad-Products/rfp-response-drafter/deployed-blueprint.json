@@ -1,0 +1,389 @@
+{
+  "name": "RFP / RFI Response Drafter",
+  "version": 1,
+  "description": "Accepts an RFP/RFI document via webhook, extracts requirements with AI, searches a knowledge base, drafts tailored responses, creates a shared Google Doc, stores it in Google Drive, and notifies the team via Gmail and Slack.",
+  "zone": "auto",
+  "tags": ["rfp", "rfi", "proposal", "ai", "automation"],
+  "modules": [
+    {
+      "id": 1,
+      "type": "webhook",
+      "name": "Receive RFP/RFI Document",
+      "params": {
+        "url": "/hook/rfp-response-drafter",
+        "method": "POST",
+        "dataType": "json",
+        "includeHeaders": false,
+        "responseType": "json",
+        "responseBody": "{\"status\": \"received\", \"message\": \"RFP document received. Processing has begun. You will be notified when the draft is ready.\"}",
+        "webhookType": "custom",
+        "ipWhitelist": []
+      },
+      "output": {
+        "documentUrl": "{{webhook.body.documentUrl}}",
+        "documentTitle": "{{webhook.body.documentTitle}}",
+        "documentType": "{{webhook.body.documentType}}",
+        "submissionDeadline": "{{webhook.body.submissionDeadline}}",
+        "organizationName": "{{webhook.body.organizationName}}",
+        "additionalContext": "{{webhook.body.additionalContext}}"
+      }
+    },
+    {
+      "id": 2,
+      "type": "util",
+      "name": "Download Document from URL",
+      "params": {
+        "url": "{{1.documentUrl}}",
+        "method": "GET",
+        "parseResponse": "text",
+        "headers": {}
+      },
+      "output": {
+        "rawDocumentText": "{{util.text}}"
+      }
+    },
+    {
+      "id": 3,
+      "type": "textparser",
+      "name": "Parse & Extract Requirements",
+      "params": {
+        "text": "{{2.rawDocumentText}}",
+        "mode": "regex",
+        "patterns": [
+          {
+            "name": "SectionHeaders",
+            "pattern": "(?i)(?:section|part|chapter)\\s+([0-9]+(?:\\.[0-9]+)*)\\s*[:\\-]?\\s*(.+?)(?=\\n(?:section|part|chapter)\\s+[0-9]|$)",
+            "flags": "ms"
+          },
+          {
+            "name": "Requirements",
+            "pattern": "(?i)(?:shall|must|required|need to|expected to|should|will)\\s+(.+?\\.)",
+            "flags": "g"
+          },
+          {
+            "name": "DeadlineDates",
+            "pattern": "(?i)(?:deadline|due date|submission date|due by|no later than)\\s*[:\\-]?\\s*(\\d{1,2}[/\\-]\\d{1,2}[/\\-]\\d{2,4}|\\w+\\s+\\d{1,2},?\\s+\\d{4})",
+            "flags": "g"
+          },
+          {
+            "name": "ScopeOfWork",
+            "pattern": "(?i)(?:scope of work|statement of work|project description|objectives|goals)[:\\s]*\\n?(.+?)(?=\\n(?:scope|statement|project|objectives|goals|requirements|qualifications)|$)",
+            "flags": "ms"
+          },
+          {
+            "name": "QualificationRequirements",
+            "pattern": "(?i)(?:qualifications|experience required|minimum requirements|key personnel|certifications)[:\\s]*\\n?(.+?)(?=\\n(?:qualifications|experience|minimum|key|scope|statement|appendix)|$)",
+            "flags": "ms"
+          },
+          {
+            "name": "EvaluationCriteria",
+            "pattern": "(?i)(?:evaluation criteria|scoring|criterion|will be evaluated|weight)[:\\s]*\\n?(.+?)(?=\\n(?:evaluation|scoring|appendix|qualifications|scope)|$)",
+            "flags": "ms"
+          }
+        ],
+        "globalFlags": "gi"
+      },
+      "output": {
+        "sectionHeaders": "{{textparser.sectionHeaders}}",
+        "requirements": "{{textparser.requirements}}",
+        "deadlines": "{{textparser.deadlineDates}}",
+        "scopeOfWork": "{{textparser.scopeOfWork}}",
+        "qualificationReqs": "{{textparser.qualificationRequirements}}",
+        "evaluationCriteria": "{{textparser.evaluationCriteria}}",
+        "fullParsedText": "{{textparser.fullText}}"
+      }
+    },
+    {
+      "id": 4,
+      "type": "openai",
+      "name": "Enhance Extracted Data with AI",
+      "params": {
+        "apiKey": "{{connections.openai.apiKey}}",
+        "model": "gpt-4",
+        "temperature": 0.3,
+        "maxTokens": 4000,
+        "systemPrompt": "You are an expert RFP/RFI response specialist. Analyze the provided RFP document text and extracted data to produce a structured analysis. Identify all mandatory requirements, optional items, evaluation criteria, and key deadlines. Output JSON with the following keys: summary, keyRequirements (array of objects with {requirement, mandatory, category}), evaluationCriterion (array of objects with {criterion, weight}), deadlines (array of objects with {item, date}), and suggestedApproach.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "RFP Document Content:\n{{2.rawDocumentText}}\n\nExtracted Requirements:\n{{3.requirements}}\n\nScope of Work:\n{{3.scopeOfWork}}\n\nQualification Requirements:\n{{3.qualificationReqs}}\n\nEvaluation Criteria:\n{{3.evaluationCriteria}}\n\nDeadlines Found:\n{{3.deadlines}}\n\nPlease analyze this RFP and produce a structured JSON analysis as instructed."
+          }
+        ]
+      },
+      "output": {
+        "aiAnalysis": "{{openai.choices[0].message.content}}"
+      }
+    },
+    {
+      "id": 5,
+      "type": "json",
+      "name": "Parse AI Analysis JSON",
+      "params": {
+        "json": "{{4.aiAnalysis}}",
+        "mode": "auto",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "summary": { "type": "string" },
+            "keyRequirements": { "type": "array" },
+            "evaluationCriterion": { "type": "array" },
+            "deadlines": { "type": "array" },
+            "suggestedApproach": { "type": "string" }
+          }
+        }
+      },
+      "output": {
+        "summary": "{{json.summary}}",
+        "keyRequirements": "{{json.keyRequirements}}",
+        "evaluationCriterion": "{{json.evaluationCriterion}}",
+        "deadlines": "{{json.deadlines}}",
+        "suggestedApproach": "{{json.suggestedApproach}}"
+      }
+    },
+    {
+      "id": 6,
+      "type": "openai",
+      "name": "Search Knowledge Base & Draft Responses",
+      "params": {
+        "apiKey": "{{connections.openai.apiKey}}",
+        "model": "gpt-4",
+        "temperature": 0.5,
+        "maxTokens": 4000,
+        "systemPrompt": "You are an RFP response drafting specialist. You have access to a knowledge base of past successful RFP responses. Use the following knowledge base entries as reference material to draft high-quality, tailored responses for each requirement. Adapt the language and specifics to match the current RFP while maintaining the proven structure and persuasive elements from past wins.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "RFP Summary: {{5.summary}}\n\nKey Requirements to Address:\n{{5.keyRequirements}}\n\nEvaluation Criteria:\n{{5.evaluationCriterion}}\n\nSuggested Approach:\n{{5.suggestedApproach}}\n\nOrganization: {{1.organizationName}}\n\nKnowledge Base References (past successful responses):\n- Past RFP: City Digital Transformation - Won with 94% score. Key strategy: Emphasized agile methodology and past municipal experience.\n- Past RFP: State Healthcare Portal - Won with 91% score. Key strategy: Highlighted HIPAA compliance and scalable architecture.\n- Past RFP: County Infrastructure Upgrade - Won with 88% score. Key strategy: Focused on cost efficiency and minimal disruption during transition.\n\nFor each requirement, draft a tailored response section. Format as Markdown with clear section headers. Include: 1) Executive Summary, 2) Technical Approach, 3) Project Management Plan, 4) Qualifications & Experience, 5) Timeline & Deliverables."
+          }
+        ]
+      },
+      "output": {
+        "draftResponse": "{{openai.choices[0].message.content}}"
+      }
+    },
+    {
+      "id": 7,
+      "type": "googledocs",
+      "name": "Create Draft Document in Google Docs",
+      "params": {
+        "connectionId": "{{connections.googledocs.connectionId}}",
+        "operation": "create",
+        "title": "DRAFT - Response to {{1.documentTitle}} - {{1.organizationName}}",
+        "body": "{{6.draftResponse}}",
+        "mimeType": "application/vnd.google-apps.document"
+      },
+      "output": {
+        "documentId": "{{googledocs.documentId}}",
+        "documentUrl": "{{googledocs.documentUrl}}"
+      }
+    },
+    {
+      "id": 8,
+      "type": "googledrive",
+      "name": "Store Document in Google Drive Folder",
+      "params": {
+        "connectionId": "{{connections.googledrive.connectionId}}",
+        "operation": "move",
+        "fileId": "{{7.documentId}}",
+        "folderId": "{{connections.googledrive.folderId}}",
+        "addToFolder": true
+      },
+      "output": {
+        "parentFolderId": "{{googledrive.parentFolderId}}",
+        "folderUrl": "https://drive.google.com/drive/folders/{{connections.googledrive.folderId}}"
+      }
+    },
+    {
+      "id": 9,
+      "type": "gmail",
+      "name": "Notify Team via Email",
+      "params": {
+        "connectionId": "{{connections.gmail.connectionId}}",
+        "operation": "send",
+        "to": "{{connections.gmail.teamEmail}}",
+        "subject": "📄 RFP Draft Ready: {{1.documentTitle}} ({{1.organizationName}})",
+        "body": "<html><body style=\"font-family: Arial, sans-serif; padding: 20px;\"><h2>RFP Response Draft Ready</h2><table style=\"border-collapse: collapse; width: 100%; max-width: 600px;\"><tr><td style=\"padding: 8px; border-bottom: 1px solid #ddd; font-weight: bold;\">RFP Document:</td><td style=\"padding: 8px; border-bottom: 1px solid #ddd;\">{{1.documentTitle}}</td></tr><tr><td style=\"padding: 8px; border-bottom: 1px solid #ddd; font-weight: bold;\">Organization:</td><td style=\"padding: 8px; border-bottom: 1px solid #ddd;\">{{1.organizationName}}</td></tr><tr><td style=\"padding: 8px; border-bottom: 1px solid #ddd; font-weight: bold;\">Deadline:</td><td style=\"padding: 8px; border-bottom: 1px solid #ddd;\">{{1.submissionDeadline}}</td></tr><tr><td style=\"padding: 8px; border-bottom: 1px solid #ddd; font-weight: bold;\">Draft Document:</td><td style=\"padding: 8px; border-bottom: 1px solid #ddd;\"><a href=\"{{7.documentUrl}}\">Open in Google Docs</a></td></tr><tr><td style=\"padding: 8px; border-bottom: 1px solid #ddd; font-weight: bold;\">Drive Folder:</td><td style=\"padding: 8px; border-bottom: 1px solid #ddd;\"><a href=\"{{8.folderUrl}}\">View in Google Drive</a></td></tr></table><p style=\"margin-top: 20px; color: #666;\">This draft was generated automatically. Please review, edit, and finalize before submission.</p></body></html>",
+        "cc": "",
+        "bcc": "",
+        "replyTo": ""
+      },
+      "output": {
+        "messageId": "{{gmail.messageId}}",
+        "threadId": "{{gmail.threadId}}"
+      }
+    },
+    {
+      "id": 10,
+      "type": "slack",
+      "name": "Post Summary to Slack Channel",
+      "params": {
+        "connectionId": "{{connections.slack.connectionId}}",
+        "operation": "postMessage",
+        "channel": "{{connections.slack.channelId}}",
+        "text": "",
+        "blocks": [
+          {
+            "type": "header",
+            "text": {
+              "type": "plain_text",
+              "text": "📋 RFP Response Draft Generated",
+              "emoji": true
+            }
+          },
+          {
+            "type": "section",
+            "fields": [
+              {
+                "type": "mrkdwn",
+                "text": "*RFP:*\n{{1.documentTitle}}"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*Organization:*\n{{1.organizationName}}"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*Deadline:*\n{{1.submissionDeadline}}"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*Requirements Found:*\n{{3.requirements.length}} items"
+              }
+            ]
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Summary:*\n{{5.summary}}"
+            }
+          },
+          {
+            "type": "actions",
+            "elements": [
+              {
+                "type": "button",
+                "text": {
+                  "type": "plain_text",
+                  "text": "📄 Open Draft",
+                  "emoji": true
+                },
+                "url": "{{7.documentUrl}}",
+                "style": "primary"
+              },
+              {
+                "type": "button",
+                "text": {
+                  "type": "plain_text",
+                  "text": "📁 Drive Folder",
+                  "emoji": true
+                },
+                "url": "{{8.folderUrl}}",
+                "style": "default"
+              }
+            ]
+          },
+          {
+            "type": "divider"
+          },
+          {
+            "type": "context",
+            "elements": [
+              {
+                "type": "mrkdwn",
+                "text": "🤖 Generated automatically by *RFP / RFI Response Drafter* | Please review before submission"
+              }
+            ]
+          }
+        ]
+      },
+      "output": {
+        "slackTimestamp": "{{slack.ts}}",
+        "channelId": "{{slack.channel}}"
+      }
+    }
+  ],
+  "connections": {
+    "openai": {
+      "id": "conn_openai_rfp",
+      "name": "OpenAI API",
+      "type": "openai",
+      "required": true,
+      "description": "Your OpenAI API key with access to GPT-4"
+    },
+    "googledocs": {
+      "id": "conn_googledocs_rfp",
+      "name": "Google Docs",
+      "type": "googledocs",
+      "required": true,
+      "description": "Google account for document creation"
+    },
+    "googledrive": {
+      "id": "conn_googledrive_rfp",
+      "name": "Google Drive",
+      "type": "googledrive",
+      "required": true,
+      "description": "Google account for file storage",
+      "params": {
+        "folderId": "",
+        "description": "ID of the Google Drive folder where RFP responses will be stored"
+      }
+    },
+    "gmail": {
+      "id": "conn_gmail_rfp",
+      "name": "Gmail",
+      "type": "gmail",
+      "required": true,
+      "description": "Gmail account for sending team notifications",
+      "params": {
+        "teamEmail": "",
+        "description": "Email address of the team or distribution list to notify"
+      }
+    },
+    "slack": {
+      "id": "conn_slack_rfp",
+      "name": "Slack",
+      "type": "slack",
+      "required": true,
+      "description": "Slack workspace for posting summaries",
+      "params": {
+        "channelId": "",
+        "description": "Slack channel ID where RFP draft summaries will be posted"
+      }
+    }
+  },
+  "metadata": {
+    "author": "Hermes Agent - Nous Research",
+    "createdAt": "2026-07-20T00:00:00Z",
+    "updatedAt": "2026-07-20T00:00:00Z",
+    "version": "1.0.0",
+    "category": "Document Processing & AI",
+    "icon": "file-text",
+    "color": "#2563eb",
+    "useCases": [
+      "RFP Response Drafting",
+      "RFI Response Automation",
+      "Proposal Generation",
+      "Document Analysis & Response"
+    ],
+    "license": "MIT",
+    "documentation": "https://buy.stripe.com/test_28E00c7DM347g3ybqz9Zm02"
+  },
+  "edges": [
+    { "id": "e1-2", "source": 1, "target": 2 },
+    { "id": "e2-3", "source": 2, "target": 3 },
+    { "id": "e3-4", "source": 3, "target": 4 },
+    { "id": "e4-5", "source": 4, "target": 5 },
+    { "id": "e5-6", "source": 5, "target": 6 },
+    { "id": "e6-7", "source": 6, "target": 7 },
+    { "id": "e7-8", "source": 7, "target": 8 },
+    { "id": "e8-9", "source": 8, "target": 9 },
+    { "id": "e9-10", "source": 9, "target": 10 }
+  ],
+  "routing": {
+    "error": "stop",
+    "concurrency": 1,
+    "maxQueue": 10,
+    "executionTimeout": 300
+  }
+}

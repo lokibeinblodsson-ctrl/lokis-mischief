@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "product": "Seiðr Messaging Stack — Emotion Sequences",
+    "price": "$59",
+    "platform": ["n8n"],
+    "version": "1.0.0",
+    "author": "Loki's Mischief",
+    "description": "Emotion-aware sequences that match buyer state to message intensity.",
+    "usage": "Import in n8n, connect calendar and messaging tools."
+  },
+  "scenario": {
+    "name": "Emotion Follow-up",
+    "flow": [
+      { "id": "1", "module": "Schedule", "action": "Trigger", "fields": { "cron": "0 10 * * 1-5" } },
+      { "id": "2", "module": "HTTP", "action": "Make a request", "fields": { "endpoint": "YOUR_CRM_API", "method": "GET" } },
+      { "id": "3", "module": "Tools", "action": "Text Parser", "fields": { "mode": "regex", "pattern": "(frustrated|curious|excited|confused|ready)" } },
+      { "id": "4", "module": "Flow Control", "action": "Router", "routing": [ { "name": "Close", "patterns": ["ready","excited"] }, { "name": "Nurture", "patterns": ["curious"] }, { "name": "Rescue", "patterns": ["frustrated","confused"] } ] },
+      { "id": "5", "module": "Email", "action": "Send email", "fields": { "to": "prospect@company.com", "subject": "Next step: {{3.name}}" } }
+    ]
+  }
+}

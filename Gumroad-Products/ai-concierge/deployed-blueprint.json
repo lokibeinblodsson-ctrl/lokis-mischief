@@ -1,0 +1,938 @@
+{
+  "name": "AI Client Concierge System",
+  "version": "1.0.0",
+  "description": "AI-powered intake system that handles client lead qualification, scheduling, status updates, and FAQ responses. Automatically processes inbound inquiries via GPT-4o analysis, routes qualified leads to scheduling and CRM logging, sends polite declines with recommendations for non-qualified leads, and runs recurring follow-up checks on active leads.",
+  "flow": [
+    {
+      "id": 1,
+      "module": "webhook:receive",
+      "version": 2,
+      "metadata": {
+        "designer": {
+          "x": 100,
+          "y": 200
+        },
+        "parameters": {
+          "webhook": {
+            "webhookId": "ai-concierge-inbound-v1"
+          }
+        }
+      },
+      "parameters": {},
+      "mapper": {
+        "data": {
+          "name": "{{1.name}}",
+          "email": "{{1.email}}",
+          "company": "{{1.company}}",
+          "service_interest": "{{1.service_interest}}",
+          "budget": "{{1.budget}}",
+          "message": "{{1.message}}",
+          "phone": "{{1.phone}}",
+          "referral_source": "{{1.referral_source}}",
+          "timeline": "{{1.timeline}}",
+          "heard_about": "{{1.heard_about}}",
+          "timestamp": "{{timestamp}}"
+        }
+      },
+      "moduleModel": {
+        "type": "webhook",
+        "nativeType": "webhook",
+        "label": "Inbound Inquiry Webhook",
+        "notes": "Receives client inquiry data from website form, landing page, or API POST. Expected fields: name, email, company, service_interest, budget, message, phone, referral_source, timeline, heard_about."
+      }
+    },
+    {
+      "id": 2,
+      "module": "http:request",
+      "version": 2,
+      "metadata": {
+        "designer": {
+          "x": 280,
+          "y": 200
+        },
+        "parameters": {
+          "url": "https://api.openai.com/v1/chat/completions",
+          "method": "POST",
+          "headers": {
+            "Authorization": "Bearer {{3.apiKey}}",
+            "Content-Type": "application/json"
+          },
+          "body": {
+            "model": "gpt-4o",
+            "messages": [
+              {
+                "role": "system",
+                "content": "You are an expert AI client concierge for a digital agency. Your job is to analyze incoming client inquiries and:\n\n1. EXTRACT INTENT: Determine the primary intent of the inquiry (new project inquiry, existing client status update, general question/FAQ, partnership request, or support issue).\n\n2. QUALIFY THE LEAD: Evaluate if this is a serious, qualified lead based on:\n   - Does the inquiry mention a specific project or need?\n   - Is there a budget range or willingness to invest?\n   - Is the contact information complete (name, email, company)?\n   - Does the timeline indicate urgency or genuine interest?\n   - Is the inquiry professional and coherent?\n\n   A qualified lead should have at least 3 of 5 positive signals.\n\n3. DETERMINE BEST SERVICE FIT: Map the inquiry to one of these services:\n   - Web Development (websites, web apps, e-commerce)\n   - Mobile Development (iOS, Android, cross-platform)\n   - AI & Automation (chatbots, AI agents, workflow automation)\n   - UI/UX Design (design systems, prototypes, UX research)\n   - Consulting (strategy, tech advisory)\n   - Other (specify)\n\n4. WRITE A PERSONALIZED RESPONSE: Draft a warm, professional email response body (plain text) that:\n   - Thanks the prospect for their inquiry\n   - Shows understanding of their specific needs\n   - Briefly introduces relevant expertise\n   - Proposes next steps (discovery call for qualified, alternative resources for unqualified)\n   - Is under 200 words\n\n5. SUGGEST MEETING TOPICS: If qualified, suggest 2-3 talking points for the discovery call.\n\nRespond in the following JSON format ONLY (no markdown, no code fences):\n{\n  \"intent\": \"new_project_inquiry | status_update | general_question | partnership | support\",\n  \"qualified\": true | false,\n  \"qualification_score\": 0-5,\n  \"qualification_signals\": [\"signal1\", \"signal2\", ...],\n  \"best_service_fit\": \"Web Development | Mobile Development | AI & Automation | UI/UX Design | Consulting | Other\",\n  \"service_explanation\": \"Brief explanation of why this service fits\",\n  \"confidence\": 0.0-1.0,\n  \"personalized_response\": \"Full email response body here...\",\n  \"suggested_meeting_topics\": [\"Topic 1\", \"Topic 2\", \"Topic 3\"],\n  \"faq_answer\": \"If intent is general_question, provide helpful answer here\",\n  \"budget_assessment\": \"low | medium | high | premium | unclear\",\n  \"urgency\": \"low | medium | high | urgent\",\n  \"extracted_company_name\": \"Company name if mentioned\",\n  \"extracted_project_name\": \"Project name if mentioned\"\n}",
+                "role": "user",
+                "content": "Analyze this client inquiry for our agency:\n\nName: {{1.name}}\nEmail: {{1.email}}\nCompany: {{1.company}}\nService Interest: {{1.service_interest}}\nBudget: {{1.budget}}\nTimeline: {{1.timeline}}\nMessage: {{1.message}}\nReferral Source: {{1.referral_source}}\nHeard About Us: {{1.heard_about}}"
+              }
+            ],
+            "temperature": 0.3,
+            "max_tokens": 1500,
+            "response_format": {
+              "type": "json_object"
+            }
+          }
+        }
+      },
+      "parameters": {
+        "url": "https://api.openai.com/v1/chat/completions",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{3.apiKey}}",
+          "Content-Type": "application/json"
+        },
+        "bodyType": "json",
+        "parseResponse": "json",
+        "followRedirects": true,
+        "timeout": 60000,
+        "enableAdvancedJsonParsing": true
+      },
+      "mapper": {
+        "url": "https://api.openai.com/v1/chat/completions",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{3.apiKey}}",
+          "Content-Type": "application/json"
+        },
+        "bodyType": "json",
+        "parseResponse": "json",
+        "followRedirects": true,
+        "timeout": 60000,
+        "enableAdvancedJsonParsing": true
+      },
+      "moduleModel": {
+        "type": "http",
+        "nativeType": "http",
+        "label": "GPT-4o Inquiry Analysis",
+        "notes": "Calls OpenAI GPT-4o to analyze inquiry, extract intent, qualify lead, determine service fit, and draft personalized response."
+      }
+    },
+    {
+      "id": 3,
+      "module": "router:router",
+      "version": 1,
+      "metadata": {
+        "designer": {
+          "x": 460,
+          "y": 200
+        },
+        "parameters": {}
+      },
+      "parameters": {},
+      "mapper": {},
+      "routes": [
+        {
+          "id": "route_a_qualified",
+          "label": "Qualified Lead",
+          "conditions": {
+            "type": "if",
+            "operator": "eq",
+            "firstValue": "{{2.data.qualified}}",
+            "secondValue": true
+          }
+        },
+        {
+          "id": "route_b_not_qualified",
+          "label": "Not Qualified",
+          "conditions": {
+            "type": "else"
+          }
+        }
+      ],
+      "moduleModel": {
+        "type": "router",
+        "nativeType": "flowControl",
+        "label": "Qualification Router",
+        "notes": "Splits workflow based on GPT-4o qualification result. Path A = qualified lead, Path B = not qualified."
+      }
+    },
+    {
+      "id": 4,
+      "module": "googleCalendar:createEvent",
+      "version": 3,
+      "metadata": {
+        "designer": {
+          "x": 640,
+          "y": 100
+        },
+        "parameters": {
+          "connection": "{{4.connection}}"
+        }
+      },
+      "parameters": {
+        "connection": "{{4.connection}}"
+      },
+      "mapper": {
+        "calendarId": "primary",
+        "summary": "Discovery Call: {{1.name}} — {{2.data.extracted_company_name}}",
+        "description": "Discovery Call with {{1.name}} ({{1.email}})\n\nCompany: {{1.company}}\nService Interest: {{1.service_interest}}\nBudget: {{1.budget}}\nTimeline: {{1.timeline}}\n\n--- AI Analysis ---\nIntent: {{2.data.intent}}\nQualification Score: {{2.data.qualification_score}}/5\nBest Service Fit: {{2.data.best_service_fit}}\n\n--- Suggested Talking Points ---\n{{2.data.suggested_meeting_topics[0]}}\n{{2.data.suggested_meeting_topics[1]}}\n{{2.data.suggested_meeting_topics[2]}}\n\n--- Original Inquiry ---\n{{1.message}}\n\n--- Setup Notes ---\nThis meeting was automatically scheduled by the AI Client Concierge System.\nPlease review the lead in your CRM before the call.",
+        "startDate": "{{addDays(now, 2)}}",
+        "startTime": "10:00",
+        "endDate": "{{addDays(now, 2)}}",
+        "endTime": "10:30",
+        "timezone": "America/New_York",
+        "attendees": [
+          {
+            "email": "{{1.email}}",
+            "displayName": "{{1.name}}"
+          },
+          {
+            "email": "team@agency.com",
+            "displayName": "Agency Team"
+          }
+        ],
+        "reminders": {
+          "useDefault": false,
+          "overrides": [
+            {
+              "method": "email",
+              "minutes": 60
+            },
+            {
+              "method": "popup",
+              "minutes": 30
+            },
+            {
+              "method": "popup",
+              "minutes": 10
+            }
+          ]
+        },
+        "conferenceData": {
+          "createRequest": {
+            "requestId": "{{uuid}}",
+            "conferenceSolutionKey": {
+              "type": "hangoutsMeet"
+            }
+          }
+        },
+        "colorId": "7",
+        "visibility": "default",
+        "status": "confirmed"
+      },
+      "moduleModel": {
+        "type": "googleCalendar",
+        "nativeType": "googleCalendar",
+        "label": "Create Discovery Call (Google Calendar)",
+        "notes": "Creates a 30-minute Google Calendar event with Google Meet link, 2 business days out. Includes attendee from prospect and internal team."
+      }
+    },
+    {
+      "id": 5,
+      "module": "gmail:sendEmail",
+      "version": 2,
+      "metadata": {
+        "designer": {
+          "x": 820,
+          "y": 100
+        },
+        "parameters": {
+          "connection": "{{5.connection}}"
+        }
+      },
+      "parameters": {
+        "connection": "{{5.connection}}"
+      },
+      "mapper": {
+        "to": "{{1.email}}",
+        "cc": "team@agency.com",
+        "bcc": "",
+        "subject": "Welcome! Your Discovery Call is Confirmed — {{1.name}}",
+        "bodyType": "html",
+        "body": "<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <style>\n    body { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f6f8; }\n    .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }\n    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 30px; text-align: center; }\n    .header h1 { color: #ffffff; margin: 0; font-size: 28px; font-weight: 700; }\n    .header p { color: rgba(255,255,255,0.9); margin: 8px 0 0 0; font-size: 16px; }\n    .content { padding: 30px; }\n    .greeting { font-size: 18px; color: #2d3748; margin-bottom: 20px; }\n    .greeting strong { color: #667eea; }\n    .details-box { background: #f7fafc; border-left: 4px solid #667eea; padding: 20px; margin: 20px 0; border-radius: 0 8px 8px 0; }\n    .details-box h3 { margin: 0 0 12px 0; color: #2d3748; font-size: 16px; }\n    .details-box p { margin: 6px 0; color: #4a5568; font-size: 14px; }\n    .details-box .label { font-weight: 600; color: #2d3748; }\n    .button-container { text-align: center; margin: 30px 0; }\n    .button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 14px 36px; border-radius: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 14px rgba(102, 126, 234, 0.4); }\n    .button:hover { box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6); }\n    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }\n    .info-item { background: #f7fafc; padding: 16px; border-radius: 8px; }\n    .info-item .label { font-size: 12px; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }\n    .info-item .value { font-size: 15px; color: #2d3748; margin-top: 4px; font-weight: 500; }\n    .message-box { background: #ebf4ff; padding: 20px; border-radius: 8px; margin: 20px 0; }\n    .message-box p { margin: 0; color: #2b6cb0; font-style: italic; font-size: 14px; }\n    .footer { padding: 20px 30px; background: #f7fafc; text-align: center; border-top: 1px solid #e2e8f0; }\n    .footer p { margin: 4px 0; color: #a0aec0; font-size: 12px; }\n    .footer a { color: #667eea; text-decoration: none; }\n    hr { border: none; border-top: 1px solid #e2e8f0; margin: 24px 0; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>You're On Our Calendar! 🎉</h1>\n      <p>Your Discovery Call has been scheduled</p>\n    </div>\n    <div class=\"content\">\n      <p class=\"greeting\">Hi <strong>{{1.name}}</strong>,</p>\n      <p style=\"color: #4a5568; font-size: 15px; line-height: 1.7;\">\n        Thank you for reaching out to us at <strong>Agency</strong>! We're excited to learn more about {{1.company}} \n        and discuss how we can help with <strong>{{1.service_interest}}</strong>.\n      </p>\n\n      <div class=\"details-box\">\n        <h3>📅 Your Discovery Call Details</h3>\n        <p><span class=\"label\">Date:</span> {{formatDate(addDays(now, 2), \"dddd, MMMM Do, YYYY\")}}</p>\n        <p><span class=\"label\">Time:</span> 10:00 AM — 10:30 AM (Eastern Time)</p>\n        <p><span class=\"label\">Duration:</span> 30 minutes</p>\n        <p><span class=\"label\">With:</span> Your Agency Team</p>\n      </div>\n\n      <div class=\"button-container\">\n        <a href=\"{{4.conferenceData.entryPoints[0].uri}}\" class=\"button\" target=\"_blank\">🔗 Join Google Meet</a>\n      </div>\n\n      <p style=\"color: #4a5568; font-size: 14px; text-align: center;\">\n        A calendar invitation has been sent to your email with the meeting link.\n      </p>\n\n      <div class=\"info-grid\">\n        <div class=\"info-item\">\n          <div class=\"label\">Service Interest</div>\n          <div class=\"value\">{{1.service_interest}}</div>\n        </div>\n        <div class=\"info-item\">\n          <div class=\"label\">Budget Range</div>\n          <div class=\"value\">{{1.budget}}</div>\n        </div>\n        <div class=\"info-item\">\n          <div class=\"label\">Company</div>\n          <div class=\"value\">{{1.company}}</div>\n        </div>\n        <div class=\"info-item\">\n          <div class=\"label\">Timeline</div>\n          <div class=\"value\">{{1.timeline}}</div>\n        </div>\n      </div>\n\n      <hr>\n\n      <div class=\"message-box\">\n        <p>\"{{2.data.personalized_response}}\"</p>\n      </div>\n\n      <h3 style=\"color: #2d3748; font-size: 16px; margin-top: 24px;\">💡 What to Expect on the Call</h3>\n      <ul style=\"color: #4a5568; font-size: 14px; line-height: 1.8; padding-left: 20px;\">\n        <li>We'll dive deeper into your project goals and requirements</li>\n        <li>We'll share relevant case studies and examples from similar work</li>\n        <li>We'll outline a proposed approach and timeline</li>\n        <li>You'll have plenty of time to ask questions</li>\n      </ul>\n\n      <h3 style=\"color: #2d3748; font-size: 16px; margin-top: 24px;\">📋 In the Meantime</h3>\n      <ul style=\"color: #4a5568; font-size: 14px; line-height: 1.8; padding-left: 20px;\">\n        <li>Check out our <a href=\"https://agency.com/portfolio\" style=\"color: #667eea;\">portfolio</a> for relevant work samples</li>\n        <li>Review our <a href=\"https://agency.com/process\" style=\"color: #667eea;\">engagement process</a> to understand how we work</li>\n        <li>Feel free to reply to this email with any questions before the call</li>\n      </ul>\n\n      <p style=\"color: #4a5568; font-size: 15px; line-height: 1.7; margin-top: 24px;\">\n        We're looking forward to speaking with you!\n      </p>\n      <p style=\"color: #2d3748; font-size: 15px; line-height: 1.7;\">\n        Best regards,<br>\n        <strong>The Agency Team</strong><br>\n        <span style=\"color: #667eea; font-size: 13px;\">hello@agency.com | (555) 123-4567</span>\n      </p>\n    </div>\n    <div class=\"footer\">\n      <p>© {{formatDate(now, \"YYYY\")}} Agency. All rights reserved.</p>\n      <p>123 Business Ave, Suite 100, New York, NY 10001</p>\n      <p>\n        <a href=\"https://agency.com/privacy\">Privacy Policy</a> ·\n        <a href=\"https://agency.com/terms\">Terms of Service</a> ·\n        <a href=\"mailto:hello@agency.com\">Contact Us</a>\n      </p>\n    </div>\n  </div>\n</body>\n</html>",
+        "fromName": "Agency Concierge Team",
+        "replyTo": "hello@agency.com",
+        "attachments": []
+      },
+      "moduleModel": {
+        "type": "gmail",
+        "nativeType": "gmail",
+        "label": "Send Confirmation Email (Qualified)",
+        "notes": "Sends a branded HTML welcome email to the prospect with calendar link, call details, service info, and next steps."
+      }
+    },
+    {
+      "id": 6,
+      "module": "googleSheets:addRow",
+      "version": 3,
+      "metadata": {
+        "designer": {
+          "x": 820,
+          "y": 200
+        },
+        "parameters": {
+          "connection": "{{6.connection}}"
+        }
+      },
+      "parameters": {
+        "connection": "{{6.connection}}"
+      },
+      "mapper": {
+        "spreadsheetId": "YOUR_SPREADSHEET_ID_HERE",
+        "sheetName": "Qualified Leads",
+        "headersRowNumber": "1",
+        "values": {
+          "0": "{{timestamp}}",
+          "1": "{{1.name}}",
+          "2": "{{1.email}}",
+          "3": "{{1.company}}",
+          "4": "{{1.phone}}",
+          "5": "{{1.service_interest}}",
+          "6": "{{2.data.best_service_fit}}",
+          "7": "{{1.budget}}",
+          "8": "{{2.data.budget_assessment}}",
+          "9": "{{1.timeline}}",
+          "10": "{{2.data.urgency}}",
+          "11": "{{1.message}}",
+          "12": "{{2.data.intent}}",
+          "13": "{{2.data.qualification_score}}",
+          "14": "Qualified",
+          "15": "{{formatDate(addDays(now, 2), \"YYYY-MM-DD\")}}",
+          "16": "10:00 AM ET",
+          "17": "Discovery Call Scheduled",
+          "18": "{{2.data.suggested_meeting_topics[0]}} | {{2.data.suggested_meeting_topics[1]}} | {{2.data.suggested_meeting_topics[2]}}",
+          "19": "{{1.referral_source}}",
+          "20": "{{1.heard_about}}",
+          "21": "{{2.data.service_explanation}}"
+        }
+      },
+      "moduleModel": {
+        "type": "googleSheets",
+        "nativeType": "googleSheets",
+        "label": "Log Qualified Lead to Sheet",
+        "notes": "Adds a new row to the 'Qualified Leads' sheet with full lead details, AI analysis, and scheduled call info. Column headers: Timestamp, Name, Email, Company, Phone, Service Interest, Best Service Fit, Budget, Budget Assessment, Timeline, Urgency, Message, Intent, Qualification Score, Status, Call Date, Call Time, Call Stage, Talking Points, Referral Source, Heard About, Service Explanation."
+      }
+    },
+    {
+      "id": 7,
+      "module": "slack:sendMessage",
+      "version": 2,
+      "metadata": {
+        "designer": {
+          "x": 820,
+          "y": 300
+        },
+        "parameters": {
+          "connection": "{{7.connection}}"
+        }
+      },
+      "parameters": {
+        "connection": "{{7.connection}}"
+      },
+      "mapper": {
+        "channel": "#lead-alerts",
+        "text": "🚀 New Qualified Lead: {{1.name}} from {{1.company}}",
+        "parse": "full",
+        "linkNames": true,
+        "blocks": [
+          {
+            "type": "header",
+            "text": {
+              "type": "plain_text",
+              "text": "🚀 New Qualified Lead — Action Required",
+              "emoji": true
+            }
+          },
+          {
+            "type": "section",
+            "fields": [
+              {
+                "type": "mrkdwn",
+                "text": "*Name:*\n{{1.name}}"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*Company:*\n{{1.company}}"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*Email:*\n<mailto:{{1.email}}|{{1.email}}>"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*Phone:*\n{{1.phone}}"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*Service Interest:*\n{{1.service_interest}}"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*Best Fit:*\n{{2.data.best_service_fit}}"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*Budget:*\n{{1.budget}} ({{2.data.budget_assessment}})"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*Timeline:*\n{{1.timeline}} ({{2.data.urgency}})"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*Qualification Score:*\n{{2.data.qualification_score}}/5"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*Intent:*\n{{2.data.intent}}"
+              }
+            ]
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Inquiry Message:*\n> {{1.message}}"
+            }
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*AI Response:*\n> {{2.data.personalized_response}}"
+            }
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Suggested Talking Points:*\n• {{2.data.suggested_meeting_topics[0]}}\n• {{2.data.suggested_meeting_topics[1]}}\n• {{2.data.suggested_meeting_topics[2]}}"
+            }
+          },
+          {
+            "type": "divider"
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*📅 Discovery Call Scheduled:* {{formatDate(addDays(now, 2), \"YYYY-MM-DD\")}} at 10:00 AM ET\n*🔗 Google Meet:* {{4.conferenceData.entryPoints[0].uri}}\n*📊 Sheet:* View in <https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID_HERE|Qualified Leads Tracker>"
+            }
+          },
+          {
+            "type": "actions",
+            "elements": [
+              {
+                "type": "button",
+                "text": {
+                  "type": "plain_text",
+                  "text": "✉️ Email Prospect",
+                  "emoji": true
+                },
+                "url": "mailto:{{1.email}}?subject=Re: Your Discovery Call",
+                "style": "primary"
+              },
+              {
+                "type": "button",
+                "text": {
+                  "type": "plain_text",
+                  "text": "📅 Open Calendar",
+                  "emoji": true
+                },
+                "url": "{{4.htmlLink}}",
+                "style": "primary"
+              },
+              {
+                "type": "button",
+                "text": {
+                  "type": "plain_text",
+                  "text": "❌ Not Interested",
+                  "emoji": true
+                },
+                "style": "danger",
+                "url": "https://agency.com/internal/decline-lead?lead={{1.email}}"
+              }
+            ]
+          },
+          {
+            "type": "context",
+            "elements": [
+              {
+                "type": "mrkdwn",
+                "text": "🤖 *AI Client Concierge* · Automated lead qualification and scheduling · {{timestamp}}"
+              }
+            ]
+          }
+        ],
+        "attachments": []
+      },
+      "moduleModel": {
+        "type": "slack",
+        "nativeType": "slack",
+        "label": "Notify Team via Slack",
+        "notes": "Sends a rich Slack message to #lead-alerts with lead summary, AI analysis, action buttons, and calendar link."
+      }
+    },
+    {
+      "id": 8,
+      "module": "gmail:sendEmail",
+      "version": 2,
+      "metadata": {
+        "designer": {
+          "x": 640,
+          "y": 380
+        },
+        "parameters": {
+          "connection": "{{8.connection}}"
+        }
+      },
+      "parameters": {
+        "connection": "{{8.connection}}"
+      },
+      "mapper": {
+        "to": "{{1.email}}",
+        "cc": "",
+        "bcc": "team@agency.com",
+        "subject": "Thank You for Your Inquiry — {{1.name}}",
+        "bodyType": "html",
+        "body": "<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <style>\n    body { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f6f8; }\n    .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }\n    .header { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 40px 30px; text-align: center; }\n    .header h1 { color: #ffffff; margin: 0; font-size: 28px; font-weight: 700; }\n    .header p { color: rgba(255,255,255,0.9); margin: 8px 0 0 0; font-size: 16px; }\n    .content { padding: 30px; }\n    .greeting { font-size: 18px; color: #2d3748; margin-bottom: 20px; }\n    .greeting strong { color: #667eea; }\n    .recommendation-box { background: #fff5f5; border-left: 4px solid #f5576c; padding: 20px; margin: 20px 0; border-radius: 0 8px 8px 0; }\n    .recommendation-box h3 { margin: 0 0 12px 0; color: #2d3748; font-size: 16px; }\n    .recommendation-box p, .recommendation-box li { color: #4a5568; font-size: 14px; line-height: 1.7; }\n    .resource-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }\n    .resource-item { background: #f7fafc; padding: 20px; border-radius: 8px; text-align: center; }\n    .resource-item h4 { margin: 0 0 8px 0; color: #2d3748; font-size: 15px; }\n    .resource-item p { margin: 0; color: #718096; font-size: 13px; }\n    .resource-item a { color: #667eea; text-decoration: none; font-weight: 600; }\n    .message-box { background: #ebf4ff; padding: 20px; border-radius: 8px; margin: 20px 0; }\n    .message-box p { margin: 0; color: #2b6cb0; font-style: italic; font-size: 14px; }\n    .footer { padding: 20px 30px; background: #f7fafc; text-align: center; border-top: 1px solid #e2e8f0; }\n    .footer p { margin: 4px 0; color: #a0aec0; font-size: 12px; }\n    .footer a { color: #667eea; text-decoration: none; }\n    hr { border: none; border-top: 1px solid #e2e8f0; margin: 24px 0; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>Thank You for Reaching Out 🙏</h1>\n      <p>We appreciate your interest in Agency</p>\n    </div>\n    <div class=\"content\">\n      <p class=\"greeting\">Hi <strong>{{1.name}}</strong>,</p>\n      <p style=\"color: #4a5568; font-size: 15px; line-height: 1.7;\">\n        Thank you so much for taking the time to reach out to us! We truly appreciate \n        your interest in <strong>{{1.service_interest}}</strong> for {{1.company}}.\n      </p>\n\n      <p style=\"color: #4a5568; font-size: 15px; line-height: 1.7;\">\n        After carefully reviewing your inquiry, we've determined that our current services \n        and engagement model may not be the best fit for your needs at this time. We want \n        to be transparent about this upfront so we don't waste your valuable time.\n      </p>\n\n      <div class=\"recommendation-box\">\n        <h3>💡 Recommendations & Resources</h3>\n        <p>While we can't take on this project right now, here are some resources that may help:</p>\n        <ul>\n          <li><strong>Service:</strong> Based on your interest in {{1.service_interest}}, we recommend exploring <a href=\"https://agency.com/alternatives\" style=\"color: #667eea;\">these alternative solutions</a> that might be a better fit.</li>\n          <li><strong>Budget:</strong> For projects in the {{1.budget}} range, consider starting with a smaller scoped engagement to validate your concept.</li>\n          <li><strong>DIY Resources:</strong> Check out our <a href=\"https://agency.com/blog\" style=\"color: #667eea;\">blog</a> and <a href=\"https://agency.com/resources\" style=\"color: #667eea;\">free resources</a> for guides and templates you can use on your own.</li>\n        </ul>\n      </div>\n\n      <div class=\"message-box\">\n        <p>\"{{2.data.personalized_response}}\"</p>\n      </div>\n\n      <hr>\n\n      <h3 style=\"color: #2d3748; font-size: 16px; margin-top: 24px;\">🔍 Other Ways We Can Help</h3>\n\n      <div class=\"resource-grid\">\n        <div class=\"resource-item\">\n          <h4>📚 Free Resources</h4>\n          <p>Guides, templates, and tools</p>\n          <a href=\"https://agency.com/resources\">Browse Resources →</a>\n        </div>\n        <div class=\"resource-item\">\n          <h4>📝 Blog</h4>\n          <p>Industry insights and tips</p>\n          <a href=\"https://agency.com/blog\">Read Blog →</a>\n        </div>\n        <div class=\"resource-item\">\n          <h4>💬 Community</h4>\n          <p>Join our free community</p>\n          <a href=\"https://agency.com/community\">Join Now →</a>\n        </div>\n        <div class=\"resource-item\">\n          <h4>📞 Future Projects</h4>\n          <p>We'd love to help in the future</p>\n          <a href=\"https://agency.com/contact\">Stay in Touch →</a>\n        </div>\n      </div>\n\n      <p style=\"color: #4a5568; font-size: 15px; line-height: 1.7; margin-top: 24px;\">\n        We'll keep your information on file for future opportunities. If your needs change \n        or you'd like to explore a different scope of work, please don't hesitate to reach out again.\n      </p>\n\n      <p style=\"color: #4a5568; font-size: 15px; line-height: 1.7;\">\n        We wish you the very best with {{1.company}}!\n      </p>\n      <p style=\"color: #2d3748; font-size: 15px; line-height: 1.7;\">\n        Warm regards,<br>\n        <strong>The Agency Team</strong><br>\n        <span style=\"color: #667eea; font-size: 13px;\">hello@agency.com | (555) 123-4567</span>\n      </p>\n    </div>\n    <div class=\"footer\">\n      <p>© {{formatDate(now, \"YYYY\")}} Agency. All rights reserved.</p>\n      <p>123 Business Ave, Suite 100, New York, NY 10001</p>\n      <p>\n        <a href=\"https://agency.com/privacy\">Privacy Policy</a> ·\n        <a href=\"https://agency.com/terms\">Terms of Service</a> ·\n        <a href=\"mailto:hello@agency.com\">Contact Us</a>\n      </p>\n    </div>\n  </div>\n</body>\n</html>",
+        "fromName": "Agency Concierge Team",
+        "replyTo": "hello@agency.com",
+        "attachments": []
+      },
+      "moduleModel": {
+        "type": "gmail",
+        "nativeType": "gmail",
+        "label": "Send Decline Email (Not Qualified)",
+        "notes": "Sends a polite, helpful decline email with alternative recommendations, resources, and an invitation to reach out in the future."
+      }
+    },
+    {
+      "id": 9,
+      "module": "googleSheets:addRow",
+      "version": 3,
+      "metadata": {
+        "designer": {
+          "x": 640,
+          "y": 480
+        },
+        "parameters": {
+          "connection": "{{9.connection}}"
+        }
+      },
+      "parameters": {
+        "connection": "{{9.connection}}"
+      },
+      "mapper": {
+        "spreadsheetId": "YOUR_SPREADSHEET_ID_HERE",
+        "sheetName": "Future Follow-Up",
+        "headersRowNumber": "1",
+        "values": {
+          "0": "{{timestamp}}",
+          "1": "{{1.name}}",
+          "2": "{{1.email}}",
+          "3": "{{1.company}}",
+          "4": "{{1.phone}}",
+          "5": "{{1.service_interest}}",
+          "6": "{{2.data.best_service_fit}}",
+          "7": "{{1.budget}}",
+          "8": "{{2.data.budget_assessment}}",
+          "9": "{{1.timeline}}",
+          "10": "{{2.data.urgency}}",
+          "11": "{{1.message}}",
+          "12": "{{2.data.intent}}",
+          "13": "{{2.data.qualification_score}}",
+          "14": "Not Qualified",
+          "15": "Not Scheduled",
+          "16": "Nurture",
+          "17": "{{2.data.service_explanation}}",
+          "18": "{{1.referral_source}}",
+          "19": "{{1.heard_about}}",
+          "20": "{{formatDate(addDays(now, 90), \"YYYY-MM-DD\")}}",
+          "21": "Decline sent with recommendations"
+        }
+      },
+      "moduleModel": {
+        "type": "googleSheets",
+        "nativeType": "googleSheets",
+        "label": "Log Not Qualified Lead for Follow-Up",
+        "notes": "Adds a new row to the 'Future Follow-Up' sheet with lead details and AI analysis. These leads are nurtured automatically via the recurring scheduler."
+      }
+    },
+    {
+      "id": 10,
+      "module": "schedule:trigger",
+      "version": 2,
+      "metadata": {
+        "designer": {
+          "x": 100,
+          "y": 600
+        },
+        "parameters": {
+          "schedule": {
+            "type": "recurring",
+            "frequency": "daily",
+            "time": "09:00",
+            "daysOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+            "timezone": "America/New_York"
+          }
+        }
+      },
+      "parameters": {
+        "schedule": {
+          "type": "recurring",
+          "frequency": "daily",
+          "time": "09:00",
+          "daysOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          "timezone": "America/New_York"
+        }
+      },
+      "mapper": {},
+      "moduleModel": {
+        "type": "schedule",
+        "nativeType": "schedule",
+        "label": "Daily Lead Status Check (Recurring)",
+        "notes": "Triggers every weekday at 9:00 AM ET. Reads active leads from the tracker, checks their status, and sends follow-up or status update emails as needed."
+      }
+    },
+    {
+      "id": 11,
+      "module": "googleSheets:searchRows",
+      "version": 2,
+      "metadata": {
+        "designer": {
+          "x": 280,
+          "y": 600
+        },
+        "parameters": {
+          "connection": "{{11.connection}}"
+        }
+      },
+      "parameters": {
+        "connection": "{{11.connection}}"
+      },
+      "mapper": {
+        "spreadsheetId": "YOUR_SPREADSHEET_ID_HERE",
+        "sheetName": "Qualified Leads",
+        "headersRowNumber": "1",
+        "searchColumn": "Call Stage",
+        "searchValue": "Discovery Call Scheduled",
+        "orderBy": "Call Date",
+        "orderDirection": "asc",
+        "limit": "50"
+      },
+      "moduleModel": {
+        "type": "googleSheets",
+        "nativeType": "googleSheets",
+        "label": "Search Active Leads for Follow-Up",
+        "notes": "Searches the Qualified Leads sheet for rows where the Call Stage is 'Discovery Call Scheduled' or 'Awaiting Follow-Up', then processes each for status updates."
+      }
+    },
+    {
+      "id": 12,
+      "module": "iterator:iterator",
+      "version": 1,
+      "metadata": {
+        "designer": {
+          "x": 460,
+          "y": 600
+        },
+        "parameters": {}
+      },
+      "parameters": {},
+      "mapper": {},
+      "moduleModel": {
+        "type": "iterator",
+        "nativeType": "flowControl",
+        "label": "Iterate Over Active Leads",
+        "notes": "Loops through each active lead returned from the search and performs follow-up actions."
+      }
+    },
+    {
+      "id": 13,
+      "module": "gmail:sendEmail",
+      "version": 2,
+      "metadata": {
+        "designer": {
+          "x": 640,
+          "y": 600
+        },
+        "parameters": {
+          "connection": "{{13.connection}}"
+        }
+      },
+      "parameters": {
+        "connection": "{{13.connection}}"
+      },
+      "mapper": {
+        "to": "{{11.email}}",
+        "cc": "",
+        "bcc": "team@agency.com",
+        "subject": "Checking In — Still Interested in {{11.service_interest}}?",
+        "bodyType": "html",
+        "body": "<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <style>\n    body { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f6f8; }\n    .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }\n    .header { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 40px 30px; text-align: center; }\n    .header h1 { color: #ffffff; margin: 0; font-size: 28px; font-weight: 700; }\n    .header p { color: rgba(255,255,255,0.9); margin: 8px 0 0 0; font-size: 16px; }\n    .content { padding: 30px; }\n    .greeting { font-size: 18px; color: #2d3748; margin-bottom: 20px; }\n    .button { display: inline-block; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: #ffffff; text-decoration: none; padding: 14px 36px; border-radius: 8px; font-weight: 600; font-size: 16px; margin: 8px; }\n    .button-secondary { display: inline-block; background: #edf2f7; color: #4a5568; text-decoration: none; padding: 14px 36px; border-radius: 8px; font-weight: 600; font-size: 16px; margin: 8px; }\n    .footer { padding: 20px 30px; background: #f7fafc; text-align: center; border-top: 1px solid #e2e8f0; }\n    .footer p { margin: 4px 0; color: #a0aec0; font-size: 12px; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>Just Checking In 👋</h1>\n      <p>We haven't forgotten about you!</p>\n    </div>\n    <div class=\"content\">\n      <p class=\"greeting\">Hi <strong>{{11.name}}</strong>,</p>\n      <p style=\"color: #4a5568; font-size: 15px; line-height: 1.7;\">\n        We recently connected about <strong>{{11.service_interest}}</strong> for \n        <strong>{{11.company}}</strong>, and we wanted to check in and see if \n        you're still interested in moving forward.\n      </p>\n\n      <p style=\"color: #4a5568; font-size: 15px; line-height: 1.7;\">\n        We're here to help and would love to pick up where we left off. \n        If now isn't the right time, no worries at all — just let us know \n        and we'll touch base in a few months.\n      </p>\n\n      <div style=\"text-align: center; margin: 30px 0;\">\n        <a href=\"https://agency.com/schedule\" class=\"button\">📅 Yes, Let's Talk!</a>\n        <a href=\"https://agency.com/not-now?email={{11.email}}\" class=\"button-secondary\">⏰ Not Right Now</a>\n      </div>\n\n      <p style=\"color: #4a5568; font-size: 14px; text-align: center;\">\n        Or reply directly to this email to connect with our team.\n      </p>\n\n      <p style=\"color: #2d3748; font-size: 15px; line-height: 1.7; margin-top: 24px;\">\n        Best regards,<br>\n        <strong>The Agency Team</strong>\n      </p>\n    </div>\n    <div class=\"footer\">\n      <p>© {{formatDate(now, \"YYYY\")}} Agency. All rights reserved.</p>\n      <p><a href=\"https://agency.com/unsubscribe?email={{11.email}}\" style=\"color: #a0aec0;\">Unsubscribe from check-in emails</a></p>\n    </div>\n  </div>\n</body>\n</html>",
+        "fromName": "Agency Concierge Team",
+        "replyTo": "hello@agency.com",
+        "attachments": []
+      },
+      "moduleModel": {
+        "type": "gmail",
+        "nativeType": "gmail",
+        "label": "Send Follow-Up / Status Update Email",
+        "notes": "Sends a gentle follow-up email to active leads who haven't converted yet. Includes scheduling link and opt-out option."
+      }
+    },
+    {
+      "id": 14,
+      "module": "googleSheets:updateRow",
+      "version": 2,
+      "metadata": {
+        "designer": {
+          "x": 820,
+          "y": 600
+        },
+        "parameters": {
+          "connection": "{{14.connection}}"
+        }
+      },
+      "parameters": {
+        "connection": "{{14.connection}}"
+      },
+      "mapper": {
+        "spreadsheetId": "YOUR_SPREADSHEET_ID_HERE",
+        "sheetName": "Qualified Leads",
+        "headersRowNumber": "1",
+        "rowIndex": "{{11.rowNumber}}",
+        "values": {
+          "17": "Follow-Up Sent"
+        }
+      },
+      "moduleModel": {
+        "type": "googleSheets",
+        "nativeType": "googleSheets",
+        "label": "Update Lead Status",
+        "notes": "Updates the Call Stage column to 'Follow-Up Sent' so the lead isn't processed again on the next run."
+      }
+    },
+    {
+      "id": 15,
+      "module": "slack:sendMessage",
+      "version": 2,
+      "metadata": {
+        "designer": {
+          "x": 1000,
+          "y": 600
+        },
+        "parameters": {
+          "connection": "{{15.connection}}"
+        }
+      },
+      "parameters": {
+        "connection": "{{15.connection}}"
+      },
+      "mapper": {
+        "channel": "#lead-alerts",
+        "text": "📬 Follow-up sent to {{11.name}} ({{11.company}})",
+        "parse": "full",
+        "linkNames": true,
+        "blocks": [
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "📬 *Follow-Up Sent*\nLead: *{{11.name}}* — {{11.company}}\nService: {{11.service_interest}}\nStage: {{11.call_stage}} → Follow-Up Sent"
+            }
+          },
+          {
+            "type": "context",
+            "elements": [
+              {
+                "type": "mrkdwn",
+                "text": "🤖 *AI Client Concierge* · Automated follow-up · {{timestamp}}"
+              }
+            ]
+          }
+        ]
+      },
+      "moduleModel": {
+        "type": "slack",
+        "nativeType": "slack",
+        "label": "Notify Team of Follow-Up",
+        "notes": "Sends a brief Slack notification when a follow-up email is sent to an active lead."
+      }
+    }
+  ],
+  "connections": [
+    {
+      "id": "1_2",
+      "from": 1,
+      "to": 2,
+      "metadata": {
+        "designer": {
+          "note": "Passes inbound inquiry data to GPT-4o for analysis"
+        }
+      },
+      "parameters": {}
+    },
+    {
+      "id": "2_3",
+      "from": 2,
+      "to": 3,
+      "metadata": {
+        "designer": {
+          "note": "Passes AI analysis result to router for qualification decision"
+        }
+      },
+      "parameters": {}
+    },
+    {
+      "id": "3_4",
+      "from": 3,
+      "to": 4,
+      "route": "route_a_qualified",
+      "metadata": {
+        "designer": {
+          "note": "Qualified lead → Create Google Calendar event"
+        }
+      },
+      "parameters": {}
+    },
+    {
+      "id": "4_5",
+      "from": 4,
+      "to": 5,
+      "metadata": {
+        "designer": {
+          "note": "Passes calendar event data (Meet link) to confirmation email"
+        }
+      },
+      "parameters": {}
+    },
+    {
+      "id": "5_6",
+      "from": 5,
+      "to": 6,
+      "metadata": {
+        "designer": {
+          "note": "After email sent, log lead to Google Sheets tracker"
+        }
+      },
+      "parameters": {}
+    },
+    {
+      "id": "6_7",
+      "from": 6,
+      "to": 7,
+      "metadata": {
+        "designer": {
+          "note": "After logging, notify team via Slack"
+        }
+      },
+      "parameters": {}
+    },
+    {
+      "id": "3_8",
+      "from": 3,
+      "to": 8,
+      "route": "route_b_not_qualified",
+      "metadata": {
+        "designer": {
+          "note": "Not qualified → Send polite decline with recommendations"
+        }
+      },
+      "parameters": {}
+    },
+    {
+      "id": "8_9",
+      "from": 8,
+      "to": 9,
+      "metadata": {
+        "designer": {
+          "note": "After decline sent, log lead to Future Follow-Up sheet"
+        }
+      },
+      "parameters": {}
+    },
+    {
+      "id": "10_11",
+      "from": 10,
+      "to": 11,
+      "metadata": {
+        "designer": {
+          "note": "Daily trigger → Search for leads needing follow-up"
+        }
+      },
+      "parameters": {}
+    },
+    {
+      "id": "11_12",
+      "from": 11,
+      "to": 12,
+      "metadata": {
+        "designer": {
+          "note": "Passes search results to iterator for batch processing"
+        }
+      },
+      "parameters": {}
+    },
+    {
+      "id": "12_13",
+      "from": 12,
+      "to": 13,
+      "metadata": {
+        "designer": {
+          "note": "Each lead → Send follow-up email"
+        }
+      },
+      "parameters": {}
+    },
+    {
+      "id": "13_14",
+      "from": 13,
+      "to": 14,
+      "metadata": {
+        "designer": {
+          "note": "After follow-up sent → Update lead status in sheet"
+        }
+      },
+      "parameters": {}
+    },
+    {
+      "id": "14_15",
+      "from": 14,
+      "to": 15,
+      "metadata": {
+        "designer": {
+          "note": "After status updated → Notify team of follow-up action"
+        }
+      },
+      "parameters": {}
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "scenario": {
+      "name": "AI Client Concierge System",
+      "description": "AI-powered intake system that handles client lead qualification, scheduling, status updates, and FAQ responses. Automatically processes inbound inquiries via GPT-4o analysis, routes qualified leads to scheduling and CRM logging, sends polite declines with recommendations for non-qualified leads, and runs recurring follow-up checks on active leads.",
+      "roundtrips": {
+        "max": 100,
+        "interval": 60
+      },
+      "flowControl": true,
+      "autoCommit": true,
+      "maxChildren": 100,
+      "sequentialExecution": false,
+      "concurrency": 10
+    }
+  },
+  "webhooks": [
+    {
+      "id": "ai-concierge-inbound-v1",
+      "type": "webhook",
+      "label": "Inbound Inquiry Webhook",
+      "description": "Receives client inquiry data via POST request. Expected JSON payload: { name, email, company, service_interest, budget, message, phone?, referral_source?, timeline?, heard_about? }",
+      "endpoint": "https://hook.make.com/ai-concierge-inbound-v1",
+      "responseType": "json"
+    }
+  ],
+  "notes": [
+    "BEFORE ACTIVATING: Replace all connection placeholders ({{X.connection}}) and 'YOUR_SPREADSHEET_ID_HERE' with your actual Make.com connections and Google Sheet ID.",
+    "The OpenAI API key is referenced via connection {{3.apiKey}} — set this up in Make.com connections as 'OpenAI API' with your API key.",
+    "Module IDs 4-9 are on Path A (Qualified) and Path B (Not Qualified) branches of the router (module 3).",
+    "Module IDs 10-15 form the recurring scheduler sub-scenario for daily lead follow-up checks.",
+    "The webhook endpoint URL will be generated by Make.com after import and activation.",
+    "Test the webhook with a sample POST payload before going live.",
+    "HTML email templates use Make.com functions: formatDate, addDays, now, uuid."
+  ]
+}

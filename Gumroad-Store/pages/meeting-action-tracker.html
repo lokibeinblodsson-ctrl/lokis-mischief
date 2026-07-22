@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meeting-to-Action Tracker — $39</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background: #07070a; color: #e4e4e7; line-height: 1.6;
+  }
+  .container { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+
+  .hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    padding: 60px 0 50px; text-align: center;
+    border-bottom: 1px solid #1e293b;
+  }
+  .hero-badge {
+    display: inline-block; background: #06b6d422; color: #22d3ee;
+    font-size: 13px; font-weight: 600; padding: 4px 14px;
+    border-radius: 20px; border: 1px solid #06b6d444;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: 36px; font-weight: 800; line-height: 1.15; margin-bottom: 12px;
+    background: linear-gradient(135deg, #fff 30%, #94a3b8 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .hero p { font-size: 18px; color: #94a3b8; max-width: 520px; margin: 0 auto 28px; }
+  .price-tag { color: #94a3b8; font-size: 16px; margin-bottom: 28px; }
+  .price-tag strong { font-size: 42px; font-weight: 800; color: #fff; }
+
+  .btn {
+    display: inline-block; padding: 16px 48px; border-radius: 12px;
+    font-size: 18px; font-weight: 700; text-decoration: none;
+    transition: transform .15s, box-shadow .2s;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn-primary {
+    background: linear-gradient(135deg, #06b6d4, #0891b2); color: #fff;
+    box-shadow: 0 4px 20px #06b6d433;
+  }
+  .btn-secondary {
+    background: #1e293b; color: #cbd5e1; margin-left: 12px; font-size: 14px; padding: 12px 24px;
+  }
+
+  section { padding: 48px 0; }
+  section h2 { font-size: 24px; font-weight: 700; margin-bottom: 20px; color: #f1f5f9; }
+
+  .features { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .feature-box {
+    background: #0d0d14; border: 1px solid #1e1e2a; border-radius: 12px; padding: 20px;
+  }
+  .feature-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 10px; }
+  .feature-box h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; color: #f1f5f9; }
+  .feature-box p { font-size: 13px; color: #64748b; }
+
+  .step { display: flex; align-items: flex-start; gap: 14px; background: #0d0d14; border: 1px solid #1e1e2a; border-radius: 12px; padding: 16px 20px; margin-bottom: 12px; }
+  .step-num { min-width: 32px; height: 32px; border-radius: 8px; background: #06b6d422; color: #22d3ee; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
+  .step h3 { font-size: 15px; font-weight: 600; color: #f1f5f9; }
+  .step p { font-size: 13px; color: #64748b; }
+
+  .included-list { list-style: none; }
+  .included-list li { padding: 10px 0; border-bottom: 1px solid #1e293b; display: flex; align-items: center; gap: 10px; font-size: 14px; }
+  .included-list li:last-child { border: none; }
+  .check { color: #22d3ee; font-size: 16px; }
+
+  .cta-section { text-align: center; padding: 56px 0; border-top: 1px solid #1e293b; }
+  .cta-section h2 { margin-bottom: 8px; }
+  .cta-section p { color: #64748b; margin-bottom: 24px; font-size: 15px; }
+  .test-badge { display: inline-block; background: #f59e0b22; color: #fbbf24; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 20px; border: 1px solid #f59e0b44; margin-top: 14px; }
+
+  footer { text-align: center; padding: 24px 0; font-size: 13px; color: #475569; border-top: 1px solid #1e293b; }
+  footer a { color: #64748b; text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 28px; }
+    .features { grid-template-columns: 1fr; }
+    .btn { width: 100%; text-align: center; }
+    .btn-secondary { margin-left: 0; margin-top: 10px; width: 100%; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="container">
+    <div class="hero-badge">⚡ AI-Powered Meeting Ops</div>
+    <h1>Meeting-to-Action<br>Tracker</h1>
+    <p>Never lose a meeting action item again. Transcribe, extract decisions, assign tasks — all automated.</p>
+    <div class="price-tag"><strong>$39</strong> one-time · lifetime updates</div>
+    <br>
+    <a href="https://buy.stripe.com/test_6oU8wI1fo8orcRm52b9Zm04" class="btn btn-primary">Buy Now — $39</a>
+    <a href="index.html" class="btn btn-secondary">← Back to store</a>
+    <div class="test-badge" style="margin-top:16px;">⚠ Test mode — no real charges</div>
+  </div>
+</div>
+
+<section>
+  <div class="container">
+    <h2>What's Included</h2>
+    <ul class="included-list">
+      <li><span class="check">✓</span> Meeting transcription pipeline (Zoom, Teams, or recording upload)</li>
+      <li><span class="check">✓</span> AI extraction of decisions, action items, and owners</li>
+      <li><span class="check">✓</span> Auto-created shared tracker (Google Sheets)</li>
+      <li><span class="check">✓</span> Automated email to all attendees with their action items</li>
+      <li><span class="check">✓</span> Slack notification to the team with the summary</li>
+      <li><span class="check">✓</span> 1 year of updates + email support</li>
+    </ul>
+  </div>
+</section>
+
+<section style="border-top:1px solid #1e293b;">
+  <div class="container">
+    <h2>Features</h2>
+    <div class="features">
+      <div class="feature-box">
+        <div class="feature-icon" style="background:#06b6d422;">🎙️</div>
+        <h3>Multi-Source Transcription</h3>
+        <p>Works with Zoom recordings, Teams transcripts, or uploaded audio files. AI transcribes everything.</p>
+      </div>
+      <div class="feature-box">
+        <div class="feature-icon" style="background:#22c55e22;">🧠</div>
+        <h3>Smart Extraction</h3>
+        <p>OpenAI identifies decisions, action items, deadlines, and responsible owners from the transcript.</p>
+      </div>
+      <div class="feature-box">
+        <div class="feature-icon" style="background:#f59e0b22;">📋</div>
+        <h3>Live Tracker Sheet</h3>
+        <p>All action items logged to a Google Sheet with status, owner, due date, and priority columns.</p>
+      </div>
+      <div class="feature-box">
+        <div class="feature-icon" style="background:#6366f122;">📬</div>
+        <h3>Auto Email Summary</h3>
+        <p>Each attendee gets a personalized email with only their action items. No more "who does what."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="border-top:1px solid #1e293b;">
+  <div class="container">
+    <h2>How It Works</h2>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h3>Meeting ends, recording lands</h3>
+        <p>Upload a recording or paste a transcript link. The workflow catches it automatically.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h3>AI transcribes &amp; analyzes</h3>
+        <p>OpenAI Whisper transcribes (if needed), then GPT extracts decisions, tasks, owners, and deadlines.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h3>Tracker created, emails sent</h3>
+        <p>Google Sheet populated. Each attendee emailed their personalized action items. Slack notified.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="border-top:1px solid #1e293b;">
+  <div class="container">
+    <h2>Requirements</h2>
+    <ul class="included-list">
+      <li><span class="check">✓</span> Make.com account (free tier works)</li>
+      <li><span class="check">✓</span> OpenAI API key (for transcription + extraction)</li>
+      <li><span class="check">✓</span> Google Drive / Gmail / Google Sheets</li>
+      <li><span class="check">✓</span> Slack workspace (optional)</li>
+      <li><span class="check">✓</span> ~15 minutes to configure</li>
+    </ul>
+  </div>
+</section>
+
+<div class="cta-section">
+  <div class="container">
+    <h2>Stop losing action items.</h2>
+    <p>One purchase. Every meeting, automated. For life.</p>
+    <a href="https://buy.stripe.com/test_6oU8wI1fo8orcRm52b9Zm04" class="btn btn-primary">Buy Now — $39</a>
+    <div class="test-badge" style="display:block;margin-top:16px;">⚠ Test mode — switch to live keys for real charges</div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <a href="index.html">← Back to store</a>
+    &nbsp;&middot;&nbsp;
+    &copy; 2026 Loki Blodsson
+  </div>
+</footer>
+
+</body>
+</html>

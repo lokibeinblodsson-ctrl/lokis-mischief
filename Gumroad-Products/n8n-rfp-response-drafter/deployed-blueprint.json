@@ -1,0 +1,267 @@
+{
+  "name": "RFP / RFI Response Drafter",
+  "active": false,
+  "settings": {},
+  "tags": [],
+  "pinData": {},
+  "versionId": "d3f4a2b1-9c8e-4f7a-8b2d-6e1c3a9f5b7d",
+  "nodes": [
+    {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [0, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "rfp-response",
+        "options": {
+          "responseMode": "onReceived",
+          "responseData": "allEntries"
+        }
+      },
+      "webhookId": "rfp-response"
+    },
+    {
+      "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [280, 300],
+      "parameters": {
+        "method": "GET",
+        "url": "https://knowledge-base.internal.company.com/api/search",
+        "authentication": "genericCredentialType",
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "={{ $json.body.rfp_text || $json.query?.rfp_text }}"
+            },
+            {
+              "name": "limit",
+              "value": "10"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpApi": {
+          "id": null,
+          "name": "Knowledge Base API Key"
+        }
+      }
+    },
+    {
+      "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+      "name": "OpenAI",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 2,
+      "position": [560, 300],
+      "parameters": {
+        "model": "gpt-4o",
+        "temperature": 0.3,
+        "options": {
+          "maxTokens": 4096,
+          "frequencyPenalty": 0,
+          "presencePenalty": 0
+        },
+        "messages": {
+          "values": [
+            {
+              "messageType": "system",
+              "message": "You are an expert RFP/RFI response drafter. Analyze the provided RFP/RFI submission text and any relevant knowledge base documents to create a comprehensive, professional, and persuasive response draft. Structure the response by each requirement or question in the RFP, providing clear answers backed by relevant capabilities, past experience, and differentiators. Use formal business tone, include specific data points where available, and highlight the organization's strengths and unique value propositions."
+            },
+            {
+              "messageType": "user",
+              "message": "=== RFP / RFI SUBMISSION ===\n{{ $json.body.rfp_text || $json.query?.rfp_text }}\n\n=== RELEVANT KNOWLEDGE BASE DOCUMENTS ===\n{{ JSON.stringify($json.documents || $json.body?.documents || []) }}\n\nDraft a complete professional response to the above RFP/RFI submission. Include:\n1. Executive summary / introductory cover letter\n2. Response to each requirement or question\n3. Relevant case studies or past performance examples\n4. Proposed approach and methodology\n5. Team qualifications\n6. Pricing or cost summary (if applicable)\n7. Next steps and closing"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "OpenAI API Account"
+        }
+      }
+    },
+    {
+      "id": "d4e5f6a7-b8c9-0123-defa-234567890123",
+      "name": "Google Docs",
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [840, 300],
+      "parameters": {
+        "operation": "create",
+        "title": {
+          "__rl": true,
+          "value": "RFP Response Draft - {{ $json.rfp_title || $json.body?.rfp_title || 'New RFP Response' }}"
+        },
+        "body": {
+          "__rl": true,
+          "value": "={{ $json.choices?.[0]?.message?.content || $json.response || $json.output }}"
+        }
+      },
+      "credentials": {
+        "googleApi": {
+          "id": null,
+          "name": "Google Workspace Service Account"
+        }
+      }
+    },
+    {
+      "id": "e5f6a7b8-c9d0-1234-efab-345678901234",
+      "name": "Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 2,
+      "position": [1120, 300],
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id || $json.fileId }}"
+        },
+        "name": {
+          "__rl": true,
+          "value": "={{ $json.title }}"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1a2b3c4d5e6f7g8h9i0j-k_l_m_n_o_p" 
+        },
+        "fields": {
+          "__rl": true,
+          "value": "id,name,webViewLink"
+        },
+        "options": {
+          "supportsAllDrives": true,
+          "useDefaultFolder": false
+        }
+      },
+      "credentials": {
+        "googleDriveApi": {
+          "id": null,
+          "name": "Google Drive Service Account"
+        }
+      }
+    },
+    {
+      "id": "f6a7b8c9-d0e1-2345-fabc-456789012345",
+      "name": "Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [1400, 300],
+      "parameters": {
+        "operation": "send",
+        "to": "rfp-team@company.com",
+        "cc": "",
+        "bcc": "",
+        "subject": "{{ $json.name || 'RFP Response' }} Draft Ready for Review",
+        "htmlBody": "<html><body><h2>RFP Response Draft Ready</h2><p>A new draft response has been prepared for review.</p><p><strong>Document:</strong> {{ $json.name }}</p><p><strong>Link:</strong> <a href=\"{{ $json.webViewLink }}\">Open in Google Docs</a></p><p>Please review the draft and provide feedback by end of business tomorrow.</p><br><p>Best regards,<br>RFP Response Automation</p></body></html>",
+        "attachments": {
+          "attachments": []
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": null,
+          "name": "Gmail RFP Team Account"
+        }
+      }
+    },
+    {
+      "id": "a7b8c9d0-e1f2-3456-abcd-567890123456",
+      "name": "Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [1680, 300],
+      "parameters": {
+        "channel": "C08KJH4Q2HP",
+        "text": "📄 *New RFP Response Draft Ready*\n*Document:* {{ $json.name }}\n*Link:* {{ $json.webViewLink }}\n\nTeam has been notified via email. Please review and provide feedback.",
+        "otherOptions": {
+          "mrkdwn": true,
+          "unfurl_links": true,
+          "unfurl_media": false
+        },
+        "attachments": {
+          "attachments": []
+        }
+      },
+      "credentials": {
+        "slackApi": {
+          "id": null,
+          "name": "Slack RFP Workspace Bot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Google Docs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Docs": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
+            "node": "Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

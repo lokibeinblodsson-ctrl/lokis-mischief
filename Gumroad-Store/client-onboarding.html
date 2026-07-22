@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agency Client Onboarding Agent — $39</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background: #0a0a0f;
+    color: #e4e4e7;
+    line-height: 1.6;
+  }
+  .container { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    padding: 60px 0 50px;
+    text-align: center;
+    border-bottom: 1px solid #1e293b;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: #22c55e22;
+    color: #4ade80;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 14px;
+    border-radius: 20px;
+    border: 1px solid #22c55e44;
+    margin-bottom: 20px;
+    letter-spacing: 0.3px;
+  }
+  .hero h1 {
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #fff 30%, #94a3b8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    font-size: 18px;
+    color: #94a3b8;
+    max-width: 520px;
+    margin: 0 auto 28px;
+  }
+  .price-tag {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    color: #94a3b8;
+    font-size: 16px;
+    margin-bottom: 28px;
+  }
+  .price-tag strong {
+    font-size: 42px;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-block;
+    padding: 16px 48px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: transform .15s, box-shadow .2s;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn-primary {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff;
+    box-shadow: 0 4px 20px #6366f144;
+  }
+  .btn-primary:hover { box-shadow: 0 6px 28px #6366f166; }
+
+  /* Sections */
+  section { padding: 48px 0; }
+  section h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #f1f5f9;
+  }
+
+  /* Features grid */
+  .features { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .feature-box {
+    background: #13131b;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .feature-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  .feature-box h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #f1f5f9;
+  }
+  .feature-box p {
+    font-size: 13px;
+    color: #64748b;
+  }
+
+  /* How it works */
+  .steps { display: flex; flex-direction: column; gap: 12px; }
+  .step {
+    display: flex; align-items: flex-start; gap: 14px;
+    background: #13131b;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 16px 20px;
+  }
+  .step-num {
+    min-width: 32px; height: 32px;
+    border-radius: 8px;
+    background: #6366f122;
+    color: #818cf8;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+  }
+  .step h3 { font-size: 15px; font-weight: 600; color: #f1f5f9; }
+  .step p { font-size: 13px; color: #64748b; }
+
+  /* What's included */
+  .included-list { list-style: none; }
+  .included-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid #1e293b;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 14px;
+  }
+  .included-list li:last-child { border: none; }
+  .check { color: #4ade80; font-size: 16px; }
+
+  /* CTA section */
+  .cta-section {
+    text-align: center;
+    padding: 56px 0;
+    border-top: 1px solid #1e293b;
+  }
+  .cta-section h2 { margin-bottom: 8px; }
+  .cta-section p { color: #64748b; margin-bottom: 24px; font-size: 15px; }
+  .test-mode-badge {
+    display: inline-block;
+    background: #f59e0b22;
+    color: #fbbf24;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid #f59e0b44;
+    margin-top: 14px;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 24px 0;
+    font-size: 13px;
+    color: #475569;
+    border-top: 1px solid #1e293b;
+  }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 28px; }
+    .features { grid-template-columns: 1fr; }
+    .btn { width: 100%; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="container">
+    <div class="hero-badge">⚡ AI-Powered Automation</div>
+    <h1>Agency Client<br>Onboarding Agent</h1>
+    <p>Stop losing 3–5 hours per new client to manual onboarding. This workflow does it in 60 seconds.</p>
+    <div class="price-tag">
+      <strong>$39</strong> one-time · lifetime updates
+    </div>
+    <br>
+    <a href="https://buy.stripe.com/test_aEUcMQ9LWDCA7Yp9Zm00" class="btn btn-primary">Buy Now — $39</a>
+    <div class="test-mode-badge">⚠ Test Mode — no real charges</div>
+  </div>
+</div>
+
+<section>
+  <div class="container">
+    <h2>What You Get</h2>
+    <div class="features">
+      <div class="feature-box">
+        <div class="feature-icon" style="background:#6366f122;">📦</div>
+        <h3>Make.com Blueprint</h3>
+        <p>Ready-to-import JSON file. Plug it into your Make.com account and connect your apps.</p>
+      </div>
+      <div class="feature-box">
+        <div class="feature-icon" style="background:#22c55e22;">📘</div>
+        <h3>16-Page Setup Guide</h3>
+        <p>Step-by-step walkthrough with screenshots. Even non-technical users get it running in 15 min.</p>
+      </div>
+      <div class="feature-box">
+        <div class="feature-icon" style="background:#f59e0b22;">🔄</div>
+        <h3>1-Year Updates</h3>
+        <p>Free updates as Make.com evolves. New modules and improvements included.</p>
+      </div>
+      <div class="feature-box">
+        <div class="feature-icon" style="background:#ef444422;">💬</div>
+        <h3>Email Support</h3>
+        <p>Questions? I'll help you get it running. No extra charge, ever.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="border-top:1px solid #1e293b;">
+  <div class="container">
+    <h2>How It Works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <h3>Client fills the intake form</h3>
+          <p>Any form — Typeform, Google Forms, or a simple webhook. The workflow catches it automatically.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <h3>AI generates a welcome plan</h3>
+          <p>OpenAI creates a personalized onboarding plan based on the client's needs and service type.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <h3>Everything is created for you</h3>
+          <p>Google Drive folders, tracking sheet entry, welcome email, and Slack channel — all in parallel.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div>
+          <h3>You get a confirmation</h3>
+          <p>Summary of everything that was set up, delivered to your inbox. No manual checking required.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="border-top:1px solid #1e293b;">
+  <div class="container">
+    <h2>What's Included</h2>
+    <ul class="included-list">
+      <li><span class="check">✓</span> Make.com scenario blueprint (JSON export)</li>
+      <li><span class="check">✓</span> 16-page setup guide with screenshots (PDF)</li>
+      <li><span class="check">✓</span> Pre-configured email, Slack, Drive & Sheets modules</li>
+      <li><span class="check">✓</span> AI-powered welcome plan generation</li>
+      <li><span class="check">✓</span> 1 year of free updates</li>
+      <li><span class="check">✓</span> Email support</li>
+    </ul>
+  </div>
+</section>
+
+<section style="border-top:1px solid #1e293b;">
+  <div class="container">
+    <h2>Requirements</h2>
+    <ul class="included-list">
+      <li><span class="check">✓</span> Make.com account (free tier works)</li>
+      <li><span class="check">✓</span> Gmail / Google Drive / Google Sheets</li>
+      <li><span class="check">✓</span> Slack workspace (optional — can be removed)</li>
+      <li><span class="check">✓</span> ~15 minutes to configure</li>
+    </ul>
+  </div>
+</section>
+
+<div class="cta-section">
+  <div class="container">
+    <h2>Ready to save 3+ hours per client?</h2>
+    <p>One purchase. Lifetime use. Works for unlimited clients.</p>
+    <a href="https://buy.stripe.com/test_aEUcMQ9LWDCA7Yp9Zm00" class="btn btn-primary">Buy Now — $39</a>
+    <div class="test-mode-badge" style="display:block;margin-top:16px;">⚠ Test mode — switch to live keys for real charges</div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <a href="index.html">← Back to store</a>
+  &copy; 2026 Loki Blodsson &middot; Digital product &middot; Delivered as downloadable filesnbsp;&copy; 2026 Loki Blodsson &middot; Digital product &middot; Delivered as downloadable filesmiddot;&copy; 2026 Loki Blodsson &middot; Digital product &middot; Delivered as downloadable filesnbsp;
+  &copy; 2026 Loki Blodsson &middot; Digital product &middot; Delivered as downloadable filescopy; 2026 Loki Blodsson
+  </div>
+</footer>
+
+</body>
+</html>

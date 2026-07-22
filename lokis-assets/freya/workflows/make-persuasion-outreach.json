@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "product": "Seiðr Messaging Stack",
+    "price": "$59",
+    "platform": ["make.com", "n8n"],
+    "version": "1.0.0",
+    "author": "Loki's Mischief",
+    "description": "Persuasion-tuned outreach, positioning frameworks, and emotion-aware sequences.",
+    "usage": "Import JSON, map messaging channels, tune tone settings."
+  },
+  "scenario": {
+    "name": "Persuasion Router",
+    "flow": [
+      { "id": "1", "module": "HTTP", "action": "Make a request", "fields": { "endpoint": "YOUR_INTAKE_WEBHOOK", "method": "POST", "headers": { "Content-Type": "application/json" } } },
+      { "id": "2", "module": "Tools", "action": "Text Parser", "fields": { "mode": "regex", "pattern": "(budget|urgency|authority|need|timing)" } },
+      { "id": "3", "module": "Flow Control", "action": "Router", "routing": [ { "name": "Urgency", "patterns": ["urgency","timing"] }, { "name": "Authority", "patterns": ["authority","budget"] }, { "name": "Need", "patterns": ["need"] } ] },
+      { "id": "4", "module": "Email", "action": "Send email", "fields": { "to": "outreach@company.com", "subject": "Seiðr path: {{3.name}}" } },
+      { "id": "5", "module": "Slack", "action": "Send message", "fields": { "channel": "#messaging", "text": "Mapped Persuasion route: {{3.name}}" } }
+    ]
+  }
+}

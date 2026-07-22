@@ -1,0 +1,7 @@
+{
+  "rules": [
+    "Never route customer complaint automation to external vendor without approval.",
+    "Keep human handoff under 2 minutes.",
+    "Pause routing if error rate exceeds 5%."
+  ]
+}

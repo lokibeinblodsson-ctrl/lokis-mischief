@@ -1,0 +1,38 @@
+{
+  "name": "Narrative Monthly Report Builder",
+  "price": 39,
+  "currency": "USD",
+  "stripe_link": "https://buy.stripe.com/test_dRm4gs9LUeMP8B60LV9Zm01",
+  "description": "Automatically gathers metrics from GA4, Facebook Ads, Google Ads, and Search Console, generates AI-written narrative commentary via OpenAI GPT-4o, and produces a polished Google Slides or PDF monthly report delivered to the client via email and Slack.",
+  "version": "1.2",
+  "category": "Make.com Blueprint",
+  "platform": "Make.com",
+  "features": [
+    "Webhook-triggered monthly report generation",
+    "Multi-source data ingestion (GA4, Facebook Ads, Google Ads, Search Console)",
+    "AI-powered narrative report writing with OpenAI GPT-4o",
+    "Automated Google Slides presentation creation",
+    "PDF export option",
+    "Email delivery via Gmail with report preview",
+    "Slack team notification on delivery",
+    "Google Sheets logging for audit trail",
+    "Brandable template support",
+    "Modular architecture — add/remove data sources easily"
+  ],
+  "requirements": {
+    "make_plan": "Paid plan (10K+ ops/month recommended)",
+    "openai_api": true,
+    "google_cloud_apis": [
+      "Google Slides API",
+      "Google Sheets API",
+      "Gmail API",
+      "Google Analytics Data API",
+      "Google Search Console API",
+      "Google Ads API"
+    ],
+    "slack_workspace": true,
+    "facebook_developer_app": true
+  },
+  "created_at": "2026-07-20T00:00:00Z",
+  "updated_at": "2026-07-20T00:00:00Z"
+}

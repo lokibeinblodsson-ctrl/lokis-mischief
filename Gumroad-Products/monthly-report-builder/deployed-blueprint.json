@@ -1,0 +1,971 @@
+{
+  "name": "Narrative Monthly Report Builder",
+  "description": "Automatically gathers metrics from multiple agency tools, generates AI-written narrative commentary, and produces a polished Google Slides or PDF monthly report delivered to the client.",
+  "flow": [
+    {
+      "id": 1,
+      "module": "webhook:receive",
+      "version": 1,
+      "metadata": {
+        "designer": {
+          "x": 100,
+          "y": 200
+        },
+        "label": "Trigger — Monthly Report Request",
+        "parameters": [
+          {
+            "name": "client_name",
+            "type": "text",
+            "label": "Client Name",
+            "required": true
+          },
+          {
+            "name": "report_month",
+            "type": "text",
+            "label": "Reporting Month (YYYY-MM)",
+            "required": true
+          },
+          {
+            "name": "data_sources",
+            "type": "text",
+            "label": "Comma-separated data sources (ga4,fb_ads,google_ads,search_console)",
+            "required": false
+          },
+          {
+            "name": "output_format",
+            "type": "select",
+            "label": "Output Format",
+            "options": ["google_slides", "pdf"],
+            "default": "google_slides",
+            "required": true
+          },
+          {
+            "name": "send_to",
+            "type": "email",
+            "label": "Send report to (email)",
+            "required": false
+          }
+        ]
+      },
+      "parameters": {},
+      "mapper": {}
+    },
+    {
+      "id": 2,
+      "module": "router:Router",
+      "version": 1,
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 200
+        },
+        "label": "Route by Data Sources"
+      },
+      "parameters": {},
+      "mapper": {}
+    },
+    {
+      "id": 3,
+      "module": "http:MakeRequest",
+      "version": 4,
+      "metadata": {
+        "designer": {
+          "x": 500,
+          "y": 120
+        },
+        "label": "Fetch GA4 Analytics Data",
+        "route": 1,
+        "routeName": "GA4"
+      },
+      "parameters": {
+        "url": {
+          "value": "https://analyticsdata.googleapis.com/v1beta/properties/{{parameters.property_id}}:runReport"
+        },
+        "method": {
+          "value": "POST"
+        },
+        "headers": {
+          "value": "Authorization: Bearer {{connection.accessToken}}\nContent-Type: application/json"
+        },
+        "body": {
+          "value": "{\n  \"dateRanges\": [{\"startDate\": \"{{1.report_month}}-01\", \"endDate\": \"{{1.report_month}}-{{getLastDayOfMonth(1.report_month)}}\"}],\n  \"metrics\": [{\"name\": \"sessions\"}, {\"name\": \"activeUsers\"}, {\"name\": \"newUsers\"}, {\"name\": \"bounceRate\"}, {\"name\": \"averageSessionDuration\"}, {\"name\": \"conversionRate\"}, {\"name\": \"transactions\"}, {\"name\": \"revenue\"}],\n  \"dimensions\": [{\"name\": \"date\"}, {\"name\": \"source\"}, {\"name\": \"medium\"}]\n}"
+        },
+        "parseResponse": {
+          "value": "json"
+        },
+        "followRedirects": {
+          "value": true
+        }
+      },
+      "mapper": {
+        "map": [
+          {
+            "from": "parameters.property_id",
+            "to": "url",
+            "transform": "replace"
+          }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "module": "http:MakeRequest",
+      "version": 4,
+      "metadata": {
+        "designer": {
+          "x": 500,
+          "y": 280
+        },
+        "label": "Fetch Facebook Ads Data",
+        "route": 2,
+        "routeName": "Facebook Ads"
+      },
+      "parameters": {
+        "url": {
+          "value": "https://graph.facebook.com/v18.0/{{parameters.ad_account_id}}/insights"
+        },
+        "method": {
+          "value": "GET"
+        },
+        "queryParameters": {
+          "value": "fields=impressions,clicks,spend,reach,frequency,ctr,cpc,cpm,cost_per_action_type,actions,conversions&time_range[since]={{1.report_month}}-01&time_range[until]={{1.report_month}}-{{getLastDayOfMonth(1.report_month)}}&level=account&breakdowns=none&access_token={{connection.accessToken}}"
+        },
+        "parseResponse": {
+          "value": "json"
+        },
+        "followRedirects": {
+          "value": true
+        }
+      },
+      "mapper": {
+        "map": [
+          {
+            "from": "parameters.ad_account_id",
+            "to": "url",
+            "transform": "replace"
+          }
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "module": "http:MakeRequest",
+      "version": 4,
+      "metadata": {
+        "designer": {
+          "x": 500,
+          "y": 440
+        },
+        "label": "Fetch Google Ads Data",
+        "route": 3,
+        "routeName": "Google Ads"
+      },
+      "parameters": {
+        "url": {
+          "value": "https://googleads.googleapis.com/v15/customers/{{parameters.google_ads_customer_id}}/googleAds:search"
+        },
+        "method": {
+          "value": "POST"
+        },
+        "headers": {
+          "value": "Authorization: Bearer {{connection.accessToken}}\nContent-Type: application/json\ndeveloper-token: {{parameters.developer_token}}"
+        },
+        "body": {
+          "value": "{\n  \"query\": \"SELECT campaign.name, metrics.impressions, metrics.clicks, metrics.cost_micros, metrics.conversions, metrics.conversions_value, metrics.average_cpc, metrics.ctr FROM campaign WHERE segments.date BETWEEN '{{1.report_month}}-01' AND '{{1.report_month}}-{{getLastDayOfMonth(1.report_month)}}'\"\n}"
+        },
+        "parseResponse": {
+          "value": "json"
+        },
+        "followRedirects": {
+          "value": true
+        }
+      },
+      "mapper": {
+        "map": [
+          {
+            "from": "parameters.google_ads_customer_id",
+            "to": "url",
+            "transform": "replace"
+          }
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "module": "http:MakeRequest",
+      "version": 4,
+      "metadata": {
+        "designer": {
+          "x": 500,
+          "y": 600
+        },
+        "label": "Fetch Search Console Data",
+        "route": 4,
+        "routeName": "Search Console"
+      },
+      "parameters": {
+        "url": {
+          "value": "https://searchconsole.googleapis.com/v1/sites/{{parameters.site_url}}/searchAnalytics/query"
+        },
+        "method": {
+          "value": "POST"
+        },
+        "headers": {
+          "value": "Authorization: Bearer {{connection.accessToken}}\nContent-Type: application/json"
+        },
+        "body": {
+          "value": "{\n  \"startDate\": \"{{1.report_month}}-01\",\n  \"endDate\": \"{{1.report_month}}-{{getLastDayOfMonth(1.report_month)}}\",\n  \"dimensions\": [\"query\", \"page\", \"device\"],\n  \"rowLimit\": 100\n}"
+        },
+        "parseResponse": {
+          "value": "json"
+        },
+        "followRedirects": {
+          "value": true
+        }
+      },
+      "mapper": {
+        "map": [
+          {
+            "from": "parameters.site_url",
+            "to": "url",
+            "transform": "replace"
+          }
+        ]
+      }
+    },
+    {
+      "id": 7,
+      "module": "aggregator:Aggregator",
+      "version": 1,
+      "metadata": {
+        "designer": {
+          "x": 700,
+          "y": 200
+        },
+        "label": "Aggregate All Data Sources"
+      },
+      "parameters": {
+        "aggregator": {
+          "value": "all_of"
+        },
+        "aggregatorType": {
+          "value": "json"
+        }
+      },
+      "mapper": {
+        "map": [
+          {
+            "from": "3.body",
+            "to": "ga4"
+          },
+          {
+            "from": "4.body",
+            "to": "facebook_ads"
+          },
+          {
+            "from": "5.body",
+            "to": "google_ads"
+          },
+          {
+            "from": "6.body",
+            "to": "search_console"
+          },
+          {
+            "from": "1.client_name",
+            "to": "client_name"
+          },
+          {
+            "from": "1.report_month",
+            "to": "report_month"
+          }
+        ]
+      }
+    },
+    {
+      "id": 8,
+      "module": "json:CreateJSON",
+      "version": 2,
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": 200
+        },
+        "label": "Build Report Data Payload"
+      },
+      "parameters": {
+        "data": {
+          "value": "{\n  \"client_name\": \"{{7.client_name}}\",\n  \"report_month\": \"{{7.report_month}}\",\n  \"report_period\": \"{{formatDate(7.report_month \\\"-01\\\"; \\\"MMMM yyyy\\\")}}\",\n  \"ga4\": {{7.ga4}},\n  \"facebook_ads\": {{7.facebook_ads}},\n  \"google_ads\": {{7.google_ads}},\n  \"search_console\": {{7.search_console}},\n  \"generated_at\": \"{{now}}\",\n  \"template_version\": \"1.2\"\n}"
+        }
+      },
+      "mapper": {}
+    },
+    {
+      "id": 9,
+      "module": "http:MakeRequest",
+      "version": 4,
+      "metadata": {
+        "designer": {
+          "x": 1100,
+          "y": 200
+        },
+        "label": "Generate AI Narrative with OpenAI"
+      },
+      "parameters": {
+        "url": {
+          "value": "https://api.openai.com/v1/chat/completions"
+        },
+        "method": {
+          "value": "POST"
+        },
+        "headers": {
+          "value": "Authorization: Bearer {{connection.accessToken}}\nContent-Type: application/json"
+        },
+        "body": {
+          "value": "{\n  \"model\": \"gpt-4o\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are an expert digital marketing analyst who writes monthly performance reports for agency clients. Your writing is professional, data-driven, and narrative-focused. Always include:\\n1. Executive Summary — a high-level overview of the month's performance\\n2. Channel-by-Channel Analysis — dive into each platform with key metrics, trends, and observations\\n3. Wins & Opportunities — what worked well and where there's room for improvement\\n4. Recommendations — actionable next steps for the coming month\\n\\nUse a confident, consultative tone. Highlight month-over-month changes when previous data is available. Keep the report comprehensive but scannable.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Write a narrative monthly report for {{8.client_name}} covering {{8.report_period}}. Below is the raw data from each platform. Write a complete report with executive summary, channel analysis, wins and opportunities, and recommendations.\\n\\n=== GA4 (Google Analytics) ===\\n{{ifEmpty(8.ga4; \\\"No GA4 data available for this period.\\\")}}\\n\\n=== Facebook Ads ===\\n{{ifEmpty(8.facebook_ads; \\\"No Facebook Ads data available for this period.\\\")}}\\n\\n=== Google Ads ===\\n{{ifEmpty(8.google_ads; \\\"No Google Ads data available for this period.\\\")}}\\n\\n=== Google Search Console ===\\n{{ifEmpty(8.search_console; \\\"No Search Console data available for this period.\\\")}}\\n\\nFormat the report using Markdown with clear headings and sections.\"\n    }\n  ],\n  \"temperature\": 0.7,\n  \"max_tokens\": 4096\n}"
+        },
+        "parseResponse": {
+          "value": "json"
+        },
+        "followRedirects": {
+          "value": true
+        }
+      },
+      "mapper": {
+        "map": [
+          {
+            "from": "parameters.openai_api_key",
+            "to": "headers",
+            "transform": "bearer_token"
+          }
+        ]
+      }
+    },
+    {
+      "id": 10,
+      "module": "json:ParseJSON",
+      "version": 2,
+      "metadata": {
+        "designer": {
+          "x": 1300,
+          "y": 200
+        },
+        "label": "Extract Narrative Content"
+      },
+      "parameters": {
+        "data": {
+          "value": "{{9.body}}"
+        },
+        "schema": {
+          "value": "{\n  \"narrative\": \"{{choices[0].message.content}}\",\n  \"model\": \"{{model}}\",\n  \"usage\": \"{{usage}}\"\n}"
+        }
+      },
+      "mapper": {}
+    },
+    {
+      "id": 11,
+      "module": "googleslides:createPresentation",
+      "version": 2,
+      "metadata": {
+        "designer": {
+          "x": 1500,
+          "y": 200
+        },
+        "label": "Create Google Slides Presentation"
+      },
+      "parameters": {
+        "title": {
+          "value": "Monthly Report — {{8.client_name}} — {{8.report_period}}"
+        },
+        "templatePresentationId": {
+          "value": "{{parameters.slides_template_id}}"
+        }
+      },
+      "mapper": {}
+    },
+    {
+      "id": 12,
+      "module": "googleslides:addSlide",
+      "version": 2,
+      "metadata": {
+        "designer": {
+          "x": 1700,
+          "y": 100
+        },
+        "label": "Add Title Slide"
+      },
+      "parameters": {
+        "presentationId": {
+          "value": "{{11.id}}"
+        },
+        "slideLayout": {
+          "value": "TITLE_ONLY"
+        }
+      },
+      "mapper": {
+        "map": [
+          {
+            "from": "TITLE\n{{8.report_period}} Performance Report\n{{8.client_name}} | Generated {{formatDate(now; \\\"MMMM d, yyyy\\\")}}",
+            "to": "title"
+          }
+        ]
+      }
+    },
+    {
+      "id": 13,
+      "module": "googleslides:addSlide",
+      "version": 2,
+      "metadata": {
+        "designer": {
+          "x": 1700,
+          "y": 300
+        },
+        "label": "Add Executive Summary Slide"
+      },
+      "parameters": {
+        "presentationId": {
+          "value": "{{11.id}}"
+        },
+        "slideLayout": {
+          "value": "TITLE_AND_BODY"
+        }
+      },
+      "mapper": {
+        "map": [
+          {
+            "from": "Executive Summary",
+            "to": "title"
+          },
+          {
+            "from": "{{extractSection(10.narrative; \\\"Executive Summary\\\")}}",
+            "to": "body"
+          }
+        ]
+      }
+    },
+    {
+      "id": 14,
+      "module": "googleslides:addSlide",
+      "version": 2,
+      "metadata": {
+        "designer": {
+          "x": 1700,
+          "y": 500
+        },
+        "label": "Add Channel Analysis Slide"
+      },
+      "parameters": {
+        "presentationId": {
+          "value": "{{11.id}}"
+        },
+        "slideLayout": {
+          "value": "TITLE_AND_BODY"
+        }
+      },
+      "mapper": {
+        "map": [
+          {
+            "from": "Channel-by-Channel Analysis",
+            "to": "title"
+          },
+          {
+            "from": "{{extractSection(10.narrative; \\\"Channel-by-Channel Analysis\\\")}}",
+            "to": "body"
+          }
+        ]
+      }
+    },
+    {
+      "id": 15,
+      "module": "googleslides:addSlide",
+      "version": 2,
+      "metadata": {
+        "designer": {
+          "x": 1700,
+          "y": 700
+        },
+        "label": "Add Wins & Opportunities Slide"
+      },
+      "parameters": {
+        "presentationId": {
+          "value": "{{11.id}}"
+        },
+        "slideLayout": {
+          "value": "TITLE_AND_BODY"
+        }
+      },
+      "mapper": {
+        "map": [
+          {
+            "from": "Wins & Opportunities",
+            "to": "title"
+          },
+          {
+            "from": "{{extractSection(10.narrative; \\\"Wins & Opportunities\\\")}}",
+            "to": "body"
+          }
+        ]
+      }
+    },
+    {
+      "id": 16,
+      "module": "googleslides:addSlide",
+      "version": 2,
+      "metadata": {
+        "designer": {
+          "x": 1700,
+          "y": 900
+        },
+        "label": "Add Recommendations Slide"
+      },
+      "parameters": {
+        "presentationId": {
+          "value": "{{11.id}}"
+        },
+        "slideLayout": {
+          "value": "TITLE_AND_BODY"
+        }
+      },
+      "mapper": {
+        "map": [
+          {
+            "from": "Recommendations & Next Steps",
+            "to": "title"
+          },
+          {
+            "from": "{{extractSection(10.narrative; \\\"Recommendations\\\")}}",
+            "to": "body"
+          }
+        ]
+      }
+    },
+    {
+      "id": 17,
+      "module": "googleslides:updateSlide",
+      "version": 2,
+      "metadata": {
+        "designer": {
+          "x": 1900,
+          "y": 200
+        },
+        "label": "Apply Branding & Formatting"
+      },
+      "parameters": {
+        "presentationId": {
+          "value": "{{11.id}}"
+        },
+        "slideId": {
+          "value": "all"
+        },
+        "updates": {
+          "value": "{\n  \"replaceAllText\": {\n    \"containsText\": {\"text\": \"{{8.client_name}}\", \"matchCase\": false},\n    \"replaceText\": \"{{8.client_name}}\"\n  }\n}"
+        }
+      },
+      "mapper": {}
+    },
+    {
+      "id": 18,
+      "module": "googlesheets:addRow",
+      "version": 3,
+      "metadata": {
+        "designer": {
+          "x": 2100,
+          "y": 200
+        },
+        "label": "Log Report to Google Sheets"
+      },
+      "parameters": {
+        "spreadsheetId": {
+          "value": "{{parameters.log_sheet_id}}"
+        },
+        "sheetName": {
+          "value": "Reports"
+        },
+        "columns": {
+          "value": "[\n  \"{{now}}\",\n  \"{{8.client_name}}\",\n  \"{{8.report_period}}\",\n  \"{{11.id}}\",\n  \"{{11.url}}\",\n  \"{{if(1.output_format = \\\"google_slides\\\"; \\\"Google Slides\\\"; \\\"PDF\\\")}}\",\n  \"{{1.send_to}}\",\n  \"success\"\n]"
+        }
+      },
+      "mapper": {}
+    },
+    {
+      "id": 19,
+      "module": "router:Router",
+      "version": 1,
+      "metadata": {
+        "designer": {
+          "x": 2300,
+          "y": 200
+        },
+        "label": "Route by Output Format"
+      },
+      "parameters": {},
+      "mapper": {}
+    },
+    {
+      "id": 20,
+      "module": "googleslides:exportPresentation",
+      "version": 2,
+      "metadata": {
+        "designer": {
+          "x": 2500,
+          "y": 100
+        },
+        "label": "Export as PDF",
+        "route": 1,
+        "routeName": "PDF"
+      },
+      "parameters": {
+        "presentationId": {
+          "value": "{{11.id}}"
+        },
+        "exportFormat": {
+          "value": "application/pdf"
+        }
+      },
+      "mapper": {}
+    },
+    {
+      "id": 21,
+      "module": "gmail:sendEmail",
+      "version": 2,
+      "metadata": {
+        "designer": {
+          "x": 2700,
+          "y": 200
+        },
+        "label": "Send Report via Email"
+      },
+      "parameters": {
+        "to": {
+          "value": "{{1.send_to}}"
+        },
+        "cc": {
+          "value": "{{parameters.bcc_email}}"
+        },
+        "subject": {
+          "value": "Monthly Performance Report — {{8.client_name}} — {{8.report_period}}"
+        },
+        "bodyType": {
+          "value": "HTML"
+        },
+        "body": {
+          "value": "<html><body style=\"font-family: Arial, sans-serif; padding: 20px;\">\n<h2>📊 {{8.client_name}} — {{8.report_period}} Performance Report</h2>\n<p>Hi {{8.client_name}},</p>\n<p>Your monthly performance report is ready. Please find it attached or access the live presentation below.</p>\n{{if(1.output_format = \"google_slides\"; \"<p><a href=\\\"{{11.url}}\\\">🔗 Open Live Presentation</a></p>\"; \"\")}}\n<br>\n<p><strong>Executive Summary Preview:</strong></p>\n<blockquote>{{truncate(extractSection(10.narrative; \"Executive Summary\"); 500)}}...</blockquote>\n<br>\n<p>Best regards,<br><strong>Your Agency Team</strong></p>\n</body></html>"
+        },
+        "attachments": {
+          "value": "{{if(1.output_format = \"pdf\"; [{\"filename\": \"{{replace(8.client_name; \\\" \\\"; \\\"_\\\")}}_{{8.report_month}}_Report.pdf\"; \"mimeType\": \"application/pdf\"; \"data\": {{20.data}}}]; [])}}"
+        }
+      },
+      "mapper": {}
+    },
+    {
+      "id": 22,
+      "module": "slack:sendMessage",
+      "version": 2,
+      "metadata": {
+        "designer": {
+          "x": 2900,
+          "y": 200
+        },
+        "label": "Notify Team in Slack"
+      },
+      "parameters": {
+        "channel": {
+          "value": "{{parameters.slack_channel}}"
+        },
+        "text": {
+          "value": "📬 *Monthly report delivered!*\n\n*Client:* {{8.client_name}}\n*Period:* {{8.report_period}}\n*Format:* {{if(1.output_format = \"google_slides\"; \"Google Slides\"; \"PDF\")}}\n*Delivered to:* {{1.send_to}}\n\n{{if(1.output_format = \"google_slides\"; \"<{{11.url}}|Open Presentation>\"; \"\")}}"
+        },
+        "parseLinks": {
+          "value": true
+        },
+        "unfurlLinks": {
+          "value": false
+        }
+      },
+      "mapper": {}
+    },
+    {
+      "id": 23,
+      "module": "webhook:sendResponse",
+      "version": 1,
+      "metadata": {
+        "designer": {
+          "x": 3100,
+          "y": 200
+        },
+        "label": "Return Success Response"
+      },
+      "parameters": {
+        "status": {
+          "value": "200"
+        },
+        "body": {
+          "value": "{\n  \"success\": true,\n  \"client_name\": \"{{8.client_name}}\",\n  \"report_period\": \"{{8.report_period}}\",\n  \"presentation_url\": \"{{11.url}}\",\n  \"presentation_id\": \"{{11.id}}\",\n  \"delivered_to\": \"{{1.send_to}}\"\n}"
+        },
+        "headers": {
+          "value": "Content-Type: application/json"
+        }
+      },
+      "mapper": {}
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "scenario": {
+      "roundtrips": {
+        "max": 1
+      },
+      "flowControl": false,
+      "description": "Narrative Monthly Report Builder — Takes data from GA4, Facebook Ads, Google Ads, and Search Console, generates AI-written narrative commentary, and produces a Google Slides (or PDF) report delivered via email and Slack."
+    },
+    "designer": {
+      "zoom": 0.85,
+      "modulesOrigin": {
+        "x": 100,
+        "y": 200
+      },
+      "notes": {
+        "1": "Accepts client name, report month, data sources, and output format via webhook. Can be triggered by Make.com webhook, Zapier, or any HTTP client.",
+        "2": "Routes to only the data source modules the user selected — saves API calls on unused sources.",
+        "3": "Pulls sessions, users, bounce rate, conversion rate, and revenue from GA4. Requires Google Analytics connection.",
+        "4": "Pulls impressions, clicks, spend, reach, CTR, CPC, and conversions from Facebook Ads. Requires Facebook Ads connection.",
+        "5": "Pulls campaign-level metrics from Google Ads. Requires Google Ads connection with developer token.",
+        "6": "Pulls search query and page performance from Google Search Console. Requires Search Console connection.",
+        "7": "Waits for all data source branches to complete, then merges results into one unified JSON payload.",
+        "8": "Structures the aggregated data into a clean JSON format ready for the AI prompt.",
+        "9": "Sends the merged data to OpenAI GPT-4o with a detailed system prompt. Generates a full narrative report with executive summary, channel analysis, wins/opportunities, and recommendations.",
+        "10": "Extracts the generated narrative from the OpenAI response for use in slides.",
+        "11": "Creates a new Google Slides presentation (or uses a branded template if configured).",
+        "12-16": "Builds the slide deck — title, executive summary, channel analysis, wins/opportunities, and recommendations.",
+        "17": "Applies branding replacements (client name, custom text) across all slides.",
+        "18": "Logs the delivery record to Google Sheets for audit trail and historical tracking.",
+        "19": "Routes to PDF export if PDF was selected, or skips directly to email.",
+        "20": "Exports the Google Slides presentation as a PDF file (only when output_format=pdf).",
+        "21": "Sends the report via Gmail with a preview of the executive summary and link to the live presentation.",
+        "22": "Posts a notification to the team Slack channel with key delivery details.",
+        "23": "Returns a JSON response to the webhook caller confirming the report was generated and delivered."
+      }
+    },
+    "concept": {
+      "name": "Narrative Monthly Report Builder",
+      "version": "1.2",
+      "author": "Agency Ops Toolkit",
+      "description": "Enterprise-grade monthly reporting automation that transforms raw metrics into narrative-driven client reports with AI commentary."
+    }
+  },
+  "connections": [
+    {
+      "id": 1,
+      "from": 1,
+      "to": 2,
+      "metadata": {
+        "type": "data"
+      }
+    },
+    {
+      "id": 2,
+      "from": 2,
+      "to": 3,
+      "metadata": {
+        "type": "data",
+        "route": 1
+      }
+    },
+    {
+      "id": 3,
+      "from": 2,
+      "to": 4,
+      "metadata": {
+        "type": "data",
+        "route": 2
+      }
+    },
+    {
+      "id": 4,
+      "from": 2,
+      "to": 5,
+      "metadata": {
+        "type": "data",
+        "route": 3
+      }
+    },
+    {
+      "id": 5,
+      "from": 2,
+      "to": 6,
+      "metadata": {
+        "type": "data",
+        "route": 4
+      }
+    },
+    {
+      "id": 6,
+      "from": 3,
+      "to": 7,
+      "metadata": {
+        "type": "data"
+      }
+    },
+    {
+      "id": 7,
+      "from": 4,
+      "to": 7,
+      "metadata": {
+        "type": "data"
+      }
+    },
+    {
+      "id": 8,
+      "from": 5,
+      "to": 7,
+      "metadata": {
+        "type": "data"
+      }
+    },
+    {
+      "id": 9,
+      "from": 6,
+      "to": 7,
+      "metadata": {
+        "type": "data"
+      }
+    },
+    {
+      "id": 10,
+      "from": 7,
+      "to": 8,
+      "metadata": {
+        "type": "data"
+      }
+    },
+    {
+      "id": 11,
+      "from": 8,
+      "to": 9,
+      "metadata": {
+        "type": "data"
+      }
+    },
+    {
+      "id": 12,
+      "from": 9,
+      "to": 10,
+      "metadata": {
+        "type": "data"
+      }
+    },
+    {
+      "id": 13,
+      "from": 10,
+      "to": 11,
+      "metadata": {
+        "type": "data"
+      }
+    },
+    {
+      "id": 14,
+      "from": 11,
+      "to": 12,
+      "metadata": {
+        "type": "data"
+      }
+    },
+    {
+      "id": 15,
+      "from": 12,
+      "to": 13,
+      "metadata": {
+        "type": "data"
+      }
+    },
+    {
+      "id": 16,
+      "from": 13,
+      "to": 14,
+      "metadata": {
+        "type": "data"
+      }
+    },
+    {
+      "id": 17,
+      "from": 14,
+      "to": 15,
+      "metadata": {
+        "type": "data"
+      }
+    },
+    {
+      "id": 18,
+      "from": 15,
+      "to": 16,
+      "metadata": {
+        "type": "data"
+      }
+    },
+    {
+      "id": 19,
+      "from": 16,
+      "to": 17,
+      "metadata": {
+        "type": "data"
+      }
+    },
+    {
+      "id": 20,
+      "from": 17,
+      "to": 18,
+      "metadata": {
+        "type": "data"
+      }
+    },
+    {
+      "id": 21,
+      "from": 18,
+      "to": 19,
+      "metadata": {
+        "type": "data"
+      }
+    },
+    {
+      "id": 22,
+      "from": 19,
+      "to": 20,
+      "metadata": {
+        "type": "data",
+        "route": 1
+      }
+    },
+    {
+      "id": 23,
+      "from": 19,
+      "to": 21,
+      "metadata": {
+        "type": "data",
+        "route": 2
+      }
+    },
+    {
+      "id": 24,
+      "from": 20,
+      "to": 21,
+      "metadata": {
+        "type": "data"
+      }
+    },
+    {
+      "id": 25,
+      "from": 21,
+      "to": 22,
+      "metadata": {
+        "type": "data"
+      }
+    },
+    {
+      "id": 26,
+      "from": 22,
+      "to": 23,
+      "metadata": {
+        "type": "data"
+      }
+    }
+  ]
+}

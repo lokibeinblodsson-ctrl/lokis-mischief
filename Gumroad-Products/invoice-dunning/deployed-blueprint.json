@@ -1,0 +1,454 @@
+{
+  "name": "Invoice Dunning & Payment Reminder",
+  "description": "Triggers when an invoice is past due, sends tiered email reminders (Day 1: friendly, Day 7: nudge, Day 14: final notice), updates a tracking sheet, and notifies the team on final notice.",
+  "version": "1.0.0",
+  "scenarios": [
+    {
+      "id": 1,
+      "name": "Invoice Dunning Workflow",
+      "active": true,
+      "consecutiveRuns": 0,
+      "lastRun": null,
+      "rounds": 0,
+      "color": 191249,
+      "notes": "Main dunning automation. Triggered by Stripe webhook for past-due invoices. Routes to appropriate reminder tier based on days elapsed since due date.",
+      "schemaVersion": 2,
+      "instant": true,
+      "realtime": false,
+      "interface": {
+        "triggers": {
+          "webhook": {
+            "label": "Stripe Invoice Webhook",
+            "type": "Webhook",
+            "data": {
+              "ipWhitelist": "",
+              "ipWhitelistEnabled": false,
+              "respondWith": "",
+              "httpMethod": "POST",
+              "enableHeaders": false,
+              "enableHMACVerification": false,
+              "hmacSecret": "",
+              "hmacHashAlgorithm": "SHA256",
+              "hmacPosition": "header",
+              "hmacHeaderName": "",
+              "webhookId": "stripe-invoice-webhook-01"
+            }
+          }
+        },
+        "modules": [
+          {
+            "id": 10,
+            "label": "Webhook — Stripe Invoice Event",
+            "type": "Webhook",
+            "function": "receive",
+            "data": {
+              "ipWhitelist": "",
+              "ipWhitelistEnabled": false,
+              "respondWith": ""
+            },
+            "output": [
+              { "name": "id", "type": "text", "label": "Invoice ID" },
+              { "name": "customer_email", "type": "text", "label": "Customer Email" },
+              { "name": "customer_name", "type": "text", "label": "Customer Name" },
+              { "name": "amount_due", "type": "number", "label": "Amount Due (cents)" },
+              { "name": "currency", "type": "text", "label": "Currency" },
+              { "name": "due_date", "type": "date", "label": "Due Date" },
+              { "name": "days_past_due", "type": "number", "label": "Days Past Due" },
+              { "name": "status", "type": "text", "label": "Invoice Status" },
+              { "name": "stripe_invoice_url", "type": "text", "label": "Stripe Invoice URL" },
+              { "name": "subscription_id", "type": "text", "label": "Subscription ID" },
+              { "name": "amount_formatted", "type": "text", "label": "Amount Formatted" }
+            ]
+          },
+          {
+            "id": 20,
+            "label": "Router by Days Past Due",
+            "type": "Router",
+            "function": "route",
+            "data": {
+              "routes": [
+                {
+                  "id": "route_1",
+                  "label": "Day 1 — Friendly Reminder",
+                  "condition": "{{10.days_past_due}} === 1 || {{10.days_past_due}} <= 3"
+                },
+                {
+                  "id": "route_7",
+                  "label": "Day 7 — Gentle Nudge",
+                  "condition": "{{10.days_past_due}} >= 4 && {{10.days_past_due}} <= 10"
+                },
+                {
+                  "id": "route_14",
+                  "label": "Day 14+ — Final Notice",
+                  "condition": "{{10.days_past_due}} >= 11"
+                }
+              ],
+              "fallbackRoute": {
+                "label": "Undefined — Log Only",
+                "enabled": true
+              }
+            }
+          },
+          {
+            "id": 30,
+            "label": "Gmail — Friendly Reminder (Day 1)",
+            "type": "Gmail",
+            "function": "sendEmail",
+            "data": {
+              "to": "{{10.customer_email}}",
+              "subject": "Friendly reminder: Invoice {{10.id}} is due",
+              "bodyType": "html",
+              "body": "<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;\">\n  <div style=\"background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 10px 10px 0 0; text-align: center;\">\n    <h1 style=\"color: #ffffff; margin: 0; font-size: 24px;\">📋 Friendly Payment Reminder</h1>\n  </div>\n  <div style=\"background: #ffffff; padding: 30px; border: 1px solid #e0e0e0; border-top: none; border-radius: 0 0 10px 10px;\">\n    <p style=\"font-size: 16px; color: #333;\">Hi <strong>{{10.customer_name}}</strong>,</p>\n    <p style=\"font-size: 16px; color: #555; line-height: 1.6;\">\n      This is a gentle reminder that invoice <strong>{{10.id}}</strong> for \n      <strong>{{10.amount_formatted}}</strong> is now past due.\n    </p>\n    <p style=\"font-size: 16px; color: #555; line-height: 1.6;\">\n      We understand things can slip through the cracks — no worries! Please take a moment \n      to settle the invoice at your earliest convenience.\n    </p>\n    <div style=\"text-align: center; margin: 30px 0;\">\n      <a href=\"{{10.stripe_invoice_url}}\" \n         style=\"background: #667eea; color: #ffffff; padding: 14px 36px; \n                border-radius: 6px; text-decoration: none; font-size: 16px; font-weight: bold;\">\n        Pay Invoice Now\n      </a>\n    </div>\n    <p style=\"font-size: 14px; color: #888; line-height: 1.5;\">\n      <strong>Invoice Details:</strong><br>\n      Invoice #: {{10.id}}<br>\n      Amount: {{10.amount_formatted}}<br>\n      Due Date: {{10.due_date}}<br>\n      Days Past Due: {{10.days_past_due}}\n    </p>\n    <hr style=\"border: none; border-top: 1px solid #eee; margin: 20px 0;\">\n    <p style=\"font-size: 13px; color: #aaa; text-align: center;\">\n      If you have already paid, please disregard this message. Thank you for your business!\n    </p>\n  </div>\n</div>",
+              "attachments": []
+            },
+            "output": [
+              { "name": "message_id", "type": "text", "label": "Message ID" },
+              { "name": "thread_id", "type": "text", "label": "Thread ID" },
+              { "name": "status", "type": "text", "label": "Send Status" }
+            ]
+          },
+          {
+            "id": 40,
+            "label": "Gmail — Gentle Nudge (Day 7)",
+            "type": "Gmail",
+            "function": "sendEmail",
+            "data": {
+              "to": "{{10.customer_email}}",
+              "subject": "Second notice: Invoice {{10.id}} is overdue",
+              "bodyType": "html",
+              "body": "<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;\">\n  <div style=\"background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 30px; border-radius: 10px 10px 0 0; text-align: center;\">\n    <h1 style=\"color: #ffffff; margin: 0; font-size: 24px;\">⏰ Payment Nudge</h1>\n  </div>\n  <div style=\"background: #ffffff; padding: 30px; border: 1px solid #e0e0e0; border-top: none; border-radius: 0 0 10px 10px;\">\n    <p style=\"font-size: 16px; color: #333;\">Hi <strong>{{10.customer_name}}</strong>,</p>\n    <p style=\"font-size: 16px; color: #555; line-height: 1.6;\">\n      This is a follow-up regarding invoice <strong>{{10.id}}</strong> for \n      <strong>{{10.amount_formatted}}</strong>, which is now <strong>{{10.days_past_due}} days</strong> past due.\n    </p>\n    <p style=\"font-size: 16px; color: #555; line-height: 1.6;\">\n      We'd greatly appreciate prompt payment to keep your account in good standing. \n      Please use the link below to complete your payment.\n    </p>\n    <div style=\"text-align: center; margin: 30px 0;\">\n      <a href=\"{{10.stripe_invoice_url}}\" \n         style=\"background: #f5576c; color: #ffffff; padding: 14px 36px; \n                border-radius: 6px; text-decoration: none; font-size: 16px; font-weight: bold;\">\n        Pay Invoice Now\n      </a>\n    </div>\n    <p style=\"font-size: 14px; color: #888; line-height: 1.5;\">\n      <strong>Invoice Details:</strong><br>\n      Invoice #: {{10.id}}<br>\n      Amount: {{10.amount_formatted}}<br>\n      Due Date: {{10.due_date}}<br>\n      Days Past Due: {{10.days_past_due}}<br>\n      Status: <span style=\"color: #e74c3c; font-weight: bold;\">Overdue</span>\n    </p>\n    <hr style=\"border: none; border-top: 1px solid #eee; margin: 20px 0;\">\n    <p style=\"font-size: 13px; color: #aaa; text-align: center;\">\n      If you have already paid, please disregard this message. Late payment may result in \n      service interruption.\n    </p>\n  </div>\n</div>",
+              "attachments": []
+            },
+            "output": [
+              { "name": "message_id", "type": "text", "label": "Message ID" },
+              { "name": "thread_id", "type": "text", "label": "Thread ID" },
+              { "name": "status", "type": "text", "label": "Send Status" }
+            ]
+          },
+          {
+            "id": 50,
+            "label": "Gmail — Final Notice (Day 14)",
+            "type": "Gmail",
+            "function": "sendEmail",
+            "data": {
+              "to": "{{10.customer_email}}",
+              "subject": "FINAL NOTICE: Invoice {{10.id}} — Immediate action required",
+              "bodyType": "html",
+              "body": "<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;\">\n  <div style=\"background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); padding: 30px; border-radius: 10px 10px 0 0; text-align: center;\">\n    <h1 style=\"color: #ffffff; margin: 0; font-size: 24px;\">⚠️ FINAL NOTICE</h1>\n  </div>\n  <div style=\"background: #ffffff; padding: 30px; border: 1px solid #e0e0e0; border-top: none; border-radius: 0 0 10px 10px;\">\n    <p style=\"font-size: 16px; color: #333;\">Hi <strong>{{10.customer_name}}</strong>,</p>\n    <p style=\"font-size: 16px; color: #e74c3c; line-height: 1.6; font-weight: bold;\">\n      This is your final notice regarding invoice <strong>{{10.id}}</strong> for \n      <strong>{{10.amount_formatted}}</strong>, which is now <strong>{{10.days_past_due}} days</strong> overdue.\n    </p>\n    <p style=\"font-size: 16px; color: #555; line-height: 1.6;\">\n      If payment is not received within <strong>3 business days</strong>, we will be forced to \n      escalate this matter, which may result in service suspension and/or transfer to a collections agency.\n    </p>\n    <div style=\"text-align: center; margin: 30px 0;\">\n      <a href=\"{{10.stripe_invoice_url}}\" \n         style=\"background: #e74c3c; color: #ffffff; padding: 14px 36px; \n                border-radius: 6px; text-decoration: none; font-size: 16px; font-weight: bold;\">\n        Pay Invoice Immediately\n      </a>\n    </div>\n    <p style=\"font-size: 14px; color: #888; line-height: 1.5;\">\n      <strong>Invoice Details:</strong><br>\n      Invoice #: {{10.id}}<br>\n      Amount: {{10.amount_formatted}}<br>\n      Due Date: {{10.due_date}}<br>\n      Days Past Due: {{10.days_past_due}}<br>\n      Status: <span style=\"color: #e74c3c; font-weight: bold;\">CRITICALLY OVERDUE</span>\n    </p>\n    <hr style=\"border: none; border-top: 1px solid #eee; margin: 20px 0;\">\n    <p style=\"font-size: 13px; color: #aaa; text-align: center;\">\n      If you have already paid, please disregard this message and contact support if you \n      believe this is an error.\n    </p>\n  </div>\n</div>",
+              "attachments": []
+            },
+            "output": [
+              { "name": "message_id", "type": "text", "label": "Message ID" },
+              { "name": "thread_id", "type": "text", "label": "Thread ID" },
+              { "name": "status", "type": "text", "label": "Send Status" }
+            ]
+          },
+          {
+            "id": 60,
+            "label": "Google Sheets — Log Final Notice",
+            "type": "Google Sheets",
+            "function": "addRow",
+            "data": {
+              "spreadsheetId": "YOUR_SPREADSHEET_ID_HERE",
+              "sheetName": "Dunning Log",
+              "columns": [
+                {
+                  "column": "A",
+                  "value": "{{10.id}}"
+                },
+                {
+                  "column": "B",
+                  "value": "{{10.customer_name}}"
+                },
+                {
+                  "column": "C",
+                  "value": "{{10.customer_email}}"
+                },
+                {
+                  "column": "D",
+                  "value": "{{10.amount_formatted}}"
+                },
+                {
+                  "column": "E",
+                  "value": "{{10.due_date}}"
+                },
+                {
+                  "column": "F",
+                  "value": "{{10.days_past_due}}"
+                },
+                {
+                  "column": "G",
+                  "value": "FINAL NOTICE"
+                },
+                {
+                  "column": "H",
+                  "value": "{{50.message_id}}"
+                },
+                {
+                  "column": "I",
+                  "value": "{{formatDate now \"YYYY-MM-DD HH:mm:ss\"}}"
+                },
+                {
+                  "column": "J",
+                  "value": "Slack notification sent"
+                }
+              ]
+            },
+            "output": [
+              { "name": "row_number", "type": "number", "label": "Row Number" },
+              { "name": "url", "type": "text", "label": "Row URL" }
+            ]
+          },
+          {
+            "id": 70,
+            "label": "Google Sheets — Log Friendly Reminder",
+            "type": "Google Sheets",
+            "function": "addRow",
+            "data": {
+              "spreadsheetId": "YOUR_SPREADSHEET_ID_HERE",
+              "sheetName": "Dunning Log",
+              "columns": [
+                {
+                  "column": "A",
+                  "value": "{{10.id}}"
+                },
+                {
+                  "column": "B",
+                  "value": "{{10.customer_name}}"
+                },
+                {
+                  "column": "C",
+                  "value": "{{10.customer_email}}"
+                },
+                {
+                  "column": "D",
+                  "value": "{{10.amount_formatted}}"
+                },
+                {
+                  "column": "E",
+                  "value": "{{10.due_date}}"
+                },
+                {
+                  "column": "F",
+                  "value": "{{10.days_past_due}}"
+                },
+                {
+                  "column": "G",
+                  "value": "FRIENDLY REMINDER"
+                },
+                {
+                  "column": "H",
+                  "value": "{{30.message_id}}"
+                },
+                {
+                  "column": "I",
+                  "value": "{{formatDate now \"YYYY-MM-DD HH:mm:ss\"}}"
+                },
+                {
+                  "column": "J",
+                  "value": "Sent"
+                }
+              ]
+            },
+            "output": [
+              { "name": "row_number", "type": "number", "label": "Row Number" },
+              { "name": "url", "type": "text", "label": "Row URL" }
+            ]
+          },
+          {
+            "id": 80,
+            "label": "Google Sheets — Log Gentle Nudge",
+            "type": "Google Sheets",
+            "function": "addRow",
+            "data": {
+              "spreadsheetId": "YOUR_SPREADSHEET_ID_HERE",
+              "sheetName": "Dunning Log",
+              "columns": [
+                {
+                  "column": "A",
+                  "value": "{{10.id}}"
+                },
+                {
+                  "column": "B",
+                  "value": "{{10.customer_name}}"
+                },
+                {
+                  "column": "C",
+                  "value": "{{10.customer_email}}"
+                },
+                {
+                  "column": "D",
+                  "value": "{{10.amount_formatted}}"
+                },
+                {
+                  "column": "E",
+                  "value": "{{10.due_date}}"
+                },
+                {
+                  "column": "F",
+                  "value": "{{10.days_past_due}}"
+                },
+                {
+                  "column": "G",
+                  "value": "GENTLE NUDGE"
+                },
+                {
+                  "column": "H",
+                  "value": "{{40.message_id}}"
+                },
+                {
+                  "column": "I",
+                  "value": "{{formatDate now \"YYYY-MM-DD HH:mm:ss\"}}"
+                },
+                {
+                  "column": "J",
+                  "value": "Sent"
+                }
+              ]
+            },
+            "output": [
+              { "name": "row_number", "type": "number", "label": "Row Number" },
+              { "name": "url", "type": "text", "label": "Row URL" }
+            ]
+          },
+          {
+            "id": 90,
+            "label": "Slack — Notify Team of Final Notice",
+            "type": "Slack",
+            "function": "sendMessage",
+            "data": {
+              "channel": "#collections-alerts",
+              "text": "",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "🚨 FINAL DUNNING NOTICE SENT",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Customer:*\n{{10.customer_name}}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Email:*\n{{10.customer_email}}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Invoice:*\n{{10.id}}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Amount:*\n{{10.amount_formatted}}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Days Overdue:*\n{{10.days_past_due}}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Due Date:*\n{{10.due_date}}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Action required: This customer has been sent their *final notice*. If payment is not received within 3 business days, escalate to collections."
+                  }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Invoice",
+                        "emoji": true
+                      },
+                      "url": "{{10.stripe_invoice_url}}",
+                      "style": "danger"
+                    }
+                  ]
+                }
+              ],
+              "parse": "full",
+              "link_names": false,
+              "unfurl_links": false,
+              "unfurl_media": false
+            },
+            "output": [
+              { "name": "ts", "type": "text", "label": "Timestamp" },
+              { "name": "channel", "type": "text", "label": "Channel" },
+              { "name": "status", "type": "text", "label": "Status" }
+            ]
+          }
+        ],
+        "connections": [
+          {
+            "from": 10,
+            "to": 20,
+            "label": "Trigger → Router",
+            "type": "data"
+          },
+          {
+            "from": 20,
+            "to": 30,
+            "label": "Route: Day 1 → Friendly Reminder",
+            "type": "route",
+            "routeId": "route_1"
+          },
+          {
+            "from": 20,
+            "to": 40,
+            "label": "Route: Day 7 → Gentle Nudge",
+            "type": "route",
+            "routeId": "route_7"
+          },
+          {
+            "from": 20,
+            "to": 50,
+            "label": "Route: Day 14+ → Final Notice",
+            "type": "route",
+            "routeId": "route_14"
+          },
+          {
+            "from": 30,
+            "to": 70,
+            "label": "Friendly → Log to Sheets",
+            "type": "data"
+          },
+          {
+            "from": 40,
+            "to": 80,
+            "label": "Nudge → Log to Sheets",
+            "type": "data"
+          },
+          {
+            "from": 50,
+            "to": 60,
+            "label": "Final Notice → Log to Sheets",
+            "type": "data"
+          },
+          {
+            "from": 60,
+            "to": 90,
+            "label": "Final Notice → Slack Alert",
+            "type": "data"
+          }
+        ]
+      }
+    }
+  ]
+}

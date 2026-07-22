@@ -1475,6 +1475,29 @@
     .ent-tab { min-width: 100px; padding: 10px 14px; }
     .meter-wrap { flex-direction: column; }
   }
+
+  /* Pantheon grid */
+  .pantheon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+  .deity-card {
+    display: block; text-decoration: none; padding: 20px 18px;
+    background: linear-gradient(160deg, #12121a, #0b0b10);
+    border: 1px solid #1e1e2a; border-radius: 14px;
+    transition: transform .18s, border-color .18s, box-shadow .18s;
+  }
+  .deity-card:hover {
+    transform: translateY(-4px); border-color: #f59e0b66;
+    box-shadow: 0 12px 30px -12px #f59e0b55;
+  }
+  .deity-card .d-rune {
+    font-size: 26px; color: #f59e0b; margin-bottom: 8px;
+    font-family: 'Cinzel', serif; letter-spacing: 1px;
+  }
+  .deity-card .d-name {
+    font-family: 'Cinzel', serif; font-weight: 700; font-size: 18px;
+    color: #f4f4f5; margin-bottom: 4px;
+  }
+  .deity-card .d-desc { font-size: 13px; color: #94a3b8; line-height: 1.4; }
+
 </style>
 </head>
 <body>
@@ -1491,6 +1514,7 @@
     <a href="#games">🐺 Games</a>
     <a href="#entertainment">Fun Stuff</a>
     <a href="#products">Products</a>
+    <a href="#pantheon">⚡ Pantheon</a>
     <a href="#playbook">Playbook</a>
     <a href="#about">About</a>
     <a href="#products" class="btn-nav">Browse All</a>
@@ -2316,7 +2340,7 @@
           <li>Pricing &amp; packaging automation services</li>
           <li>AI integration guide (GPT-4o, Claude)</li>
         </ul>
-        <a href="/playbook.md" class="btn btn-primary" download>Download Now — $19</a>
+        <a href="automation-agency-playbook/playbook.md" class="btn btn-primary" download>Download Now — $19</a>
       </div>
       <div class="pb-right">
         <div class="price-big">$19</div>
@@ -2336,6 +2360,101 @@
 </section>
 
 <!-- About -->
+<section id="pantheon" class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2>The <span class="gold">Pantheon</span></h2>
+      <p class="subtitle">Every god a business archetype. Every page a lesson + a ready-made automation.</p>
+    </div>
+    <div class="pantheon-grid">
+      <a class="deity-card" href="odin.html">
+        <div class="d-rune">ᛟ</div>
+        <div class="d-name">Óðinn</div>
+        <div class="d-desc">The Allfather — vision & strategy</div>
+      </a>
+      <a class="deity-card" href="thor.html">
+        <div class="d-rune">ᚦ</div>
+        <div class="d-name">Þórr</div>
+        <div class="d-desc">The Protector — reliability & defense</div>
+      </a>
+      <a class="deity-card" href="freyr.html">
+        <div class="d-rune">ᚠ</div>
+        <div class="d-name">Freyr</div>
+        <div class="d-desc">The Provider — growth & abundance</div>
+      </a>
+      <a class="deity-card" href="freya.html">
+        <div class="d-rune">ᚠ</div>
+        <div class="d-name">Freyja</div>
+        <div class="d-desc">The Enchantress — attraction & brand</div>
+      </a>
+      <a class="deity-card" href="tyr.html">
+        <div class="d-rune">ᛏ</div>
+        <div class="d-name">Týr</div>
+        <div class="d-desc">The Lawgiver — trust & contracts</div>
+      </a>
+      <a class="deity-card" href="heimdall.html">
+        <div class="d-rune">ᚺ</div>
+        <div class="d-name">Heimdallr</div>
+        <div class="d-desc">The Watchman — monitoring & alerts</div>
+      </a>
+      <a class="deity-card" href="bragi.html">
+        <div class="d-rune">ᛒ</div>
+        <div class="d-name">Bragi</div>
+        <div class="d-desc">The Skald — story & content</div>
+      </a>
+      <a class="deity-card" href="hel.html">
+        <div class="d-rune">ᚼ</div>
+        <div class="d-name">Hel</div>
+        <div class="d-desc">Ruler of realms — routing & boundaries</div>
+      </a>
+      <a class="deity-card" href="loki.html">
+        <div class="d-rune">ᛚ</div>
+        <div class="d-name">Loki</div>
+        <div class="d-desc">The Trickster — boundary-breaking ops</div>
+      </a>
+      <a class="deity-card" href="fenrir.html">
+        <div class="d-rune">ᚠ</div>
+        <div class="d-name">Fenrir</div>
+        <div class="d-desc">The Bound Wolf — unleashed capacity</div>
+      </a>
+      <a class="deity-card" href="jormungandr.html">
+        <div class="d-rune">ᛃ</div>
+        <div class="d-name">Jörmungandr</div>
+        <div class="d-desc">World Serpent — end-to-end coils</div>
+      </a>
+      <a class="deity-card" href="angrboda.html">
+        <div class="d-rune">ᚨ</div>
+        <div class="d-name">Angrboða</div>
+        <div class="d-desc">Mother of Monsters — scaling ops</div>
+      </a>
+      <a class="deity-card" href="sigyn.html">
+        <div class="d-rune">ᛋ</div>
+        <div class="d-name">Sigyn</div>
+        <div class="d-desc">The Steadfast — failover & catch</div>
+      </a>
+      <a class="deity-card" href="gerd.html">
+        <div class="d-rune">ᚷ</div>
+        <div class="d-name">Gerðr</div>
+        <div class="d-desc">The Won — negotiation & closing</div>
+      </a>
+      <a class="deity-card" href="hermod.html">
+        <div class="d-rune">ᚺ</div>
+        <div class="d-name">Hermóðr</div>
+        <div class="d-desc">The Messenger — relay & delivery</div>
+      </a>
+      <a class="deity-card" href="hymir.html">
+        <div class="d-rune">ᚺ</div>
+        <div class="d-name">Hymir</div>
+        <div class="d-desc">The Line-Cutter — hard limits</div>
+      </a>
+      <a class="deity-card" href="utgardaloki.html">
+        <div class="d-rune">ᚢ</div>
+        <div class="d-name">Útgarða-Loki</div>
+        <div class="d-desc">The Illusionist — A/B & testing</div>
+      </a>
+    </div>
+  </div>
+</section>
 <section id="about" class="section">
   <div class="container">
     <div class="section-header">

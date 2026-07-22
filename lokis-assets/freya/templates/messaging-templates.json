@@ -1,0 +1,7 @@
+{
+  "templates": {
+    "cold_outreach": "Subject: {{company}} — {{outcome}} in {{timeframe}}",
+    "follow_up": "You asked about {{topic}}. Here is the one-pager.",
+    "closing": "If {{condition}}, I recommend {{offer}}."
+  }
+}
