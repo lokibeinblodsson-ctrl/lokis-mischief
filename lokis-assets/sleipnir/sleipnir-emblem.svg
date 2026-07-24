@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="42%" r="70%">
+      <stop offset="0%" stop-color="#231636"/>
+      <stop offset="60%" stop-color="#1a1230"/>
+      <stop offset="100%" stop-color="#0c0817"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fcd34d"/>
+      <stop offset="55%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1080" height="1350" fill="url(#bg)"/>
+  <!-- decorative knotwork frame -->
+  <rect x="36" y="36" width="1008" height="1278" rx="26" fill="none" stroke="url(#gold)" stroke-width="3" opacity="0.55"/>
+  <rect x="54" y="54" width="972" height="1242" rx="20" fill="none" stroke="url(#gold)" stroke-width="1.5" opacity="0.3"/>
+
+  <g fill="none" stroke="url(#gold)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)">
+    <!-- GROUND -->
+    <path d="M150 1010 H930" opacity="0.5"/>
+
+    <!-- BODY: barrel -->
+    <path d="M300 700 Q360 600 520 600 Q700 600 760 700 Q800 780 740 860 Q560 940 360 880 Q280 820 300 700 Z"/>
+    <!-- CHEST / NECK -->
+    <path d="M700 720 Q800 640 840 520 Q860 470 820 440 Q770 470 740 560 Q700 680 690 740 Z"/>
+    <!-- HEAD (facing right) -->
+    <path d="M820 440 Q815 350 860 320 Q930 300 960 360 Q980 430 935 500 Q880 540 820 440 Z"/>
+    <!-- EAR -->
+    <path d="M852 332 L842 282 L884 318"/>
+    <!-- MANE -->
+    <path d="M760 560 Q720 640 700 740 M740 560 Q700 650 690 760" opacity="0.8"/>
+    <!-- TAIL -->
+    <path d="M300 700 Q230 760 220 900 Q215 980 270 1040 M320 720 Q260 780 255 920"/>
+
+    <!-- ===== EIGHT LEGS ===== -->
+    <!-- Front pair 1 (near) -->
+    <path d="M420 870 Q415 950 430 1010"/>
+    <!-- Front pair 2 (near, offset) -->
+    <path d="M470 878 Q468 958 484 1012"/>
+    <!-- Front pair 3 (far, lighter) -->
+    <path d="M395 860 Q392 945 405 1006" opacity="0.65"/>
+    <!-- Front pair 4 (far, lighter) -->
+    <path d="M445 866 Q444 950 458 1008" opacity="0.65"/>
+    <!-- Hind pair 1 (near) -->
+    <path d="M640 880 Q648 960 636 1014"/>
+    <!-- Hind pair 2 (near, offset) -->
+    <path d="M690 872 Q700 956 688 1012"/>
+    <!-- Hind pair 3 (far, lighter) -->
+    <path d="M612 870 Q620 952 606 1010" opacity="0.65"/>
+    <!-- Hind pair 4 (far, lighter) -->
+    <path d="M662 866 Q672 950 658 1008" opacity="0.65"/>
+
+    <!-- HOOF ticks -->
+    <g opacity="0.9">
+      <path d="M420 1010 h22"/><path d="M470 1012 h22"/>
+      <path d="M640 1014 h22"/><path d="M690 1012 h22"/>
+    </g>
+  </g>
+
+  <!-- rune label -->
+  <text x="540" y="1180" text-anchor="middle" font-family="Cinzel, Georgia, serif"
+        font-size="64" font-weight="900" fill="url(#gold)" letter-spacing="14" filter="url(#glow)">SLEIPNIR</text>
+  <text x="540" y="1230" text-anchor="middle" font-family="Inter, sans-serif"
+        font-size="22" fill="#94a3b8" letter-spacing="6">THE EIGHT-LEGGED · SON OF LOKI</text>
+</svg>
