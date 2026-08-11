@@ -1,0 +1,42 @@
+# Loki's Mischief — automation agents (Windmill + Node-RED) for page generation + QA.
+# Purpose: self-hosted page-gen + QA agents. Windmill runs Python scripts that draft/QA HTML pages;
+# Node-RED wires webhooks (e.g. "generate deity page") and runs HTTP checks against the live site.
+# These are OPTIONAL infrastructure — the static site runs without them (nginx on :8899).
+# Keep lean: both share one network; only start when you want the agent layer live.
+services:
+  windmill:
+    image: ghcr.io/windmill-labs/windmill:latest
+    container_name: lokis-windmill
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgres://postgres:changeme@windmill-db:5432/windmill
+      - BASE_URL=http://127.0.0.1:8000
+    volumes:
+      - windmill-data:/usr/local/bin/data
+    depends_on:
+      - windmill-db
+  windmill-db:
+    image: postgres:16-alpine
+    container_name: lokis-windmill-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD=changeme
+      - POSTGRES_DB=windmill
+    volumes:
+      - windmill-db-data:/var/lib/postgresql/data
+  nodered:
+    image: nodered/node-red:latest
+    container_name: lokis-nodered
+    restart: unless-stopped
+    ports:
+      - "1880:1880"
+    environment:
+      - FLOWS=flows.json
+    volumes:
+      - nodered-data:/data
+volumes:
+  windmill-data:
+  windmill-db-data:
+  nodered-data:

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design &amp; Automation Services — Loki's Mischief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--gold:#f59e0b;--gold2:#d97706;--bg:#05060b;--panel:#0d0d14;--panel2:#0a0a10;--line:#1a1a24;--muted:#94a3b8}
+  html,body{height:100%}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:#e4e4e7;line-height:1.6;
+    background-image:radial-gradient(ellipse 70% 45% at 50% 0%,rgba(26,5,51,.5),transparent 60%),radial-gradient(ellipse 70% 45% at 50% 100%,rgba(5,80,120,.15),transparent 60%);}
+  a{color:var(--gold);text-decoration:none}
+  .gradient{background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .gold{color:var(--gold)}
+  nav{position:sticky;top:0;z-index:50;background:rgba(5,6,11,.8);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:12px 20px;display:flex;align-items:center;justify-content:space-between}
+  nav .logo{font-family:'Cinzel',serif;font-weight:800;font-size:15px}
+  nav .links a{margin-left:16px;font-size:13px;font-weight:600;color:var(--muted)}
+  nav .links a:hover{color:var(--gold)}
+  .container{max-width:1080px;margin:0 auto;padding:0 20px}
+  .hero{padding:54px 0 18px;text-align:center}
+  .hero h1{font-family:'Cinzel',serif;font-size:34px;font-weight:900;margin-bottom:10px}
+  .hero p{color:var(--muted);max-width:700px;margin:0 auto;font-size:15px}
+  section.block{padding:30px 0}
+  .section-head{display:flex;align-items:baseline;gap:12px;margin-bottom:16px;border-bottom:1px solid var(--line);padding-bottom:10px}
+  .section-head h2{font-family:'Cinzel',serif;font-size:22px;font-weight:800}
+  .section-head span{color:var(--muted);font-size:13px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+  .card{background:linear-gradient(160deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:16px;padding:20px;transition:.2s;display:flex;flex-direction:column}
+  .card:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 6px 22px rgba(245,158,11,.16)}
+  .card .ico{font-size:34px}
+  .card h3{font-family:'Cinzel',serif;font-size:17px;margin:6px 0}
+  .card .price{color:var(--gold);font-weight:800;font-size:20px}
+  .card p{color:var(--muted);font-size:13px;margin:8px 0 12px;flex:1}
+  .card ul{list-style:none;padding:0;margin:0 0 14px}
+  .card li{font-size:12px;color:#cbd5e1;padding:3px 0;border-bottom:1px dashed var(--line)}
+  .card .go{font-weight:700;font-size:13px;display:inline-block;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07070a;padding:9px 16px;border-radius:10px;text-align:center}
+  .cta{text-align:center;margin:28px 0;padding:26px;border:1px solid var(--gold);border-radius:18px;background:linear-gradient(135deg,#0d0d14,#101018)}
+  .cta h3{font-family:'Cinzel',serif;color:var(--gold);font-size:20px;margin-bottom:8px}
+  .cta p{color:var(--muted);font-size:14px;margin-bottom:14px}
+  .cta a{font-weight:700;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07070a;padding:11px 22px;border-radius:11px}
+  .note{font-size:12px;color:#64748b;border:1px solid var(--line);border-radius:12px;padding:12px 16px;background:#0a0a10;margin-top:20px}
+  footer{padding:40px 0;text-align:center;color:#475569;font-size:12px;border-top:1px solid var(--line);margin-top:30px}
+</style>
+  <link rel="stylesheet" href="mobile.css">
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">✦ LOKI'S MISCHIEF</a>
+  <div class="links">
+    <a href="directory.html">📇 Directory</a>
+    <a href="index.html#products">💳 Workflows</a>
+    <a href="lore.html">📜 Lore</a>
+    <a href="blog/index.html">📰 Blog</a>
+    <a href="index.html#about">About</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="hero">
+    <h1>Design &amp; Automation <span class="gradient">Services</span></h1>
+    <p>Done-with-you help at reasonable rates. Pick a package, or bundle into a monthly retainer. Every deliverable is on-brand, source-included, and built to ship.</p>
+  </div>
+
+  <section class="block" id="design">
+    <div class="section-head"><h2>🎨 Design Services</h2><span>flat, reasonable, no surprises</span></div>
+    <div class="grid">
+      <div class="card" id="brand"><div class="ico">🖼️</div><h3>Brand &amp; Logo Kit</h3><div class="price">from $149</div>
+        <p>A logo, palette, type system, and a one-page brand guide.</p>
+        <ul><li>2 logo concepts + 1 final</li><li>Palette + type pairing</li><li>One-page brand guide (PDF)</li><li>Norse-toned or clean corporate</li></ul>
+        <a class="go" href="mailto:loki.bein.blodsson@gmail.com?subject=Brand%20Kit">Book →</a></div>
+
+      <div class="card" id="landing"><div class="ico">🌐</div><h3>Landing Page Build</h3><div class="price">from $249</div>
+        <p>A converting single-page site in your colors, hosted free, wired to your payment link.</p>
+        <ul><li>Mobile-first, fast load</li><li>Copy + 3 promo images</li><li>Payment link wired</li><li>3 rounds of revisions</li></ul>
+        <a class="go" href="mailto:loki.bein.blodsson@gmail.com?subject=Landing%20Page">Book →</a></div>
+
+      <div class="card" id="product"><div class="ico">📦</div><h3>Product Page Pack</h3><div class="price">from $99</div>
+        <p>Gumroad-ready product page + copy + 3 promo images per product.</p>
+        <ul><li>Product page HTML</li><li>Sales copy</li><li>3 promo images</li><li>Built to sell</li></ul>
+        <a class="go" href="mailto:loki.bein.blodsson@gmail.com?subject=Product%20Pack">Book →</a></div>
+
+      <div class="card" id="art"><div class="ico">🪄</div><h3>Artwork &amp; Rune Assets</h3><div class="price">from $79</div>
+        <p>Custom deity portraits, Elder Futhark rune sets, bundle art in your style.</p>
+        <ul><li>Source files included</li><li>Transparent + bg variants</li><li>Consistent style</li><li>Reuse rights</li></ul>
+        <a class="go" href="mailto:loki.bein.blodsson@gmail.com?subject=Artwork">Book →</a></div>
+    </div>
+  </section>
+
+  <section class="block" id="automation">
+    <div class="section-head"><h2>🛠️ Automation Services</h2><span>we install it, we document it</span></div>
+    <div class="grid">
+      <div class="card" id="automation"><div class="ico">⚙️</div><h3>Workflow Setup</h3><div class="price">from $199</div>
+        <p>We install a plug-and-play workflow into your account and document it end-to-end.</p>
+        <ul><li>Make / n8n / Windmill / Node-RED</li><li>Tested import file</li><li>Written manual (PDF)</li><li>1 live walkthrough call</li></ul>
+        <a class="go" href="mailto:loki.bein.blodsson@gmail.com?subject=Workflow%20Setup">Book →</a></div>
+
+      <div class="card" id="retainer"><div class="ico">🔁</div><h3>Monthly Retainer</h3><div class="price">$399/mo</div>
+        <p>Ongoing design + automation support on a priority queue.</p>
+        <ul><li>2 design tasks / week</li><li>1 workflow tweak / week</li><li>Priority queue</li><li>Cancel anytime</li></ul>
+        <a class="go" href="mailto:loki.bein.blodsson@gmail.com?subject=Retainer">Book →</a></div>
+    </div>
+  </section>
+
+  <div class="cta">
+    <h3>Not sure which fits?</h3>
+    <p>Tell us what you're trying to ship. We'll point you to the cheapest path that works — even if that's a free workflow from the <a href="directory.html">directory</a>.</p>
+    <a href="mailto:loki.bein.blodsson@gmail.com?subject=Help%20me%20pick">💬 Talk to Loki's Mischief</a>
+  </div>
+
+  <div class="note">All prices are flat-rate for standard scope. Custom or enterprise work is quoted up front. Source files are always included. Brand: Loki's Mischief — clever automations, honest prices.</div>
+</div>
+
+<footer>
+  Loki's Mischief — Design &amp; Automation Services. <a href="directory.html">Directory</a> · <a href="index.html">Home</a><br>
+  © 2026 Loki's Mischief.
+</footer>
+</body>
+</html>

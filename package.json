@@ -1,0 +1,11 @@
+{
+  "name": "lokis-mischief-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Loki's Mischief — test + type-check suite for the static site (games, lore, blog, directory, services).",
+  "scripts": {
+    "test": "node tests/run.js",
+    "typecheck": "node tests/typecheck.js"
+  },
+  "license": "UNLICENSED"
+}

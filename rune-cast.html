@@ -20,30 +20,39 @@
   .topbar a{color:#94a3b8;text-decoration:none;font-size:12px;font-weight:600}
   .topbar a:hover{color:#f59e0b}
   .wrap{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:64px 16px 16px}
-  #board{font-family:'Cinzel',serif;display:flex;gap:14px;margin-bottom:18px}
-  .slot{width:96px;height:120px;border:1px solid #1a1a24;border-radius:16px;background:linear-gradient(160deg,#0d0d14,#0a0a10);
-    display:flex;align-items:center;justify-content:center;font-size:54px;color:#f59e0b;
-    text-shadow:0 0 22px rgba(245,158,11,.4);transition:.25s;position:relative}
-  .slot.cast{animation:pop .4s ease}
-  .slot small{position:absolute;bottom:6px;font-family:'Inter';font-size:9px;color:#64748b;letter-spacing:1px}
-  @keyframes pop{0%{transform:scale(.4);opacity:0}100%{transform:scale(1);opacity:1}}
-  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:11px;font-size:15px;font-weight:700;cursor:pointer;
-    border:1px solid transparent;color:#07070a;background:linear-gradient(135deg,#f59e0b,#d97706);text-decoration:none}
-  .btn:hover{box-shadow:0 4px 18px rgba(245,158,11,.35)}
-  .btn:disabled{opacity:.5;cursor:not-allowed}
-  .panel{margin-top:18px;max-width:560px;text-align:center;display:none}
-  .panel.open{display:block}
+  #tree{position:absolute;inset:0;width:100%;height:100%;z-index:0;opacity:.5}
+  .stage{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center}
+  #board{font-family:'Cinzel',serif;display:flex;gap:14px;margin-bottom:16px}
+  .slot{width:108px;height:140px;border:1px solid #2a2a38;border-radius:18px;background:linear-gradient(160deg,#11111c,#0a0a12);
+    display:flex;align-items:center;justify-content:center;font-size:60px;color:#f59e0b;
+    text-shadow:0 0 26px rgba(245,158,11,.5);transition:.25s;position:relative;box-shadow:inset 0 0 30px rgba(245,158,11,.06)}
+  .slot.cast{animation:pop .45s ease}
+  .slot small{position:absolute;bottom:8px;font-family:'Inter';font-size:11px;color:#cbd5e1;letter-spacing:1px;text-transform:uppercase}
+  .slot .ph{position:absolute;top:8px;font-family:'Inter';font-size:10px;color:#64748b}
+  @keyframes pop{0%{transform:scale(.4) rotate(-8deg);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+  .howto{font-size:13px;color:#94a3b8;text-align:center;max-width:420px;margin-bottom:14px;line-height:1.5}
+  .howto b{color:#f59e0b}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 26px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;
+    border:1px solid transparent;color:#07070a;background:linear-gradient(135deg,#f59e0b,#d97706);text-decoration:none;box-shadow:0 6px 20px rgba(245,158,11,.25)}
+  .btn:hover{box-shadow:0 8px 26px rgba(245,158,11,.4)}
+  .btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+  .panel{margin-top:16px;max-width:560px;text-align:center;display:none;width:100%}
+  .panel.open{display:block;animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1}}
   .panel h3{font-family:'Cinzel',serif;font-size:18px;color:#f59e0b;margin-bottom:10px}
-  .reading{background:#0d0d14;border:1px solid #1a1a24;border-radius:14px;padding:14px 16px;margin:8px 0;text-align:left}
-  .reading .rn{font-family:'Cinzel',serif;color:#fbbf24;font-weight:700}
+  .reading{background:#0d0d14;border:1px solid #1a1a24;border-radius:14px;padding:14px 16px;margin:8px 0;text-align:left;transition:.2s}
+  .reading:hover{border-color:#f59e0b}
+  .reading .rn{font-family:'Cinzel',serif;color:#fbbf24;font-weight:700;font-size:16px}
   .reading .rd{font-size:13px;color:#a5b4fc}
   .reading .rm{font-size:12px;color:#94a3b8;margin-top:3px}
   .stats{font-size:13px;color:#94a3b8;margin-top:10px;display:flex;gap:18px;justify-content:center}
   .stats b{color:#fbbf24}
-  .hs{margin-top:14px;font-size:13px;color:#94a3b8}
+  .hs{margin-top:12px;font-size:13px;color:#94a3b8}
   .hs b{color:#fbbf24}
   .lesson{margin-top:16px;font-size:13px;color:#22c55e;border-top:1px solid #1a1a24;padding-top:12px;max-width:560px;text-align:center}
+  @media (max-width:520px){ .slot{width:88px;height:118px;font-size:48px} .howto{font-size:12px} }
 </style>
+  <link rel="stylesheet" href="mobile.css">
 </head>
 <body>
 <div class="topbar">
@@ -52,54 +61,61 @@
   <a href="index.html#games">← Games</a>
 </div>
 
+<canvas id="tree"></canvas>
+
 <div class="wrap">
-  <div id="board">
-    <div class="slot" id="s0">?</div>
-    <div class="slot" id="s1">?</div>
-    <div class="slot" id="s2">?</div>
-  </div>
-  <button class="btn" id="castBtn" onclick="cast()">🎲 Cast 3 Runes</button>
-
-  <div class="panel" id="panel">
-    <h3>Your Casting</h3>
-    <div id="reading"></div>
-    <div class="stats">
-      <span>Cast #<b id="castNum">0</b></span>
-      <span>Best (most runes w/ strength) <b id="best">0</b></span>
+  <div class="stage">
+    <div class="howto">🪨 <b>How to play:</b> tap <b>Cast 3 Runes</b>. The Norns draw three Elder Futhark runes from Yggdrasil. Each shows its name + what it means for your work. Read the pattern, then act.</div>
+    <div id="board">
+      <div class="slot" id="s0"><span class="ph">ᚠ</span>?</div>
+      <div class="slot" id="s1"><span class="ph">ᚢ</span>?</div>
+      <div class="slot" id="s2"><span class="ph">ᚱ</span>?</div>
     </div>
-    <div class="hs">🏆 Casts today: <b id="today">0</b></div>
-  </div>
+    <button class="btn" id="castBtn" onclick="cast()">🎲 Cast 3 Runes</button>
 
-  <div class="lesson">
-    ✦ <strong>Lesson:</strong> The Norns cast lots at the root of Yggdrasil — fate is read, not forced. In your agency, read the pattern before you act: the rune that appears is the work that most needs you now.
+    <div class="panel" id="panel">
+      <h3>Your Casting</h3>
+      <div id="reading"></div>
+      <div class="stats">
+        <span>Casts <b id="castNum">0</b></span>
+        <span>Best streak <b id="best">0</b></span>
+      </div>
+      <div class="hs">🏆 Today: <b id="today">0</b> · <a href="#" onclick="resetScores();return false" style="color:#64748b">reset</a></div>
+    </div>
+
+    <div class="lesson">
+      ✦ <strong>Lesson:</strong> The Norns cast lots at the root of Yggdrasil — fate is read, not forced. In your agency, read the pattern before you act: the rune that appears is the work that most needs you now.
+    </div>
   </div>
 </div>
 
 <script>
-// Purpose: a self-contained 3-rune casting game. Pulls the same rune dataset as lore.html so the lore and the game never drift.
-// Assumption: runes-data.json is same-origin. Falls back to an inline set if fetch fails (offline/file:// safety).
+// Purpose: intuitive 3-rune casting game. World-tree canvas backdrop for richer graphics; name always visible; clear how-to.
+// Loads runes-data.json so lore + game never drift; inline fallback for offline safety.
 const FALLBACK = [
-  {glyph:"\u16a0",name:"Fehu",divination:"Abundance, earned reward."},
-  {glyph:"\u16a2",name:"Uruz",divination:"Raw primal strength."},
-  {glyph:"\u16a6",name:"Thurisaz",divination:"A thorn: danger and catalyst."},
-  {glyph:"\u16a8",name:"Ansuz",divination:"Message, Odin's word."},
-  {glyph:"\u16b1",name:"Raidho",divination:"Right movement, a journey."},
-  {glyph:"\u16b7",name:"Gebo",divination:"Gift given and returned."},
-  {glyph:"\u16ba",name:"Hagalaz",divination:"Disruptive change."},
-  {glyph:"\u16be",name:"Nauthiz",divination:"Need that forges."},
-  {glyph:"\u16c1",name:"Isa",divination:"Stillness, a clean pause."},
-  {glyph:"\u16cf",name:"Tiwaz",divination:"Justice, the spear of purpose."},
-  {glyph:"\u16d2",name:"Berkana",divination:"Growth, the greening branch."},
-  {glyph:"\u16da",name:"Laguz",divination:"Intuition, the tide."},
-  {glyph:"\u16de",name:"Dagaz",divination:"Breakthrough, the dawn."}
+  {glyph:"ᚠ",name:"Fehu",phonetic:"f",meaning:"Cattle, wealth",divination:"Abundance, earned reward."},
+  {glyph:"ᚢ",name:"Uruz",phonetic:"u",meaning:"Aurochs",divination:"Raw primal strength."},
+  {glyph:"ᚦ",name:"Thurisaz",phonetic:"þ",meaning:"Thurs/giant",divination:"A thorn: danger + catalyst."},
+  {glyph:"ᚨ",name:"Ansuz",phonetic:"a",meaning:"God, Odin's word",divination:"Message, inspiration."},
+  {glyph:"ᚱ",name:"Raidho",phonetic:"r",meaning:"Ride, journey",divination:"Right movement, a journey."},
+  {glyph:"ᚷ",name:"Gebo",phonetic:"g",meaning:"Gift",divination:"Partnership, exchange."},
+  {glyph:"ᚺ",name:"Hagalaz",phonetic:"h",meaning:"Hail",divination:"Disruptive change."},
+  {glyph:"ᚾ",name:"Nauthiz",phonetic:"n",meaning:"Need",divination:"Need that forges."},
+  {glyph:"ᛁ",name:"Isa",phonetic:"i",meaning:"Ice",divination:"Stillness, a clean pause."},
+  {glyph:"ᛏ",name:"Tiwaz",phonetic:"t",meaning:"Tyr",divination:"Justice, purpose."},
+  {glyph:"ᛒ",name:"Berkana",phonetic:"b",meaning:"Birch",divination:"Growth, the branch."},
+  {glyph:"ᛚ",name:"Laguz",phonetic:"l",meaning:"Water",divination:"Intuition, the tide."},
+  {glyph:"ᛞ",name:"Dagaz",phonetic:"d",meaning:"Day",divination:"Breakthrough, dawn."}
 ];
 let RUNES = FALLBACK;
 fetch('runes-data.json').then(r=>r.json()).then(d=>{
   const all=[]; d.elderFuthark.aettir.forEach(a=>a.runes.forEach(r=>all.push(r))); if(all.length) RUNES=all;
 }).catch(()=>{});
 
-let castNum = 0, best = 0;
-try{ castNum = +localStorage.getItem('rc_castnum')||0; best = +localStorage.getItem('rc_best')||0; }catch(e){}
+let castNum=0,best=0;
+try{ castNum=+localStorage.getItem('rc_castnum')||0; best=+localStorage.getItem('rc_best')||0; }catch(e){}
+
+function resetScores(){ try{ localStorage.removeItem('rc_castnum'); localStorage.removeItem('rc_best'); localStorage.removeItem('rc_today'); }catch(e){} castNum=0;best=0; document.getElementById('castNum').textContent=0; document.getElementById('best').textContent=0; document.getElementById('today').textContent=0; }
 
 function cast(){
   const btn=document.getElementById('castBtn'); btn.disabled=true;
@@ -108,17 +124,16 @@ function cast(){
   picks.forEach((r,idx)=>{
     const el=document.getElementById('s'+idx);
     el.classList.remove('cast'); void el.offsetWidth; el.classList.add('cast');
-    setTimeout(()=>{ el.innerHTML=r.glyph+'<small>'+r.name+'</small>'; }, 120*idx);
+    setTimeout(()=>{ el.innerHTML='<span class="ph">'+r.phonetic+'</span>'+r.glyph+'<small>'+r.name+'</small>'; }, 120*idx);
   });
   setTimeout(()=>{
     let html='';
-    picks.forEach(r=>{ html+=`<div class="reading"><span class="rn">${r.glyph} ${r.name}</span> — <span class="rd">${r.divination}</span><div class="rm">${r.meaning||''}</div></div>`; });
+    picks.forEach(r=>{ html+='<div class="reading"><span class="rn">'+r.glyph+' '+r.name+'</span> <span class="ph-inline" style="color:#64748b;font-size:11px">('+r.phonetic+')</span> — <span class="rd">'+r.divination+'</span><div class="rm">'+r.meaning+'</div></div>'; });
     document.getElementById('reading').innerHTML=html;
     document.getElementById('panel').classList.add('open');
     castNum++; let today=0; try{ today=+localStorage.getItem('rc_today')||0; today++; localStorage.setItem('rc_today',today);}catch(e){}
     document.getElementById('castNum').textContent=castNum;
     document.getElementById('today').textContent=today;
-    // "strength" score = count of runes whose name starts with a vowel-ish strong letter (flavour only)
     const score=picks.filter(r=>/^[FSDAHMT]/.test(r.name)).length;
     if(score>best){best=score; try{localStorage.setItem('rc_best',best);}catch(e){}}
     document.getElementById('best').textContent=best;
@@ -126,6 +141,26 @@ function cast(){
     btn.disabled=false;
   }, 520);
 }
+
+// World-tree backdrop (Yggdrasil) — subtle animated branches for richer graphics.
+const cv=document.getElementById('tree'), cx=cv.getContext('2d');
+function resize(){ cv.width=innerWidth; cv.height=innerHeight; }
+addEventListener('resize',resize); resize();
+let t=0;
+function draw(){
+  cx.clearRect(0,0,cv.width,cv.height);
+  const w=cv.width,h=cv.height, mx=cv.width/2;
+  cx.strokeStyle='rgba(245,158,11,0.10)'; cx.lineWidth=2;
+  function branch(x,y,len,ang,d){ if(d>7||len<4)return; const x2=x+Math.cos(ang)*len, y2=y+Math.sin(ang)*len;
+    cx.beginPath(); cx.moveTo(x,y); cx.lineTo(x2,y2); cx.stroke();
+    branch(x2,y2,len*0.72,ang-0.4+Math.sin(t/40+d)*0.05,d+1);
+    branch(x2,y2,len*0.72,ang+0.4+Math.cos(t/40+d)*0.05,d+1);
+  }
+  branch(mx,h, h*0.18, -Math.PI/2, 0); // trunk up
+  branch(mx,h*0.2, h*0.10, Math.PI/2, 0); // roots down
+  t++; requestAnimationFrame(draw);
+}
+draw();
 </script>
 </body>
 </html>

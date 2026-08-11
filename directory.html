@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Directory — Loki's Mischief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--gold:#f59e0b;--gold2:#d97706;--bg:#05060b;--panel:#0d0d14;--panel2:#0a0a10;--line:#1a1a24;--muted:#94a3b8}
+  html,body{height:100%}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:#e4e4e7;line-height:1.6;
+    background-image:radial-gradient(ellipse 70% 45% at 50% 0%,rgba(26,5,51,.5),transparent 60%),radial-gradient(ellipse 70% 45% at 50% 100%,rgba(5,80,120,.15),transparent 60%);}
+  a{color:var(--gold);text-decoration:none}
+  .gradient{background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .gold{color:var(--gold)}
+  nav{position:sticky;top:0;z-index:50;background:rgba(5,6,11,.8);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:12px 20px;display:flex;align-items:center;justify-content:space-between}
+  nav .logo{font-family:'Cinzel',serif;font-weight:800;font-size:15px}
+  nav .links a{margin-left:16px;font-size:13px;font-weight:600;color:var(--muted)}
+  nav .links a:hover{color:var(--gold)}
+  .container{max-width:1080px;margin:0 auto;padding:0 20px}
+  .hero{padding:54px 0 18px;text-align:center}
+  .hero h1{font-family:'Cinzel',serif;font-size:34px;font-weight:900;margin-bottom:10px}
+  .hero p{color:var(--muted);max-width:700px;margin:0 auto;font-size:15px}
+  section.block{padding:30px 0}
+  .section-head{display:flex;align-items:baseline;gap:12px;margin-bottom:16px;border-bottom:1px solid var(--line);padding-bottom:10px}
+  .section-head h2{font-family:'Cinzel',serif;font-size:22px;font-weight:800}
+  .section-head span{color:var(--muted);font-size:13px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+  .card{background:linear-gradient(160deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:16px;padding:20px;transition:.2s}
+  .card:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 6px 22px rgba(245,158,11,.16)}
+  .card .ico{font-size:34px}
+  .card h3{font-family:'Cinzel',serif;font-size:17px;margin:6px 0}
+  .card .price{color:var(--gold);font-weight:800;font-size:18px}
+  .card p{color:var(--muted);font-size:13px;margin:8px 0 12px}
+  .card .go{font-weight:700;font-size:13px}
+  .card .tags{margin-top:8px}
+  .tag{font-size:11px;color:var(--muted);background:#14141c;border:1px solid var(--line);border-radius:8px;padding:1px 8px;margin-right:5px;display:inline-block}
+  .deity-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+  .deity{background:linear-gradient(160deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center;transition:.2s}
+  .deity:hover{border-color:var(--gold)}
+  .deity .e{font-size:30px}
+  .deity .n{font-family:'Cinzel',serif;font-size:14px;margin-top:6px}
+  .deity .l{font-size:11px;color:#a5b4fc;margin-top:4px;min-height:30px}
+  .note{font-size:12px;color:#64748b;border:1px solid var(--line);border-radius:12px;padding:12px 16px;background:#0a0a10;margin-top:20px}
+  footer{padding:40px 0;text-align:center;color:#475569;font-size:12px;border-top:1px solid var(--line);margin-top:30px}
+</style>
+  <link rel="stylesheet" href="mobile.css">
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">✦ LOKI'S MISCHIEF</a>
+  <div class="links">
+    <a href="index.html#games">🐺 Games</a>
+    <a href="services.html">🎨 Services</a>
+    <a href="#workflows">⚙️ Workflows</a>
+    <a href="lore.html">📜 Lore</a>
+    <a href="index.html#products">💳 Products</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="hero">
+    <h1>The Loki's Mischief <span class="gradient">Business Directory</span></h1>
+    <p>One hub for everything we sell and teach: done-with-you design services, plug-and-play automation workflows, and the deity pages that turn Norse myth into a business lesson. Pick your path.</p>
+  </div>
+
+  <!-- Services -->
+  <section class="block" id="services">
+    <div class="section-head"><h2>🎨 Design Services</h2><span>done-with-you, reasonable rates</span></div>
+    <div class="grid">
+      <div class="card"><div class="ico">🖼️</div><h3>Brand &amp; Logo Kit</h3><div class="price">from $149</div><p>Logo, palette, type system, and a one-page brand guide. Norse-toned or clean corporate — your call.</p><a class="go" href="services.html#brand">View →</a></div>
+      <div class="card"><div class="ico">🌐</div><h3>Landing Page Build</h3><div class="price">from $249</div><p>A converting single-page site in your colors, hosted free, wired to your payment link. 3 rounds of revisions.</p><a class="go" href="services.html#landing">View →</a></div>
+      <div class="card"><div class="ico">📦</div><h3>Product Page Pack</h3><div class="price">from $99</div><p>Gumroad-ready product page + copy + 3 promo images per product. Built to sell.</p><a class="go" href="services.html#product">View →</a></div>
+      <div class="card"><div class="ico">🪄</div><h3>Artwork &amp; Rune Assets</h3><div class="price">from $79</div><p>Custom deity portraits, Elder Futhark rune sets, and bundle art in your style. Source files included.</p><a class="go" href="services.html#art">View →</a></div>
+      <div class="card"><div class="ico">🛠️</div><h3>Automation Setup</h3><div class="price">from $199</div><p>We install a plug-and-play workflow (Make/n8n/Windmill/Node-RED) into your account and document it.</p><a class="go" href="services.html#automation">View →</a></div>
+      <div class="card"><div class="ico">🔁</div><h3>Monthly Retainer</h3><div class="price">$399/mo</div><p>Ongoing design + automation support: 2 design tasks + 1 workflow tweak per week, priority queue.</p><a class="go" href="services.html#retainer">View →</a></div>
+    </div>
+  </section>
+
+  <!-- Workflows -->
+  <section class="block" id="workflows">
+    <div class="section-head"><h2>⚙️ Plug-and-Play Workflows</h2><span>import, connect, run — with manuals</span></div>
+    <div class="grid">
+      <div class="card"><div class="ico">🤖</div><h3>AI Client Concierge</h3><div class="price">$97</div><p>24/7 lead qualification, scheduling, CRM log, Slack ping. Make + n8n.</p><div class="tags"><span class="tag">Make</span><span class="tag">n8n</span></div><a class="go" href="index.html#products">Buy →</a></div>
+      <div class="card"><div class="ico">🚀</div><h3>Client Onboarding</h3><div class="price">$39</div><p>Webhook → welcome → calendar → CRM → Slack. 5-step kickoff.</p><div class="tags"><span class="tag">Make</span><span class="tag">n8n</span></div><a class="go" href="index.html#products">Buy →</a></div>
+      <div class="card"><div class="ico">📊</div><h3>Monthly Report Builder</h3><div class="price">$39</div><p>Metrics → AI narrative → Sheets → email → Slack.</p><div class="tags"><span class="tag">Make</span><span class="tag">n8n</span></div><a class="go" href="index.html#products">Buy →</a></div>
+      <div class="card"><div class="ico">📝</div><h3>RFP / RFI Drafter</h3><div class="price">$39</div><p>KB search → AI draft → Doc → email → Slack.</p><div class="tags"><span class="tag">Make</span><span class="tag">n8n</span></div><a class="go" href="index.html#products">Buy →</a></div>
+      <div class="card"><div class="ico">🔄</div><h3>Windmill Ops Pack</h3><div class="price">$59</div><p>Self-hosted Windmill flows for intake, invoicing, and QA. Includes deploy guide.</p><div class="tags"><span class="tag">Windmill</span></div><a class="go" href="index.html#products">Buy →</a></div>
+      <div class="card"><div class="ico">🧩</div><h3>Node-RED IoT Bridge</h3><div class="price">$59</div><p>Node-RED flows to wire webhooks, MQTT, and APIs into your stack. Includes flows.json.</p><div class="tags"><span class="tag">Node-RED</span></div><a class="go" href="index.html#products">Buy →</a></div>
+    </div>
+    <div class="note">Every workflow ships with a written <strong>instruction manual</strong> (PDF) and a tested import file. Prefer a different platform? Most packs are portable — ask and we'll convert.</div>
+  </section>
+
+  <!-- Deity business lessons -->
+  <section class="block" id="deities">
+    <div class="section-head"><h2>⚡ The Pantheon — Business Lessons</h2><span>myth as operating manual</span></div>
+    <div class="deity-grid">
+      <a class="deity" href="loki.html"><div class="e">🔥</div><div class="n">Loki</div><div class="l">Route around the wall — design for the detour</div></a>
+      <a class="deity" href="odin.html"><div class="e">🦅</div><div class="n">Óðinn</div><div class="l">Centralize intelligence before you decide</div></a>
+      <a class="deity" href="thor.html"><div class="e">🔨</div><div class="n">Þórr</div><div class="l">Show up reliably — consistency is the brand</div></a>
+      <a class="deity" href="freyr.html"><div class="e">🌞</div><div class="n">Freyr</div><div class="l">Invest in the harvest before you need it</div></a>
+      <a class="deity" href="freya.html"><div class="e">💖</div><div class="n">Freyja</div><div class="l">Own your funnel — negotiate from strength</div></a>
+      <a class="deity" href="tyr.html"><div class="e">⚔️</div><div class="n">Týr</div><div class="l">Calculated sacrifice buys the bigger win</div></a>
+      <a class="deity" href="heimdall.html"><div class="e">📡</div><div class="n">Heimdallr</div><div class="l">Watch the perimeter — early signal wins</div></a>
+      <a class="deity" href="bragi.html"><div class="e">🎤</div><div class="n">Bragi</div><div class="l">Tell the story — narrative sells</div></a>
+      <a class="deity" href="hel.html"><div class="e">💀</div><div class="n">Hel</div><div class="l">Triage ruthlessly — automate vs. keep human</div></a>
+      <a class="deity" href="sigyn.html"><div class="e">🥣</div><div class="n">Sigyn</div><div class="l">Hold the line — protect the core through the storm</div></a>
+      <a class="deity" href="fenrir.html"><div class="e">🐺</div><div class="n">Fenrir</div><div class="l">Break the manual chains with timing</div></a>
+      <a class="deity" href="jormungandr.html"><div class="e">🐍</div><div class="n">Jörmungandr</div><div class="l">Remember the loop — break cycles that repeat</div></a>
+      <a class="deity" href="gerd.html"><div class="e">🌸</div><div class="n">Gerðr</div><div class="l">Earn the yes — patience closes the deal</div></a>
+      <a class="deity" href="hermod.html"><div class="e">🐎</div><div class="n">Hermóðr</div><div class="l">Move fast to recover what matters</div></a>
+      <a class="deity" href="hymir.html"><div class="e">🌊</div><div class="n">Hymir</div><div class="l">Right tool, right scale — don't overbuild</div></a>
+      <a class="deity" href="angrboda.html"><div class="e">🌑</div><div class="n">Angrboða</div><div class="l">Bet on the long game — plant the seeds</div></a>
+      <a class="deity" href="utgardaloki.html"><div class="e">🌀</div><div class="n">Útgarða-Loki</div><div class="l">Test the illusion — verify before you trust</div></a>
+    </div>
+  </section>
+</div>
+
+<footer>
+  Loki's Mischief — Business Directory. Design services, plug-and-play workflows, and myth-as-operating-manual.<br>
+  <a href="index.html">← Back to the Mischief</a>
+</footer>
+</body>
+</html>
