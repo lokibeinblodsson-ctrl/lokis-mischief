@@ -20,7 +20,7 @@
 <script>
 const G={ id:'fenrir', deity:'fenrir',
   lesson:'You held chaos with a quiet guard-rail. Fenrir\'s workflow: approval gates + kill-switches that hold where heavy chains get circumvented.',
-  mount(){ buildIntro(); }, onResize(){} };
+  mount(){ buildIntro(); }, onResize(w,h){ if(cv){ cv.width=w; cv.height=h; } } };
 Engine._game=G;
 
 const CHAINS=[ {name:'Laeding',green:0.40,spd:1.0,dmg:40},{name:'Dromi',green:0.20,spd:1.3,dmg:20},{name:'Gleipnir',green:0.12,spd:1.6,dmg:12} ];
@@ -38,6 +38,7 @@ function buildIntro(){
 function start(){
   document.getElementById('stage').innerHTML=''; cv=document.createElement('canvas'); cv.id='gc';
   cv.width=innerWidth; cv.height=innerHeight; cv.className='game'; document.getElementById('game').appendChild(cv); cx=cv.getContext('2d');
+  Engine.fitCanvas(cv);
   Engine.setState('playing'); Engine.startLoop(frame);
   chainIdx=0; pend=0; dir=1; hp=100; hits=0; score=0; shake=0;
   document.getElementById('chain').textContent=CHAINS[0].name;

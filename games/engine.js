@@ -89,14 +89,21 @@ const Engine = (() => {
   }
   function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
 
+  // ---- canvas fit (mobile: track viewport incl. rotation / address-bar) ----
+  function fitCanvas(cv){
+    const w=Math.max(1,innerWidth), h=Math.max(1,innerHeight);
+    cv.width=w; cv.height=h;
+    return {w,h};
+  }
   function init(){
     initBg();
     addEventListener('resize', ()=>{ resizeBg(); if(Engine._game&&Engine._game.onResize) Engine._game.onResize(innerWidth,innerHeight); });
+    addEventListener('orientationchange', ()=>{ setTimeout(()=>{ if(Engine._game&&Engine._game.onResize) Engine._game.onResize(innerWidth,innerHeight); },300); });
     document.addEventListener('visibilitychange', ()=>{
-      if(document.hidden && state==='playing'){ /* auto-pause hook */ if(Engine._game&&Engine._game.onHide) Engine._game.onHide(); }
+      if(document.hidden && state==='playing'){ if(Engine._game&&Engine._game.onHide) Engine._game.onHide(); }
     });
   }
   return { C, init, startLoop, setState, get state(){return state;}, bestKey, getBest, setBest,
-    blip, setMuted, showEnd, _game:null };
+    blip, setMuted, showEnd, fitCanvas, _game:null };
 })();
 window.addEventListener('DOMContentLoaded', Engine.init);

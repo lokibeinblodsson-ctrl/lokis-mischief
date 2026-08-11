@@ -38,4 +38,10 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--void);color:var(-
 .lesson{margin-top:12px;color:var(--ice);font-size:13px;font-style:italic}
 canvas.game{display:block;touch-action:none}
 .hidden{display:none!important}
-@media(max-width:640px){.panel{padding:16px;margin:0 12px}.panel h1{font-size:24px}}
+@media(max-width:640px){.panel{padding:16px;margin:0 12px}.panel h1{font-size:24px}
+  .hud{top:42px;padding:4px 12px;font-size:11px}
+  .topbar{padding:8px 12px}
+  .topbar a{font-size:11px;margin-left:10px}
+  .btn{padding:11px 18px;font-size:14px}
+  canvas.game{touch-action:none}
+}

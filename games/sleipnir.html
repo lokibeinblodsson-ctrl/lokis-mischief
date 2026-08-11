@@ -20,7 +20,7 @@
 <script>
 const G={ id:'sleipnir', deity:'sleipnir',
   lesson:'Speed multiplies when you run parallel. Sleipnir\'s relay runs 8 tools at once without crashing.',
-  mount(){ buildIntro(); }, onResize(){} };
+  mount(){ buildIntro(); }, onResize(w,h){ if(cv){ cv.width=w; cv.height=h; } } };
 Engine._game=G;
 
 let cv,cx,lane=1,lanes=4,obstacles=[],coins=[],speed=6,dist=0,coin=0,split=0,mult=1,lastT=0;
@@ -37,6 +37,7 @@ function buildIntro(){
 function start(){
   document.getElementById('stage').innerHTML=''; cv=document.createElement('canvas'); cv.className='game';
   cv.width=innerWidth; cv.height=innerHeight; document.getElementById('game').appendChild(cv); cx=cv.getContext('2d');
+  Engine.fitCanvas(cv);
   Engine.setState('playing'); Engine.startLoop(frame);
   lane=1; obstacles=[]; coins=[]; speed=6; dist=0; coin=0; split=0; mult=1; lastT=performance.now();
   addEventListener('keydown',onKey); cv.addEventListener('pointerdown',onSwipe); cv.addEventListener('pointerup',onSwipeU);

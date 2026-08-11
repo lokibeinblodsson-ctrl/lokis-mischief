@@ -20,7 +20,7 @@
 <script>
 const G={ id:'jormungandr', deity:'jormungandr',
   lesson:'You broke the loop by remembering the route. Jormungandr\'s integration workflow connects every node without circling back.',
-  mount(){ buildIntro(); }, onResize(){} };
+  mount(){ buildIntro(); }, onResize(w,h){ if(cv){ cv.width=w; cv.height=h; layout(); } } };
 Engine._game=G;
 
 const RUNES=[{g:'ᚠ',n:'Fehu'},{g:'ᚢ',n:'Uruz'},{g:'ᚦ',n:'Thurisaz'},{g:'ᚨ',n:'Ansuz'}];
@@ -38,6 +38,7 @@ function buildIntro(){
 function start(){
   document.getElementById('stage').innerHTML=''; cv=document.createElement('canvas'); cv.className='game';
   cv.width=innerWidth; cv.height=innerHeight; document.getElementById('game').appendChild(cv); cx=cv.getContext('2d');
+  Engine.fitCanvas(cv);
   Engine.setState('playing'); Engine.startLoop(frame);
   round=1; streak=0; lives=3; phase='show'; seq=[]; input=[]; playing=true;
   document.getElementById('lives').textContent=3;
