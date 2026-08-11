@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Digital Products — Loki's Mischief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mobile.css">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',system-ui,sans-serif;background:#05060b;color:#e4e4e7;line-height:1.65;-webkit-font-smoothing:antialiased}
+  a{color:#f59e0b;text-decoration:none}
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:100;background:#05060bee;backdrop-filter:blur(12px);border-bottom:1px solid #1a1a24;padding:0 18px;height:58px;display:flex;align-items:center;justify-content:space-between}
+  .topbar .brand{font-family:'Cinzel',serif;font-weight:900;font-size:15px;background:linear-gradient(135deg,#f59e0b,#d97706);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .topbar .links{display:flex;gap:14px;flex-wrap:wrap}
+  .topbar .links a{color:#94a3b8;font-size:13px;font-weight:600}
+  .topbar .links a:hover{color:#fff}
+  .wrap{padding:80px 18px 60px;max-width:1080px;margin:0 auto}
+  .hero{text-align:center;padding:30px 0 10px}
+  .hero .eyebrow{color:#f59e0b;letter-spacing:3px;text-transform:uppercase;font-size:12px}
+  .hero h1{font-family:'Cinzel',serif;font-size:42px;font-weight:900;margin:8px 0;background:linear-gradient(135deg,#f59e0b,#d97706);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .hero p{color:#94a3b8;max-width:560px;margin:0 auto;font-size:15px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;margin-top:34px}
+  .card{background:linear-gradient(160deg,#0d0d14,#090910);border:1px solid #1a1a24;border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:.25s}
+  .card:hover{border-color:#f59e0b44;box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 30px rgba(245,158,11,.06);transform:translateY(-3px)}
+  .card .cover{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;background:#05060b}
+  .card .body{padding:18px 18px 20px;display:flex;flex-direction:column;flex:1}
+  .card h3{font-family:'Cinzel',serif;color:#fde68a;font-size:19px;margin-bottom:4px}
+  .card .price{font-size:26px;font-weight:800;color:#f59e0b;margin:6px 0}
+  .card .price small{font-size:13px;color:#94a3b8;font-weight:400}
+  .card .blurb{color:#cbd5e1;font-size:13px;margin-bottom:12px}
+  .card .manual{background:#080810;border:1px solid #16161f;border-radius:12px;padding:12px 14px;margin-top:auto}
+  .card .manual summary{cursor:pointer;color:#f59e0b;font-weight:700;font-size:13px;list-style:none}
+  .card .manual summary::-webkit-details-marker{display:none}
+  .card .manual summary::before{content:"📖 "}
+  .card .manual ul{margin:10px 0 0;padding-left:18px;color:#a5b4fc;font-size:12.5px}
+  .card .manual ul li{margin:4px 0}
+  .card .manual .how{color:#94a3b8;font-size:12.5px;margin-top:8px;border-top:1px solid #16161f;padding-top:8px}
+  .card .buy{display:inline-flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;padding:12px 18px;border-radius:12px;font-weight:700;background:linear-gradient(135deg,#f59e0b,#d97706);color:#07070a;font-size:14px}
+  .card .buy:hover{box-shadow:0 8px 24px rgba(245,158,11,.35)}
+  .note{text-align:center;color:#64748b;font-size:12px;margin-top:26px}
+  .guarantee{margin:30px auto 0;max-width:620px;text-align:center;background:#0d0d14;border:1px solid #1a1a24;border-radius:14px;padding:18px;color:#94a3b8;font-size:13px}
+  .guarantee b{color:#f59e0b}
+  footer{text-align:center;color:#475569;font-size:12px;padding:30px}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html" class="brand">✦ LOKI'S MISCHIEF</a>
+  <div class="links">
+    <a href="index.html">Home</a>
+    <a href="lore.html">Runes</a>
+    <a href="directory.html">Directory</a>
+    <a href="services.html">Services</a>
+    <a href="blog/index.html">Blog</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="eyebrow">Digital Downloads</div>
+    <h1>The Hoard</h1>
+    <p>Premium Norse-mythology assets and guides — instant download, yours forever. Every product ships with a plain-English instruction manual so you know exactly what you got and how to use it.</p>
+  </div>
+
+  <div class="grid">
+    <!-- ART PACK -->
+    <div class="card">
+      <img class="cover" src="products/covers/art-pack.png" alt="Elder Futhark Art Pack cover">
+      <div class="body">
+        <h3>Elder Futhark Art Pack</h3>
+        <div class="price">$9 <small>one-time</small></div>
+        <div class="blurb">24 print-ready rune cards (832×1216), each a glowing Elder Futhark glyph on dark gold. Use them for prints, stickers, altars, social posts, or product mockups.</div>
+        <details class="manual">
+          <summary>What's inside + how to use</summary>
+          <ul>
+            <li>24 PNG files — <code>rune-01-fehu.png</code> … <code>rune-24-dagaz.png</code></li>
+            <li>Each card: 800×1000 px, RGB, transparent-safe dark frame</li>
+            <li>Glyph + name + phonetic + meaning printed on every card</li>
+            <li>Organized by the 3 ættir (families of eight)</li>
+          </ul>
+          <div class="how"><b>How to use:</b> Drop a card into Canva/Photoshop, recolor the gold, or print at 100% for a 2.7×3.3" postcard. For print, export at 300 DPI. For web, the PNG is already optimized.</div>
+        </details>
+        <a class="buy" href="https://blodsson.gumroad.com/l/lokis-elder-futhark-art" target="_blank" rel="noopener">Get the Art Pack →</a>
+      </div>
+    </div>
+
+    <!-- RUNE BOOK -->
+    <div class="card">
+      <img class="cover" src="products/covers/rune-book.png" alt="Elder Futhark Rune Book cover">
+      <div class="body">
+        <h3>The Rune Book (PDF)</h3>
+        <div class="price">$5 <small>one-time</small></div>
+        <div class="blurb">A 32-page illustrated guide to all 24 Elder Futhark runes — reconstructed names, phonetics, meanings, and the historical lore behind each. Sourced from public-domain scholarship.</div>
+        <details class="manual">
+          <summary>What's inside + how to use</summary>
+          <ul>
+            <li>1 PDF — <code>lokis-elder-futhark-rune-book.pdf</code> (A4, 32 pages)</li>
+            <li>Per rune: glyph, Proto-Germanic name, phonetic value, meaning, lore note</li>
+            <li>Intro: what Elder Futhark is, the 3 ættir, how runes were used</li>
+            <li>Source notes — lore vs. later divinatory layers kept honest</li>
+          </ul>
+          <div class="how"><b>How to use:</b> Read on any device, or print double-sided and staple into a zine. Pair with the Art Pack to label your own printed cards. Sections are bookmarked for quick jump.</div>
+        </details>
+        <a class="buy" href="https://blodsson.gumroad.com/l/lokis-rune-book" target="_blank" rel="noopener">Get the Rune Book →</a>
+      </div>
+    </div>
+
+    <!-- BUNDLE -->
+    <div class="card">
+      <img class="cover" src="products/covers/bundle.png" alt="Art + Book Bundle cover">
+      <div class="body">
+        <h3>Art + Book Bundle</h3>
+        <div class="price">$12 <small>save $2</small></div>
+        <div class="blurb">Both products together — the 24-card Art Pack AND the 32-page Rune Book PDF — at a discount. The complete Elder Futhark starter kit.</div>
+        <details class="manual">
+          <summary>What's inside + how to use</summary>
+          <ul>
+            <li>Everything in the Art Pack (24 PNGs)</li>
+            <li>Everything in the Rune Book (1 PDF)</li>
+            <li>Bonus: <code>bundle-readme.txt</code> — print + resale ideas</li>
+          </ul>
+          <div class="how"><b>How to use:</b> Same as each product above. Best value if you want both the visuals and the reference. The readme gives 5 quick project ideas (altar cards, shop stickers, social series, zine, client gift).</div>
+        </details>
+        <a class="buy" href="https://blodsson.gumroad.com/l/lokis-rune-bundle" target="_blank" rel="noopener">Get the Bundle →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="guarantee">
+    🛡️ <b>Instant access</b> after purchase — download link delivered by email. Files are yours to keep and use in personal and client projects. Questions? Reply to your Gumroad receipt and a human answers.
+  </div>
+  <div class="note">Listed on Gumroad · blodsson.gumroad.com · Loki's Mischief</div>
+</div>
+
+<footer>© Loki's Mischief — Smart Automations for Agency Owners. All art generated in-house.</footer>
+</body>
+</html>
