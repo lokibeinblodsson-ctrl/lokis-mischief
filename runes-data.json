@@ -1,0 +1,51 @@
+{
+  "elderFuthark": {
+    "note": "24 runes of the Elder Futhark (ca. 2nd-8th c. CE), arranged in three attir (families of eight). Reconstructed Proto-Germanic names and phonetics follow standard scholarship (Page 2005; Barnes 2012). Meanings are the conventional reconstructed glosses; runic divination associations are a later (medieval/modern) interpretive layer and are flagged as such.",
+    "aettir": [
+      {
+        "name": "Freyr's Eight (first att)",
+        "runes": [
+          { "glyph": "\u16a0", "name": "Fehu", "protoGermanic": "*fehu", "phonetic": "f", "meaning": "Cattle, wealth, movable property", "divination": "Abundance, earned reward, momentum — but guard against hoarding.", "unicode": "U+16A0" },
+          { "glyph": "\u16a2", "name": "Uruz", "protoGermanic": "*uruz", "phonetic": "u", "meaning": "Aurochs (wild ox)", "divination": "Raw vitality, primal strength, a force worth taming.", "unicode": "U+16A2" },
+          { "glyph": "\u16a6", "name": "Thurisaz", "protoGermanic": "*thurisaz", "phonetic": "þ (th)", "meaning": "Thurs (giant), thorn", "divination": "A thorn: danger and catalyst at once. Act with care.", "unicode": "U+16A6" },
+          { "glyph": "\u16a8", "name": "Ansuz", "protoGermanic": "*ansuz", "phonetic": "a", "meaning": "God (ansuz), Odinic mouth/word", "divination": "Message, inspiration, the spoken word, Odin's breath.", "unicode": "U+16A8" },
+          { "glyph": "\u16b1", "name": "Raidho", "protoGermanic": "*raidho", "phonetic": "r", "meaning": "Ride, journey, wagon", "divination": "Right movement, rhythm, a journey outward or inward.", "unicode": "U+16B1" },
+          { "glyph": "\u16b3", "name": "Kaunan", "protoGermanic": "*kaunan", "phonetic": "k", "meaning": "Torch, ulcer (double sense)", "divination": "Illumination, knowledge that can also burn.", "unicode": "U+16B3" },
+          { "glyph": "\u16b7", "name": "Gebo", "protoGermanic": "*gebō", "phonetic": "g", "meaning": "Gift, exchange", "divination": "Partnership, a gift given and a gift returned. No inverse rune.", "unicode": "U+16B7" },
+          { "glyph": "\u16b9", "name": "Wunjo", "protoGermanic": "*wunjō", "phonetic": "w", "meaning": "Joy, bliss, harmony", "divination": "Fulfilment, fellowship, the fruit of the first att.", "unicode": "U+16B9" }
+        ]
+      },
+      {
+        "name": "Hagal's Eight (second att)",
+        "runes": [
+          { "glyph": "\u16ba", "name": "Hagalaz", "protoGermanic": "*hagalaz", "phonetic": "h", "meaning": "Hail", "divination": "Disruptive change, a hailstorm that clears the field.", "unicode": "U+16BA" },
+          { "glyph": "\u16be", "name": "Nauthiz", "protoGermanic": "*naudiz", "phonetic": "n", "meaning": "Need, constraint", "divination": "Necessity, friction that forges. Endure to transform.", "unicode": "U+16BE" },
+          { "glyph": "\u16c1", "name": "Isa", "protoGermanic": "*isaz", "phonetic": "i", "meaning": "Ice", "divination": "Stillness, blockage, a clean pause. Wait for the thaw.", "unicode": "U+16C1" },
+          { "glyph": "\u16c3", "name": "Jera", "protoGermanic": "*jērą", "phonetic": "j", "meaning": "Year, harvest, seasonal return", "divination": "Right timing, reward after the cycle completes.", "unicode": "U+16C3" },
+          { "glyph": "\u16c8", "name": "Eihwaz", "protoGermanic": "*īhwaz", "phonetic": "ei", "meaning": "Yew tree", "divination": "Endurance, the world-axis, life-death-life.", "unicode": "U+16C8" },
+          { "glyph": "\u16c9", "name": "Perthro", "protoGermanic": "*perþō", "phonetic": "p", "meaning": "Lot-box, gaming piece (meaning debated)", "divination": "Mystery, fate's dice-cup, what is hidden.", "unicode": "U+16C9" },
+          { "glyph": "\u16c7", "name": "Algiz", "protoGermanic": "*algiz", "phonetic": "z", "meaning": "Elk, protection", "divination": "A shield-ward, defence, the upward reach.", "unicode": "U+16C7" },
+          { "glyph": "\u16cb", "name": "Sowilo", "protoGermanic": "*sōwilō", "phonetic": "s", "meaning": "Sun", "divination": "Success, the sun that cannot be lost, clarity.", "unicode": "U+16CB" }
+        ]
+      },
+      {
+        "name": "Tyr's Eight (third att)",
+        "runes": [
+          { "glyph": "\u16cf", "name": "Tiwaz", "protoGermanic": "*tīwaz", "phonetic": "t", "meaning": "Tyr (the god), the sky-god", "divination": "Justice, sacrifice, the spear of purpose.", "unicode": "U+16CF" },
+          { "glyph": "\u16d2", "name": "Berkana", "protoGermanic": "*berkaną", "phonetic": "b", "meaning": "Birch, Bercht (goddess)", "divination": "Growth, birth, the greening branch.", "unicode": "U+16D2" },
+          { "glyph": "\u16d6", "name": "Ehwaz", "protoGermanic": "*ehwaz", "phonetic": "e", "meaning": "Horse", "divination": "Movement in partnership, trust, the steed.", "unicode": "U+16D6" },
+          { "glyph": "\u16d1", "name": "Mannaz", "protoGermanic": "*mannaz", "phonetic": "m", "meaning": "Man, humanity", "divination": "The self in the collective, the mirror of others.", "unicode": "U+16D1" },
+          { "glyph": "\u16da", "name": "Laguz", "protoGermanic": "*laguz", "phonetic": "l", "meaning": "Water, lake, flow", "divination": "Intuition, the tide, what moves beneath.", "unicode": "U+16DA" },
+          { "glyph": "\u16dd", "name": "Ingwaz", "protoGermanic": "*ingwaz", "phonetic": "ŋ", "meaning": "Ing (the god), seed", "divination": "Inner rest, gestation, the seed before sprouting.", "unicode": "U+16DD" },
+          { "glyph": "\u16de", "name": "Dagaz", "protoGermanic": "*dagaz", "phonetic": "d", "meaning": "Day", "divination": "Breakthrough, dawn, the turning point. No inverse rune.", "unicode": "U+16DE" },
+          { "glyph": "\u16df", "name": "Othala", "protoGermanic": "*ōþalą", "phonetic": "o", "meaning": "Ancestral property, heritage", "divination": "Roots, inheritance, what was handed down.", "unicode": "U+16DF" }
+        ]
+      }
+    ]
+  },
+  "sources": {
+    "Elder Futhark": "https://en.wikipedia.org/wiki/Elder_Futhark",
+    "Runes: A Handbook (Barnes 2012)": "Woodbridge: Boydell",
+    "An Introduction to English Runes (Page 2005)": "Boydell Press"
+  }
+}

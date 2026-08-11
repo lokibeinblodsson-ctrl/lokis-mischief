@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loki's Mischief — Elder Futhark &amp; The Sagas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ---- Design language mirrors index.html (dark + gold) ---- */
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--gold:#f59e0b;--gold2:#d97706;--bg:#05060b;--panel:#0d0d14;--panel2:#0a0a10;--line:#1a1a24;--muted:#94a3b8}
+  html,body{height:100%}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:#e4e4e7;line-height:1.6;
+    background-image:radial-gradient(ellipse 70% 45% at 50% 0%,rgba(26,5,51,.5),transparent 60%),
+      radial-gradient(ellipse 70% 45% at 50% 100%,rgba(5,80,120,.15),transparent 60%);}
+  a{color:var(--gold);text-decoration:none}
+  .gradient{background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .gold{color:var(--gold)}
+  nav{position:sticky;top:0;z-index:50;background:rgba(5,6,11,.8);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);
+    padding:12px 20px;display:flex;align-items:center;justify-content:space-between}
+  nav .logo{font-family:'Cinzel',serif;font-weight:800;font-size:15px}
+  nav .links a{margin-left:16px;font-size:13px;font-weight:600;color:var(--muted)}
+  nav .links a:hover{color:var(--gold)}
+  .container{max-width:1080px;margin:0 auto;padding:0 20px}
+  .hero{padding:54px 0 18px;text-align:center}
+  .hero h1{font-family:'Cinzel',serif;font-size:34px;font-weight:900;margin-bottom:10px}
+  .hero p{color:var(--muted);max-width:680px;margin:0 auto;font-size:15px}
+  section.block{padding:34px 0}
+  .section-head{display:flex;align-items:baseline;gap:12px;margin-bottom:18px;border-bottom:1px solid var(--line);padding-bottom:10px}
+  .section-head h2{font-family:'Cinzel',serif;font-size:22px;font-weight:800}
+  .section-head span{color:var(--muted);font-size:13px}
+  /* rune grid */
+  .att{margin-bottom:30px}
+  .att-title{font-family:'Cinzel',serif;color:var(--gold);font-size:16px;font-weight:700;margin-bottom:12px;text-align:center;letter-spacing:1px}
+  .rune-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+  .rune{background:linear-gradient(160deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:16px;padding:16px 14px;text-align:center;transition:.2s;cursor:default}
+  .rune:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 6px 22px rgba(245,158,11,.18)}
+  .rune .g{font-size:46px;line-height:1;color:var(--gold);text-shadow:0 0 22px rgba(245,158,11,.35);margin-bottom:8px}
+  .rune .n{font-family:'Cinzel',serif;font-weight:700;font-size:15px}
+  .rune .ph{display:inline-block;margin-top:4px;font-size:12px;color:var(--muted);background:#14141c;border:1px solid var(--line);border-radius:8px;padding:1px 8px}
+  .rune .m{font-size:12px;color:#cbd5e1;margin-top:8px}
+  .rune .d{font-size:11px;color:#a5b4fc;margin-top:6px;border-top:1px dashed var(--line);padding-top:6px}
+  .rune .u{font-size:10px;color:#475569;margin-top:4px}
+  /* saga list */
+  .saga-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+  .saga{background:linear-gradient(160deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:16px;padding:18px;transition:.2s}
+  .saga:hover{border-color:var(--gold);box-shadow:0 6px 22px rgba(245,158,11,.14)}
+  .saga h3{font-family:'Cinzel',serif;font-size:16px;margin-bottom:6px}
+  .saga .tag{font-size:11px;color:var(--muted);background:#14141c;border:1px solid var(--line);border-radius:8px;padding:1px 8px;margin-right:6px}
+  .saga p{font-size:13px;color:var(--muted);margin-top:8px}
+  .note{font-size:12px;color:#64748b;border:1px solid var(--line);border-radius:12px;padding:12px 16px;background:#0a0a10;margin-top:20px}
+  footer{padding:40px 0;text-align:center;color:#475569;font-size:12px;border-top:1px solid var(--line);margin-top:30px}
+  .play{display:inline-block;margin-top:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07070a;font-weight:700;padding:10px 18px;border-radius:10px}
+  .play:hover{box-shadow:0 4px 18px rgba(245,158,11,.35)}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">✦ LOKI'S MISCHIEF</a>
+  <div class="links">
+    <a href="index.html#games">🐺 Games</a>
+    <a href="index.html#products">Products</a>
+    <a href="index.html#pantheon">⚡ Pantheon</a>
+    <a href="index.html#about">About</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="hero">
+    <h1>The <span class="gradient">Elder Futhark</span> &amp; The Sagas</h1>
+    <p>The 24 runes of the Elder Futhark — the alphabet the gods carved the world with — and the great Norse stories: the Poetic Edda, the Prose Edda, and the legendary sagas. Build the site, learn the lore.</p>
+    <a class="play" href="rune-cast.html">🎲 Cast the Runes →</a>
+  </div>
+
+  <section class="block">
+    <div class="section-head"><h2>🪨 Elder Futhark — 24 Runes</h2><span>three ættir of eight</span></div>
+    <div id="runes"><p style="color:var(--muted)">Loading runes…</p></div>
+    <div class="note">
+      <strong>On accuracy:</strong> Names, phonetics, and literal meanings follow standard runological scholarship (Page 2005; Barnes 2012).
+      The <span class="gold">divinatory</span> glosses are a later interpretive layer (medieval/modern), not the runes' original function —
+      they are included because the community expects them, but clearly separated. Runic "magic" is attested (e.g. the Lindholm amulet) but the
+      fortune-telling system is a modern construction.
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="section-head"><h2>📜 The Sagas &amp; Eddas</h2><span>the great Norse sources</span></div>
+    <div class="saga-grid">
+      <div class="saga"><h3>Poetic Edda <span class="tag">13th c. MS</span></h3><p>The <em>Codex Regius</em> — mythological and heroic poems: <em>Völuspá</em> (the Seeress's prophecy), <em>Hávamál</em> (Odin's words), <em>Þrymskviða</em>, and the lays of Sigurd.</p></div>
+      <div class="saga"><h3>Prose Edda <span class="tag">Snorri, ~1220</span></h3><p>Snorri Sturluson's handbook of skaldic metaphor: <em>Gylfaginning</em> (the tricking of Gylfi), <em>Skáldskaparmál</em>, <em>Háttatal</em>.</p></div>
+      <div class="saga"><h3>Völsunga saga <span class="tag">legendary</span></h3><p>The saga of the Völsung clan — Sigurd, Brynhild, the Rhinegold, and the dragon Fáfnir. Source for much of the Ring cycle.</p></div>
+      <div class="saga"><h3>Saga of the Ynglings <span class="tag">euhemerist</span></h3><p>Snorri's origin-myth of the Swedish kings, tracing them to the Æsir as mortal men remembered as gods.</p></div>
+      <div class="saga"><h3>Heimskringla <span class="tag">kings' sagas</span></h3><p>Snorri's collected sagas of the Norwegian kings — history written as story.</p></div>
+      <div class="saga"><h3>Gylfaginning <span class="tag">within Prose Edda</span></h3><p>The framing tale: a mortal king, Gylfi, visits Asgard disguised as Gangleri and is told the cosmology of the Nine Worlds.</p></div>
+      <div class="saga"><h3>Hávamál <span class="tag">within Poetic Edda</span></h3><p>"The Sayings of the High One" — Odin's gnomic wisdom: hospitality, self-reliance, and the rune-spell he won on the world-tree.</p></div>
+      <div class="saga"><h3>Völuspá <span class="tag">within Poetic Edda</span></h3><p>"The Seeress's Prophecy" — the creation of the world and its end at Ragnarök, spoken by a dead völva.</p></div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  Loki's Mischief — Elder Futhark &amp; Sagas reference. Lore compiled from public-domain scholarship; divinatory notes clearly marked.<br>
+  <a href="index.html">← Back to the Mischief</a>
+</footer>
+
+<script>
+// Purpose: render the 24 Elder Futhark runes from runes-data.json (data is the source of truth, not inline HTML).
+// Assumption: runes-data.json is same-origin static; on file:// it still works because fetch resolves relative.
+fetch('runes-data.json').then(r=>r.json()).then(data=>{
+  const root = document.getElementById('runes');
+  const ef = data.elderFuthark;
+  let html = '';
+  ef.aettir.forEach(att=>{
+    html += `<div class="att"><div class="att-title">${att.name}</div><div class="rune-grid">`;
+    att.runes.forEach(r=>{
+      html += `<div class="rune" title="${r.name}">
+        <div class="g">${r.glyph}</div>
+        <div class="n">${r.name}</div>
+        <div class="ph">${r.phonetic}</div>
+        <div class="m">${r.meaning}</div>
+        <div class="d">✦ ${r.divination}</div>
+        <div class="u">${r.unicode}</div>
+      </div>`;
+    });
+    html += `</div></div>`;
+  });
+  root.innerHTML = html;
+}).catch(e=>{ document.getElementById('runes').innerHTML = '<p style="color:#f87171">Could not load rune data: '+e.message+'</p>'; });
+</script>
+</body>
+</html>

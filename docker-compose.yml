@@ -1,0 +1,19 @@
+# Loki's Mischief — always-on lean site server
+# Purpose: serve the Loki's Mischief site on :8899 via nginx:alpine.
+# Keep the host lean: the image is ~25MB and the container restarts unless stopped.
+# Mounts the repo read-only; edit files on the host, they appear live.
+services:
+  lokis-site:
+    build: .
+    image: lokis-mischief-site:latest
+    container_name: lokis-site
+    restart: unless-stopped
+    ports:
+      - "8899:80"
+    volumes:
+      - .:/usr/share/nginx/html:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://127.0.0.1/"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
