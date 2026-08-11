@@ -1,15 +1,15 @@
 {
   "posts": [
     {
-      "slug": "client-onboarding-in-60-seconds-amakecom-blueprint",
-      "title": "Client onboarding in 60 seconds: aMake.com blueprint",
+      "slug": "windmill-vs-n8n-vs-nodered-which-automation-engine",
+      "title": "Windmill vs n8n vs Node-RED: which automation engine fits your team",
       "date": "2026-08-11",
-      "file": "blog/client-onboarding-in-60-seconds-amakecom-blueprint.html",
+      "file": "blog/windmill-vs-n8n-vs-nodered-which-automation-engine.html",
       "cites": 4
     }
   ],
   "published": [],
   "ideasUsed": [
-    "Client onboarding in 60 seconds: aMake.com blueprint"
+    "Windmill vs n8n vs Node-RED: which automation engine fits your team"
   ]
 }

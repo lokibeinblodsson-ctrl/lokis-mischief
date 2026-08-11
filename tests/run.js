@@ -12,8 +12,18 @@ let pass = 0, fail = 0;
 function ok(name) { pass++; console.log('  ✓ ' + name); }
 function bad(name, why) { fail++; console.log('  ✗ ' + name + (why ? ' — ' + why : '')); }
 
-const htmlFiles = fs.readdirSync(ROOT).filter(f => f.endsWith('.html') && !f.startsWith('Gumroad') && !f.startsWith('index') || f === 'index.html');
-const allFiles = new Set(fs.readdirSync(ROOT));
+// recurse to collect all html files + a full file set for link resolution
+function walk(dir, acc) {
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, e.name);
+    if (e.isDirectory()) { if (e.name === 'node_modules' || e.name === '.git') continue; walk(p, acc); }
+    else acc.push(p);
+  }
+  return acc;
+}
+const allPaths = walk(ROOT, []);
+const allFiles = new Set(allPaths.map(p => path.relative(ROOT, p).split(path.sep).join('/')));
+const htmlFiles = allPaths.map(p => path.relative(ROOT, p)).filter(f => f.endsWith('.html') && !f.startsWith('Gumroad'));
 
 console.log('\n[1] Page structure');
 for (const f of htmlFiles) {
@@ -27,16 +37,18 @@ for (const f of htmlFiles) {
 
 console.log('\n[2] Internal link resolution');
 const linkRe = /href="([^"#]+)"/g;
+const fileDir = f => f.includes('/') ? f.slice(0, f.lastIndexOf('/')) : '';
 for (const f of htmlFiles) {
   const html = fs.readFileSync(path.join(ROOT, f), 'utf8');
   let m, fileFails = [];
   while ((m = linkRe.exec(html))) {
     let href = m[1];
     if (href.startsWith('http') || href.startsWith('mailto') || href.startsWith('#') || href.startsWith('//')) continue;
-    // strip anchor
     const clean = href.split('#')[0];
     if (!clean) continue;
-    if (!allFiles.has(clean) && !fs.existsSync(path.join(ROOT, clean))) fileFails.push(href);
+    // resolve relative to the file's directory
+    const resolved = path.normalize(path.join(fileDir(f), clean)).split(path.sep).join('/');
+    if (!allFiles.has(resolved) && !fs.existsSync(path.join(ROOT, resolved))) fileFails.push(href);
   }
   if (fileFails.length === 0) ok(`${f}: all local links resolve`);
   else bad(`${f}: broken links`, fileFails.join(', '));
@@ -44,8 +56,12 @@ for (const f of htmlFiles) {
 
 console.log('\n[3] Game function presence');
 const gameChecks = [
-  ['rune-cast.html', ['function cast', 'RUNES', 'localStorage']],
-  ['index.html', ['function openGame', 'function closeGame']],
+  ['games/hel.html', ['function startGame', 'function decide', 'Engine.showEnd']],
+  ['games/fenrir.html', ['function onTap', 'Engine.showEnd', 'CHAINS']],
+  ['games/runecast.html', ['function cast', 'RUNES', 'Engine.getBest']],
+  ['games/jormungandr.html', ['function start', 'Engine.showEnd', 'seq']],
+  ['games/sleipnir.html', ['function start', 'Engine.showEnd', 'split']],
+  ['games.html', ['games/fenrir.html', 'games/runecast.html', 'loki_best_']],
 ];
 for (const [gf, fns] of gameChecks) {
   if (!fs.existsSync(path.join(ROOT, gf))) { bad(gf + ' exists'); continue; }
@@ -82,7 +98,7 @@ if (ideas.ideas.length >= 5) ok(`blog-ideas.json: pool healthy (${ideas.ideas.le
 else bad('blog-ideas.json: pool low', String(ideas.ideas.length));
 
 console.log('\n[6] Live server (:8899)');
-const routes = ['index.html', 'lore.html', 'rune-cast.html', 'directory.html', 'services.html', 'blog/index.html', 'blog/blog-ideas-ref-check.html'];
+const routes = ['index.html', 'lore.html', 'rune-cast.html', 'directory.html', 'services.html', 'products.html', 'games.html', 'games/hel.html', 'games/fenrir.html', 'games/runecast.html', 'games/jormungandr.html', 'games/sleipnir.html', 'blog/index.html'];
 (function checkNext(i) {
   if (i >= routes.length) {
     console.log(`\n[SUMMARY] pass=${pass} fail=${fail}`);

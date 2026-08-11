@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Rune Cast — ᚱᚢᚾᚨ | Loki's Mischief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../games/engine.css">
+<style>#game{position:fixed;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
+.rune{width:140px;height:180px;border:1px solid var(--border);border-radius:16px;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 30px rgba(212,183,120,.08)}
+.rune .g{font-size:64px;color:var(--gold);text-shadow:0 0 20px rgba(212,183,120,.4)}
+.rune .n{font-family:'Cinzel',serif;color:var(--ice);font-size:14px;margin-top:6px}
+.rune .p{color:var(--muted);font-size:11px}
+.rune .m{color:var(--text);font-size:11px;text-align:center;padding:0 8px;margin-top:4px}
+.row3{display:flex;gap:14px}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div class="topbar"><a href="../index.html" class="brand">✦ LOKI'S MISCHIEF</a>
+  <div><a href="../directory.html">Directory</a><a href="../services.html">Services</a><a href="../lore.html">Lore</a></div></div>
+<div class="hud"><span>Streak <b id="streak">0</b></span><span>Today's draw</span><span><button class="btn ghost" id="shuffle" style="padding:6px 14px;font-size:12px">Shuffle ↻</button></span></div>
+<div id="game"></div>
+<div id="stage"></div>
+<script src="../games/engine.js"></script>
+<script>
+const G={ id:'runecast', deity:'loki',
+  lesson:'Fate is read, not forced — know the pattern before you act. Get the Rune Prompt workflow.',
+  mount(){ buildIntro(); }, onResize(){} };
+Engine._game=G;
+
+// seeded RNG from date string (Wordle-style: everyone gets same 3 today)
+function seedFrom(str){ let h=1779033703; for(const c of str){ h=Math.imul(h^c.charCodeAt(0),3432918353); h=h<<13|h>>>19; } return (h>>>0); }
+function mulberry(a){ return function(){ a|=0;a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; } }
+
+let RUNES=[];
+fetch('../runes-data.json').then(r=>r.json()).then(d=>{ d.elderFuthark.aettir.forEach(a=>a.runes.forEach(r=>RUNES.push(r))); }).catch(()=>{});
+
+function buildIntro(){
+  document.getElementById('stage').innerHTML=`<div class="panel">
+    <h1>🪨 Rune Cast — ᚱᚢᚾᚨ</h1>
+    <p>Cast three Elder Futhark runes from Yggdrasil. Today's draw is the <b>same for everyone</b> (Wordle-style). Each shows its business meaning — read the pattern before you act.</p>
+    <div class="lesson">✦ Reflective daily retention, tied to the Lore page.</div>
+    <div class="row"><button class="btn" id="startBtn">Cast 3 Runes →</button></div></div>`;
+  document.getElementById('startBtn').onclick=()=>cast(false);
+  document.getElementById('streak').textContent=Engine.getBest('runecast');
+}
+function cast(shuffle){
+  const today=new Date().toISOString().slice(0,10);
+  const rng=mulberry(seedFrom(shuffle?(''+Math.random()):today));
+  const pool=RUNES.length?RUNES:[{glyph:'ᚠ',name:'Fehu',phonetic:'f',meaning:'Systemize wealth flow',divination:'Abundance'},{glyph:'ᚢ',name:'Uruz',phonetic:'u',meaning:'Raw strength',divination:'Primal power'},{glyph:'ᚦ',name:'Thurisaz',phonetic:'þ',meaning:'A thorn',divination:'Catalyst'}];
+  const picks=[]; const used=new Set();
+  while(picks.length<3){ const i=Math.floor(rng()*pool.length); if(!used.has(i)){used.add(i);picks.push(pool[i]);} }
+  const g=document.getElementById('game'); g.innerHTML='';
+  const row=document.createElement('div'); row.className='row3';
+  picks.forEach(r=>{ const d=document.createElement('div'); d.className='rune';
+    d.innerHTML=`<div class="g">${r.glyph}</div><div class="n">${r.name}</div><div class="p">(${r.phonetic})</div><div class="m">${r.meaning||r.divination||''}</div>`;
+    row.appendChild(d); });
+  g.appendChild(row);
+  // streak: increments each cast (daily retention)
+  let st=Engine.getBest('runecast')+1; Engine.setBest('runecast',st); document.getElementById('streak').textContent=st;
+  Engine.blip(330,.1,'sine',.15);
+  document.getElementById('stage').innerHTML=`<div class="panel" style="margin-top:18px">
+    <div class="lesson">✦ ${G.lesson}</div>
+    <div class="row">
+      <a class="btn ghost" href="../lore.html">Open the Lore →</a>
+      <a class="btn ice" href="https://blodsson.gumroad.com" target="_blank" rel="noopener">Get Rune Prompts →</a>
+      <button class="btn ghost" id="dl">Download Card</button>
+    </div></div>`;
+  document.getElementById('dl').onclick=()=>downloadCard(picks,today);
+}
+function downloadCard(picks,today){
+  const c=document.createElement('canvas'); c.width=1080; c.height=1350; const x=c.getContext('2d');
+  x.fillStyle='#080c12'; x.fillRect(0,0,1080,1350);
+  x.strokeStyle='#d4b778'; x.lineWidth=4; x.strokeRect(40,40,1000,1270);
+  x.fillStyle='#d4b778'; x.font='700 40px Cinzel, serif'; x.textAlign='center';
+  x.fillText("LOKI'S MISCHIEF — Daily Rune Cast",540,110);
+  x.font='600 28px Inter'; x.fillStyle='#7dd3e0'; x.fillText(today,540,160);
+  picks.forEach((r,i)=>{ const cy=420+i*300;
+    x.fillStyle='#d4b778'; x.font='120px serif'; x.fillText(r.glyph,540,cy);
+    x.fillStyle='#e5e7eb'; x.font='700 34px Cinzel, serif'; x.fillText(r.name+'  ('+r.phonetic+')',540,cy+70);
+    x.fillStyle='#cbd5e1'; x.font='22px Inter'; x.fillText(r.meaning||r.divination||'',540,cy+110);
+  });
+  x.fillStyle='#64748b'; x.font='20px Inter'; x.fillText('lokismischief.com',540,1290);
+  const a=document.createElement('a'); a.download='rune-cast-'+today+'.png'; a.href=c.toDataURL('image/png'); a.click();
+  Engine.blip(520,.12,'sine',.15);
+}
+document.getElementById('shuffle').onclick=()=>cast(true);
+G.mount();
+</script>
+</body></html>

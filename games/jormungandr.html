@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Jormungandr — Serpent Memory | Loki's Mischief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../games/engine.css">
+<style>#game{position:fixed;inset:0;z-index:1}</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div class="topbar"><a href="../index.html" class="brand">✦ LOKI'S MISCHIEF</a>
+  <div><a href="../directory.html">Directory</a><a href="../services.html">Services</a><a href="../lore.html">Lore</a></div></div>
+<div class="hud"><span>Round <b id="round">1</b></span><span>Streak <b id="streak">0</b></span><span>Lives <b id="lives">3</b></span></div>
+<div id="game"></div>
+<div id="stage"></div>
+<script src="../games/engine.js"></script>
+<script>
+const G={ id:'jormungandr', deity:'jormungandr',
+  lesson:'You broke the loop by remembering the route. Jormungandr\'s integration workflow connects every node without circling back.',
+  mount(){ buildIntro(); }, onResize(){} };
+Engine._game=G;
+
+const RUNES=[{g:'ᚠ',n:'Fehu'},{g:'ᚢ',n:'Uruz'},{g:'ᚦ',n:'Thurisaz'},{g:'ᚨ',n:'Ansuz'}];
+let cv,cx,seq=[],input=[],round=1,streak=0,lives=3,phase='idle',nodes=[],playing=false;
+
+function buildIntro(){
+  document.getElementById('stage').innerHTML=`<div class="panel">
+    <h1>🐍 Jormungandr — Serpent Memory</h1>
+    <p>The World-Serpent coils into the board. Watch the rune nodes light up in sequence, then repeat it by tapping the nodes. Each round adds one rune. Three wrong repeats and the loop closes.</p>
+    <p style="color:var(--muted);font-size:12px">Starts at length 3, grows to 12. Speed +5% per round. Best converter of focus.</p>
+    <div class="lesson">✦ Models integration / routing loops — remember the route, don't circle.</div>
+    <div class="row"><button class="btn" id="startBtn">Uncoil →</button></div></div>`;
+  document.getElementById('startBtn').onclick=start;
+}
+function start(){
+  document.getElementById('stage').innerHTML=''; cv=document.createElement('canvas'); cv.className='game';
+  cv.width=innerWidth; cv.height=innerHeight; document.getElementById('game').appendChild(cv); cx=cv.getContext('2d');
+  Engine.setState('playing'); Engine.startLoop(frame);
+  round=1; streak=0; lives=3; phase='show'; seq=[]; input=[]; playing=true;
+  document.getElementById('lives').textContent=3;
+  layout(); nextRound();
+}
+function layout(){
+  nodes=[]; const cx0=cv.width/2, cy0=cv.height/2, R=Math.min(cv.width,cv.height)*0.32;
+  for(let i=0;i<4;i++){ const a=-Math.PI/2 + i*Math.PI/2; nodes.push({x:cx0+R*Math.cos(a),y:cy0+R*Math.sin(a),r:46,i}); }
+  cv.onclick=(e)=>{ const r=cv.getBoundingClientRect(); const x=e.clientX-r.left,y=e.clientY-r.top;
+    nodes.forEach(n=>{ if((x-n.x)**2+(y-n.y)**2<n.r*n.r) onNode(n.i); }); };
+}
+function nextRound(){
+  input=[]; seq.push(Math.floor(Math.random()*4));
+  phase='show'; let i=0; const speed=1100 - Math.min(600,(round-1)*55);
+  const iv=setInterval(()=>{
+    if(i>=seq.length){ clearInterval(iv); phase='input'; return; }
+    flash(seq[i]); i++;
+  }, speed);
+}
+function flash(i){
+  nodes[i].lit=1; Engine.blip(300+i*120,.18,'sine',.18);
+  setTimeout(()=>{ nodes[i].lit=0; }, 520);
+}
+function onNode(i){
+  if(phase!=='input'||!playing) return;
+  flash(i); input.push(i);
+  if(input[input.length-1]!==seq[input.length-1]){
+    lives--; document.getElementById('lives').textContent=lives; Engine.blip(140,.2,'sawtooth',.2);
+    if(lives<=0){ return end(); }
+    input=[]; phase='show'; setTimeout(nextRound,500); return;
+  }
+  if(input.length===seq.length){
+    streak++; document.getElementById('streak').textContent=streak; round++;
+    document.getElementById('round').textContent=round; Engine.setBest('jormungandr',streak);
+    phase='show'; setTimeout(nextRound,700);
+  }
+}
+function frame(dt){
+  const w=cv.width,h=cv.height; cx.clearRect(0,0,w,h);
+  // serpent ring
+  cx.strokeStyle='#1e2e45'; cx.lineWidth=14; cx.beginPath();
+  cx.arc(w/2,h/2,Math.min(w,h)*0.32,0,7); cx.stroke();
+  cx.strokeStyle='rgba(125,211,224,0.25)'; cx.lineWidth=3; cx.beginPath();
+  cx.arc(w/2,h/2,Math.min(w,h)*0.32,0,7); cx.stroke();
+  nodes.forEach(n=>{
+    const glow=n.lit||0;
+    cx.fillStyle=glow?`rgba(125,211,224,${0.3+glow*0.5})`:'#111a26';
+    cx.beginPath(); cx.arc(n.x,n.y,n.r,0,7); cx.fill();
+    cx.strokeStyle=glow?'#7dd3e0':'#1e2e45'; cx.lineWidth=3; cx.stroke();
+    cx.fillStyle=glow?'#04121a':'#d4b778'; cx.font='34px serif'; cx.textAlign='center'; cx.textBaseline='middle';
+    cx.fillText(RUNES[n.i].g,n.x,n.y);
+    n.lit=Math.max(0,(n.lit||0)-dt*1.5);
+  });
+  cx.fillStyle='#64748b'; cx.font='600 14px Cinzel'; cx.textAlign='center';
+  cx.fillText(phase==='show'?'Watch…':'Repeat the sequence', w/2, h/2);
+}
+function end(){
+  playing=false; Engine.startLoop(()=>{});
+  Engine.showEnd({ title:'🐍 The Loop Closes', score:streak, sub:`reached round ${round}`, lesson:G.lesson, deity:G.deity, shareCard:null });
+}
+G.mount();
+</script>
+</body></html>

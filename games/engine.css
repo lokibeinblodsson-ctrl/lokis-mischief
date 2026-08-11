@@ -1,0 +1,41 @@
+/* Loki's Mischief — shared game engine
+   Design system (from the build bible):
+   void #080c12, card #111a26, runic border #1e2e45, ice blue #7dd3e0, gold #d4b778
+   Cinzel titles, Inter UI. Yggdrasil particle backdrop drawn procedurally.
+   State machine: idle > playing > paused > win/lose. rAF loop, pause on visibilitychange.
+   Audio muted by default (WebAudio). Keys: loki_best_[game].
+   End screen for all 5: Score + one-line Business Lesson + 3 buttons:
+     [See Deity Lesson -> deity.html] [Get The Workflow -> Gumroad] [Share -> canvas.toDataURL()]
+*/
+:root{
+  --void:#080c12; --card:#111a26; --border:#1e2e45; --ice:#7dd3e0; --gold:#d4b778;
+  --ice-dim:#4a7e8a; --text:#cbd5e1; --muted:#64748b;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--void);color:var(--text);
+  overflow:hidden;-webkit-tap-highlight-color:transparent;user-select:none}
+#bg{position:fixed;inset:0;z-index:0;display:block}
+.stage{position:fixed;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px;background:linear-gradient(180deg,rgba(8,12,18,.9),transparent)}
+.brand{font-family:'Cinzel',serif;font-weight:900;font-size:14px;color:var(--gold);letter-spacing:.5px}
+.topbar a{color:var(--muted);text-decoration:none;font-size:12px;font-weight:600;margin-left:14px}
+.topbar a:hover{color:var(--ice)}
+.hud{position:fixed;top:46px;left:0;right:0;z-index:4;display:flex;justify-content:space-between;
+  padding:6px 18px;font-size:13px;color:var(--muted)}
+.hud b{color:var(--gold)}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px 24px;
+  max-width:560px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.panel h1{font-family:'Cinzel',serif;color:var(--gold);font-size:30px;margin-bottom:6px}
+.panel p{color:var(--text);font-size:14px;line-height:1.6;margin:8px 0}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-weight:700;font-size:15px;
+  border:none;cursor:pointer;background:linear-gradient(135deg,var(--gold),#b8954f);color:#080c12;text-decoration:none}
+.btn:hover{box-shadow:0 8px 24px rgba(212,183,120,.35)}
+.btn.ghost{background:transparent;border:1px solid var(--border);color:var(--ice)}
+.btn.ice{background:var(--ice);color:#04121a}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+.lesson{margin-top:12px;color:var(--ice);font-size:13px;font-style:italic}
+canvas.game{display:block;touch-action:none}
+.hidden{display:none!important}
+@media(max-width:640px){.panel{padding:16px;margin:0 12px}.panel h1{font-size:24px}}

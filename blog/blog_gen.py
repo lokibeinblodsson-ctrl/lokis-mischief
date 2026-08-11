@@ -150,8 +150,8 @@ def main():
     links_html = ""
     for kw, page in INTERNAL:
         if kw in low:
-            html = re.sub(rf"\b({kw}[\w'-]*)", rf'<a href="{page}">\1</a>', html, count=1, flags=re.I)
-            links_html += f'<a href="{page}">{kw.title()}</a> · '
+            html = re.sub(rf"\b({kw}[\w'-]*)", rf'<a href="../{page}">\1</a>', html, count=1, flags=re.I)
+            links_html += f'<a href="../{page}">{kw.title()}</a> · '
     # External citations
     ext = ""
     for u in cites:
@@ -168,12 +168,12 @@ def main():
 h1,h2,h3{{font-family:Cinzel,serif;color:#f59e0b}}a{{color:#f59e0b}}nav a{{margin-right:14px;font-size:13px;color:#94a3b8}}
 .meta{{color:#64748b;font-size:13px;margin:8px 0 20px}}ul{{padding-left:20px}}</style></head>
 <body>
-<nav><a href="index.html">Home</a><a href="directory.html">Directory</a><a href="services.html">Services</a><a href="blog.html">Blog</a></nav>
+<nav><a href="../index.html">Home</a><a href="../directory.html">Directory</a><a href="../services.html">Services</a><a href="../blog.html">Blog</a></nav>
 <h1>{idea}</h1>
 <div class="meta">Loki's Mischief · {today} · business automation research</div>
 {html}
 <hr style="border-color:#1a1a24;margin:28px 0">
-<p style="font-size:13px;color:#94a3b8">Related: {links_html or '<a href="directory.html">Browse the directory</a>'}</p>
+<p style="font-size:13px;color:#94a3b8">Related: {links_html or '<a href="../directory.html">Browse the directory</a>'}</p>
 <p style="font-size:13px;color:#64748b">Sources:</p><ul style="font-size:12px;color:#94a3b8">{ext or '<li>Internal research</li>'}</ul>
 </body></html>"""
     open(out, "w").write(page)
@@ -188,13 +188,13 @@ h1,h2,h3{{font-family:Cinzel,serif;color:#f59e0b}}a{{color:#f59e0b}}nav a{{margi
 
 def render_index(idx):
     items = sorted(idx.get("posts", []), key=lambda p: p["date"], reverse=True)
-    rows = "\n".join(f'<li><a href="{p["file"]}">{p["title"]}</a> <span style="color:#64748b">· {p["date"]}</span></li>' for p in items)
+    rows = "\n".join(f'<li><a href="{p["file"].split("/",1)[-1]}">{p["title"]}</a> <span style="color:#64748b">· {p["date"]}</span></li>' for p in items)
     html = f"""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>Blog — Loki's Mischief</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <style>body{{font-family:Inter,system-ui,sans-serif;background:#05060b;color:#e4e4e7;line-height:1.7;max-width:820px;margin:0 auto;padding:24px 18px}}
 h1{{font-family:Cinzel,serif;color:#f59e0b}}a{{color:#f59e0b}}nav a{{margin-right:14px;font-size:13px;color:#94a3b8}}li{{margin:8px 0}}</style></head>
-<body><nav><a href="index.html">Home</a><a href="directory.html">Directory</a><a href="services.html">Services</a></nav>
+<body><nav><a href="../index.html">Home</a><a href="../directory.html">Directory</a><a href="../services.html">Services</a></nav>
 <h1>📰 Loki's Mischief — Blog</h1><p style="color:#94a3b8">Daily business-automation research, written by our own pipeline.</p>
 <ul>{rows}</ul></body></html>"""
     open(os.path.join(BLOG, "index.html"), "w").write(html)

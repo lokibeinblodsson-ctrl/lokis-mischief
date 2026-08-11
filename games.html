@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Games — Loki's Mischief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root{--void:#080c12;--card:#111a26;--border:#1e2e45;--ice:#7dd3e0;--gold:#d4b778}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',sans-serif;background:var(--void);color:#cbd5e1;min-height:100vh}
+  canvas#bg{position:fixed;inset:0;z-index:0}
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;justify-content:space-between;padding:12px 18px;background:linear-gradient(180deg,rgba(8,12,18,.92),transparent)}
+  .brand{font-family:'Cinzel',serif;font-weight:900;color:var(--gold);font-size:15px;text-decoration:none}
+  .topbar a{color:#64748b;text-decoration:none;font-size:12px;font-weight:600;margin-left:14px}
+  .topbar a:hover{color:var(--ice)}
+  .wrap{position:relative;z-index:2;max-width:980px;margin:0 auto;padding:90px 18px 60px}
+  h1{font-family:'Cinzel',serif;color:var(--gold);text-align:center;font-size:34px;margin-bottom:6px}
+  .sub{text-align:center;color:#64748b;margin-bottom:30px;font-size:14px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;transition:.2s;cursor:pointer}
+  .card:hover{border-color:var(--ice);transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,.4)}
+  .card .ic{font-size:40px}
+  .card h2{font-family:'Cinzel',serif;color:var(--gold);font-size:19px;margin:8px 0 2px}
+  .card .role{color:var(--ice);font-size:12px;font-weight:600}
+  .card p{color:#94a3b8;font-size:12.5px;line-height:1.5;margin-top:8px}
+  .card .best{margin-top:10px;color:var(--gold);font-size:11px}
+  a.card{text-decoration:none;color:inherit;display:block}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div class="topbar"><a href="index.html" class="brand">✦ LOKI'S MISCHIEF</a>
+  <div><a href="directory.html">Directory</a><a href="services.html">Services</a><a href="lore.html">Lore</a><a href="products.html">🛒 Digital</a></div></div>
+<div class="wrap">
+  <h1>🎮 The Mischief Games</h1>
+  <p class="sub">Five canvas micro-games. Each one is a business lesson in disguise. Best scores saved on this device.</p>
+  <div class="grid" id="grid"></div>
+</div>
+<script>
+const games=[
+  {ic:'⚖️',n:'Hel — Soul Sorting',role:'Triage / realm-routing',f:'games/hel.html',d:'Sort souls at Hel\'s gate: automate the routine, keep the human ones. Your best converter.',k:'hel'},
+  {ic:'🐺',n:'Fenrir — Chain Strike',role:'Compliance guard-rails',f:'games/fenrir.html',d:'Tap the pendulum in the green sweet spot to crack three chains. Quiet limits that hold.',k:'fenrir'},
+  {ic:'🪨',n:'Rune Cast — ᚱᚢᚾᚨ',role:'Daily reflection',f:'games/runecast.html',d:'Cast three Elder Futhark runes (same draw for everyone today). Read the pattern before you act.',k:'runecast'},
+  {ic:'🐍',n:'Jormungandr — Serpent Memory',role:'Integration / routing',f:'games/jormungandr.html',d:'Repeat the growing rune sequence. Remember the route, don\'t circle back.',k:'jormungandr'},
+  {ic:'🐎',n:'Sleipnir — Eight-Legged Sprint',role:'Parallel execution',f:'games/sleipnir.html',d:'Endless runner. Grab split runes to run parallel and smash through walls.',k:'sleipnir'},
+];
+const best=k=>localStorage.getItem('loki_best_'+k);
+const grid=document.getElementById('grid');
+games.forEach(g=>{
+  const a=document.createElement('a'); a.className='card'; a.href=g.f;
+  a.innerHTML=`<div class="ic">${g.ic}</div><h2>${g.n}</h2><div class="role">${g.role}</div><p>${g.d}</p><div class="best">★ Best: ${best(g.k)?best(g.k):'—'}</div>`;
+  grid.appendChild(a);
+});
+// mini backdrop
+const cv=document.getElementById('bg'),x=cv.getContext('2d');
+function rs(){cv.width=innerWidth;cv.height=innerHeight;}
+rs();addEventListener('resize',rs);
+const ps=Array.from({length:60},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vy:-(0.2+Math.random()*0.5),r:0.6+Math.random()*1.8,a:0.2+Math.random()*0.6}));
+(function loop(){x.fillStyle='#080c12';x.fillRect(0,0,cv.width,cv.height);
+ x.strokeStyle='rgba(30,46,69,0.5)';x.lineWidth=2;
+ (function br(cx0,cy0,len,ang,d){if(d<=0||len<6)return;const x2=cx0+Math.cos(ang)*len,y2=cy0+Math.sin(ang)*len;x.beginPath();x.moveTo(cx0,cy0);x.lineTo(x2,y2);x.stroke();br(x2,y2,len*0.72,ang-0.35,d-1);br(x2,y2,len*0.72,ang+0.35,d-1);})(cv.width/2,cv.height,cv.height*0.34,-Math.PI/2,7);
+ for(const p of ps){p.y+=p.vy;if(p.y<-5){p.y=cv.height+5;p.x=Math.random()*cv.width;}x.globalAlpha=p.a;x.fillStyle=Math.random()<0.5?'#7dd3e0':'#d4b778';x.beginPath();x.arc(p.x,p.y,p.r,0,7);x.fill();}x.globalAlpha=1;requestAnimationFrame(loop);})();
+</script>
+</body></html>
