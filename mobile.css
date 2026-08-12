@@ -35,16 +35,23 @@
 
 /* lokis-qa-loop: 44px minimum tap targets (auto-managed, do not duplicate) */
 @media (max-width: 480px) {
-  nav a, .nav a, header a, footer a,
-  a.btn, button, .btn, [role="button"] {
+  /* Every link/control gets the phone floor by default — bare <a> back-links and tag chips
+     included. Prose links are explicitly exempted below so article text isn't disrupted. */
+  a, nav a, .nav a, header a, footer a, .topbar a, .logo,
+  .card a, li > a, a.btn, button, .btn, [role="button"],
+  input, select, textarea, summary {
     min-height: 44px;
     min-width: 44px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
   }
+  .logo { min-width: 44px; padding: 8px 10px; font-size: 15px; }
+  .topbar .links { gap: 4px; }
+  .topbar .links a { padding: 8px 10px; min-width: 44px; }
   /* inline links inside prose must NOT be inflated — only chrome/controls get the 44px floor */
-  main p a, article p a, .prose a, li a.inline {
+  main p a, article p a, .prose a, li a.inline,
+  .tag a, a.tag, .breadcrumb a {
     min-height: 0;
     min-width: 0;
     display: inline;

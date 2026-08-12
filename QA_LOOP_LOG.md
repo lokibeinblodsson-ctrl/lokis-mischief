@@ -115,3 +115,31 @@ the JSON — not presented as historical scholarship.
 **Open queue (next ticks, bible order):** Rune Cast §05 (daily seeded draw + streak) →
 Jormungandr §02 (sequence + WebAudio) → Sleipnir §04 (lanes + powerup). The 6-scan funnel and the
 24-rune business glosses are also available now to build the diagnostic funnel + Rune Cast content.
+
+---
+
+## 2026-08-12 — tick 3 (audit cache bug + real 44px gaps fixed)
+
+**Root cause of the recurring tap-target findings:** `lokis_browser_audit.py` enabled `Network` but
+never called `Network.setCacheDisabled`. The theo VM Chrome is a long-lived profile that caches
+aggressively, so the audit had been measuring **stale cached pages from before every fix** — the
+44px CSS and meta descriptions "came back" on every run because they were never re-fetched. Added
+`Network.setCacheDisabled` to the audit (the gameplay test already had it). After that, a TRUE
+re-audit showed the real gaps, which were two genuine selector omissions:
+
+- The dominant nav container is `<div class="topbar">` — my original rule only matched `nav/.nav/
+  header/footer a`, so the topbar links (and the `.brand` logo) were never floored.
+- Card CTAs (`<a class="go">` inside `.card`), list CTAs (`li > a` guide links), and bare back-links
+  / tag chips (`<a>` with no class) were also uncovered.
+
+**Fix:** one shared `mobile.css` rule now floors **every `<a>` and form control** at <=480px, with
+explicit prose exemptions (`main p a`, `article p a`, `.prose a`, `.tag a`, `.breadcrumb a`) so
+article text is untouched. Re-audited with cache disabled: **0 tap-target findings across all pages**
+
+**Verified (cache-off audit):** 0 tap targets <44px, 0 missing meta descriptions, 0 mobile overflow,
+0 JS exceptions, 0 failed requests, only the pre-existing `services.html` duplicate-id `#automation`
+(deferred — anchor target, owner call). `node tests/run.js` pass 92/0, `play_games_cdp.py` pass 46/0.
+
+**Pitfall locked in:** ANY CDP measurement against the theo VM Chrome MUST disable cache, otherwise it
+silently tests the previous version of the file. This now applies to both `lokis_browser_audit.py`
+and `tests/play_games_cdp.py`.
