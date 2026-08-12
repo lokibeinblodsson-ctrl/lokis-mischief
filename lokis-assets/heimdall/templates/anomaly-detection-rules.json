@@ -1,1 +1,10 @@
-Placeholder: Bifrost Monitor — templates/anomaly-detection-rules.json
+{
+  "_placeholder": true,
+  "title": "Bifrost Monitor",
+  "persona": "heimdall",
+  "kind": "templates",
+  "tool": null,
+  "file": "lokis-assets/heimdall/templates/anomaly-detection-rules.json",
+  "implemented": false,
+  "note": "Automation workflow/template stub for the Loki's Mischief persona knowledge base. Replace with the exported n8n/Make.com JSON when built."
+}

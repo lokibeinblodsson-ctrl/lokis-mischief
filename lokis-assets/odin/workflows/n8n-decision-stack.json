@@ -1,1 +1,10 @@
-Placeholder: Runecraft OS — workflows/n8n-decision-stack.json
+{
+  "_placeholder": true,
+  "title": "Runecraft OS",
+  "persona": "odin",
+  "kind": "workflows",
+  "tool": "n8n",
+  "file": "lokis-assets/odin/workflows/n8n-decision-stack.json",
+  "implemented": false,
+  "note": "Automation workflow/template stub for the Loki's Mischief persona knowledge base. Replace with the exported n8n/Make.com JSON when built."
+}

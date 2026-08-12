@@ -1,1 +1,10 @@
-Placeholder: Bifrost Monitor — workflows/make-observability-stack.json
+{
+  "_placeholder": true,
+  "title": "Bifrost Monitor",
+  "persona": "heimdall",
+  "kind": "workflows",
+  "tool": "make",
+  "file": "lokis-assets/heimdall/workflows/make-observability-stack.json",
+  "implemented": false,
+  "note": "Automation workflow/template stub for the Loki's Mischief persona knowledge base. Replace with the exported n8n/Make.com JSON when built."
+}

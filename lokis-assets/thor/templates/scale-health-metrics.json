@@ -1,1 +1,10 @@
-Placeholder: Mjölnir Infrastructure — templates/scale-health-metrics.json
+{
+  "_placeholder": true,
+  "title": "Mjölnir Infrastructure",
+  "persona": "thor",
+  "kind": "templates",
+  "tool": null,
+  "file": "lokis-assets/thor/templates/scale-health-metrics.json",
+  "implemented": false,
+  "note": "Automation workflow/template stub for the Loki's Mischief persona knowledge base. Replace with the exported n8n/Make.com JSON when built."
+}

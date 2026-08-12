@@ -1,1 +1,10 @@
-Placeholder: Skald's Quill — workflows/make-content-engine.json
+{
+  "_placeholder": true,
+  "title": "Skald's Quill",
+  "persona": "bragi",
+  "kind": "workflows",
+  "tool": "make",
+  "file": "lokis-assets/bragi/workflows/make-content-engine.json",
+  "implemented": false,
+  "note": "Automation workflow/template stub for the Loki's Mischief persona knowledge base. Replace with the exported n8n/Make.com JSON when built."
+}

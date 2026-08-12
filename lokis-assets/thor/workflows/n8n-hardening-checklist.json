@@ -1,1 +1,10 @@
-Placeholder: Mjölnir Infrastructure — workflows/n8n-hardening-checklist.json
+{
+  "_placeholder": true,
+  "title": "Mjölnir Infrastructure",
+  "persona": "thor",
+  "kind": "workflows",
+  "tool": "n8n",
+  "file": "lokis-assets/thor/workflows/n8n-hardening-checklist.json",
+  "implemented": false,
+  "note": "Automation workflow/template stub for the Loki's Mischief persona knowledge base. Replace with the exported n8n/Make.com JSON when built."
+}
