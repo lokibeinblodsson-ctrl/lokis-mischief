@@ -78,3 +78,40 @@ typecheck exit 0; test suite pass=92 fail=0.
   streak) are the queue for the next ticks, in the bible's own implementation order.
 - Pitfall recorded: the theo Chrome profile served a CACHED `engine.js`, silently testing the old
   version — CDP tests must set `Network.setCacheDisabled`.
+
+---
+
+## 2026-08-12 — tick 2 (second owner artifact + Hel rebuilt to §03)
+
+**Second Meta AI artifact recovered** (`https://www.meta.ai/share/a/f525998f-...`): a **premium
+playable 5-game arcade + 6-scan diagnostic funnel**. Signed payload:
+`https://1222243714311245.a.metaaiusercontent.com/html?artifact_uuid=f525998f-...&hash=Q5fpDAFtx0JbjquHXYYsuxeJnIYZ`
+(204 KB minified React). Rendered in the theo VM Chrome and extracted the OWNER'S canonical
+content into `lokis-mischief/data/arcade-content.json`:
+- **12-soul Hel deck** with intended `correct` routing (VIP refund $2k=human, Invoice $5k=auto, …).
+- **24 business rune glosses** (Fehu→"wealth systems", … Dagaz→"breakthrough transformation").
+- **6 free diagnostic scans** (Mischief Scan, Yggdrasil Health, Huginn & Muninn, Heimdall Signal,
+  Norns Workflow, Týr Accountability) — the funnel entry points.
+- **5 diagnostic archetypes** (Fenrir Bottleneck, Raven's Nest, Jörmungandr Loop, Bifröst Breakdown,
+  Valhalla of Heroics) with fix playbooks.
+NOTE: the rune divinatory/business meanings are the owner's interpretive layer, flagged as such in
+the JSON — not presented as historical scholarship.
+
+**Hel game rebuilt to bible §03** (was on broken v1 logic):
+- Replaced guessed 2-word labels with the owner's 12-soul deck (fetched from `data/arcade-content.json`,
+  hardcoded fallback so it still runs from `file://`).
+- ONE shared essence pool (+10 correct / −10 wrong) instead of the old per-pile double-count.
+- souls/min now measured across the whole run (was resetting every wave → absurd numbers).
+- Swipe input added (60px threshold per spec); tap falls back to screen-half.
+- Wave 4+ ambiguous souls, wave 7+ paired spawns; linear 5.0s→2.0s timer ramp across 10 waves.
+- Colourblind-safe routing cue: a head shape = human, a box = machine (not colour alone).
+- Real multi-word label wrapping on the orbs.
+- S-rank end screen (90%+ accuracy) with score = essence + acc×2 + speed bonus; persisted best.
+- Lesson copy matched the owner's arcade ("80% automate, 20% human = Hel's balance").
+
+**Verified:** typecheck 0, `tests/run.js` pass 92/fail 0, `play_games_cdp.py` **pass 46/fail 0**
+(new Hel section: deck load, routing rules, essence math, timeout miss, S-rank end, persistence).
+
+**Open queue (next ticks, bible order):** Rune Cast §05 (daily seeded draw + streak) →
+Jormungandr §02 (sequence + WebAudio) → Sleipnir §04 (lanes + powerup). The 6-scan funnel and the
+24-rune business glosses are also available now to build the diagnostic funnel + Rune Cast content.

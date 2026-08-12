@@ -16,32 +16,48 @@
 <canvas id="bg"></canvas>
 <div class="topbar"><a href="../index.html" class="brand">✦ LOKI'S MISCHIEF</a>
   <div><a href="../directory.html">Directory</a><a href="../services.html">Services</a><a href="../lore.html">Lore</a></div></div>
-<div class="hud"><span>Wave <b id="wave">1</b>/10</span><span>Souls/min <b id="spm">0</b></span><span>Acc <b id="acc">100</b>%</span></div>
+<div class="hud"><span>Wave <b id="wave">1</b>/10</span><span>Souls/min <b id="spm">0</b></span><span>Acc <b id="acc">100</b>%</span><span>Essence <b id="ess">0</b></span></div>
 <div class="hel-tip" id="tip">⚖️ HEL — <b style="color:#7dd3e0">A / ← / swipe left = AUTOMATE</b> · <b style="color:#d4b778">D / → / swipe right = KEEP HUMAN</b></div>
 <div id="game"></div>
 <div id="stage"></div>
 <script src="../games/engine.js"></script>
 <script>
 const G={ id:'hel', deity:'hel',
-  lesson:'You built the boundary first — route every lead before the pile forms. Get Odin\'s Decision OS triage workflow.',
+  lesson:'Not every soul deserves Helheim. Not every task deserves you. 80% automate, 20% human = Hel’s balance. Your inbox is the river Gjöll — build a bridge. Get Odin\'s Decision OS triage workflow.',
   mount(){ buildIntro(); }, onResize(w,h){ if(cv){cv.width=w;cv.height=h;} } };
 Engine._game=G;
 
 const C=Engine.C;
 let cv,cx,w,h,state='idle';
-let souls=[], wave=1, solved=0, correct=0, total=0, waveStart=0, essAuto=0, essHuman=0, timerBase=5;
-const LABELS=[
-  ['VIP','refund'],['Cold','lead'],['Invoice','$5k'],['Angry','tweet'],['Demo','no-show'],
-  ['Upsell','ready'],['Charge','back'],['New','signup'],['Support','ticket'],['Renewal','due'],['Bug','report'],['Referral','in']
+let souls=[], wave=1, solved=0, correct=0, total=0, waveStart=0, gameStart=0, essence=0, timerBase=5;
+const WAVES=10, PER_WAVE=8, T_START=5.0, T_END=2.0;
+
+// The soul deck is the OWNER'S canonical routing list (data/arcade-content.json, recovered from the
+// premium-arcade artifact) — not guessed labels. `correct` is the intended routing for each ticket.
+// Loaded async with a hardcoded fallback so the game still runs if the fetch fails (file:// use).
+let DECK=[
+  {label:"VIP refund? $2k",correct:"human"},{label:"Duplicate entry",correct:"auto"},
+  {label:"Cold lead follow-up",correct:"auto"},{label:"Invoice $5k",correct:"auto"},
+  {label:"Password reset",correct:"auto"},{label:"CEO approval needed",correct:"human"},
+  {label:"Custom quote",correct:"human"},{label:"Escalated complaint",correct:"human"},
+  {label:"Weekly report",correct:"auto"},{label:"Contract redline",correct:"human"},
+  {label:"Lead enrichment",correct:"auto"},{label:"Strategy decision",correct:"human"}
 ];
-// a soul should be KEEP HUMAN if it needs a person (VIP, Referral, New, Upsell, Angry, Charge, Bug, Support) else AUTOMATE
-function shouldHuman(l){ return ['VIP','Referral','New','Upsell','Angry','Charge','Bug','Support','Demo'].includes(l[0]); }
+// Wave 4+ ambiguity (bible §03): souls that LOOK routine but need a person.
+const AMBIGUOUS=[
+  {label:"Angry VIP?",correct:"human"},{label:"Refund, repeat buyer",correct:"human"},
+  {label:"Invoice, disputed",correct:"human"},{label:"Bulk unsubscribe",correct:"auto"},
+  {label:"Churn risk ping",correct:"human"},{label:"Duplicate, big account",correct:"human"}
+];
+fetch('../data/arcade-content.json').then(r=>r.json()).then(d=>{ if(d&&d.souls&&d.souls.length) DECK=d.souls; }).catch(()=>{});
+function shouldHuman(s){ return s.correct==='human'; }
 
 function buildIntro(){
   document.getElementById('stage').innerHTML=`<div class="panel">
     <h1>⚖️ Hel — Soul Sorting</h1>
     <p>Souls drift toward Hel's gate. Sort fast: <b style="color:#7dd3e0">A / ← / swipe left = AUTOMATE</b> the routine ones, <b style="color:#d4b778">D / → / swipe right = KEEP HUMAN</b> the ones needing a soul.</p>
-    <p style="color:var(--muted);font-size:12px">A 5-second ring ticks each soul. Wrong call costs essence. 10 waves of 8. Fast + accurate = a high souls/min.</p>
+    <p>10 waves of 8 souls. Each gets a 5.0s→2.0s ring tick. Wrong call (or a timeout) drains essence. Wave 4+ hides ambiguous souls that look routine but need a human; wave 7+ sends them in pairs — sort faster. <b style="color:#7dd3e0">A / ← / swipe left = AUTOMATE</b> · <b style="color:#d4b778">D / → / swipe right = KEEP HUMAN</b>. 90%+ accuracy = S rank.</p>
+    <p style="color:var(--muted);font-size:12px">Keys: <b>A/D</b> or <b>←/→</b> route · <b>P</b>/<b>Esc</b> pause · <b>M</b> sound. On touch, a 60px swipe left/right routes; a tap uses the side you pressed.</p>
     <div class="lesson">✦ Best converter: this is your agency's triage in 60 seconds.</div>
     <div class="row"><button class="btn" id="startBtn">Open the Gate →</button></div></div>`;
   document.getElementById('startBtn').onclick=start;
@@ -50,27 +66,54 @@ function start(){
   document.getElementById('stage').innerHTML=''; cv=document.createElement('canvas'); cv.className='game';
   cv.width=innerWidth; cv.height=innerHeight; document.getElementById('game').appendChild(cv); cx=cv.getContext('2d');
   Engine.fitCanvas(cv); w=cv.width; h=cv.height;
-  cv.addEventListener('pointerdown',onDown);
+  cv.addEventListener('pointerdown',onDown); cv.addEventListener('pointerup',onUp);
   addEventListener('keydown',onKey);
   state='playing';
   Engine.setState('playing'); Engine.startLoop(frame);
-  wave=1; solved=0; correct=0; total=0; essAuto=0; essHuman=0; timerBase=5; waveStart=performance.now();
+  wave=1; solved=0; correct=0; total=0; essence=0; timerBase=T_START;
+  gameStart=performance.now(); waveStart=gameStart;
   document.getElementById('wave').textContent=1; spawnWave();
 }
 function spawnWave(){
   souls=[]; solved=0;
-  for(let i=0;i<8;i++) setTimeout(()=>{ if(state==='playing') spawnSoul(); }, i*430);
+  // Wave 7+ spawns souls in PAIRS (bible: "double orb — choose faster")
+  const dbl = wave>=7;
+  const gap = dbl ? 760 : 430;
+  for(let i=0;i<PER_WAVE;i+= (dbl?2:1)){
+    setTimeout(()=>{ if(state!=='playing') return; spawnSoul(-1); if(dbl) spawnSoul(1); }, (i/(dbl?2:1))*gap);
+  }
   waveStart=performance.now();
 }
-function spawnSoul(){
-  const lab=LABELS[Math.floor(Math.random()*LABELS.length)];
-  const x=w/2 + (Math.random()*2-1)*(w*0.30);
-  souls.push({lab, x, y:-40, decided:false, dead:false, t0:performance.now(), life:timerBase*1000});
+function spawnSoul(side){
+  // Wave 4+ mixes in ambiguous souls; earlier waves stay unambiguous so the player learns the rule
+  const pool = (wave>=4 && Math.random()<0.35) ? AMBIGUOUS : DECK;
+  const src = pool[Math.floor(Math.random()*pool.length)];
+  const spread = w*0.30;
+  const x = (side===undefined||side===-1&&Math.random()<0.5)
+    ? w/2 + (Math.random()*2-1)*spread
+    : w/2 + side*spread*0.7;
+  souls.push({src, lab:String(src.label), x, y:-40, decided:false, dead:false,
+    t0:performance.now(), life:timerBase*1000});
 }
+// Swipe support (bible §03: touch threshold 60px). A tap that doesn't travel far enough falls back
+// to "which half of the screen did you press", so mouse users keep the old click behaviour.
+let dragFrom=null;
 function onDown(e){
-  const r=cv.getBoundingClientRect(); const x=e.clientX-r.left, y=e.clientY-r.top;
+  const r=cv.getBoundingClientRect();
+  dragFrom={x:e.clientX-r.left, y:e.clientY-r.top, id:e.pointerId};
+}
+function onUp(e){
+  if(!dragFrom) return;
+  const r=cv.getBoundingClientRect();
+  const x=e.clientX-r.left, y=e.clientY-r.top;
+  const dx=x-dragFrom.x;
+  const side = Math.abs(dx)>=60 ? (dx<0?'auto':'human') : (dragFrom.x < w/2 ? 'auto':'human');
+  // prefer a soul actually under the press; otherwise route the soul nearest the gate
+  let hit=null;
   for(const s of souls){ if(s.decided||s.dead) continue;
-    if((x-s.x)**2+(y-s.y)**2 < 60*60){ decide(s, x < w/2 ? 'auto':'human'); return; } }
+    if((dragFrom.x-s.x)**2+(dragFrom.y-s.y)**2 < 60*60){ hit=s; break; } }
+  if(hit) decide(hit, side); else pickSide(side);
+  dragFrom=null;
 }
 function onKey(e){
   if(e.key==='a'||e.key==='A'||e.key==='ArrowLeft'){ pickSide('auto'); }
@@ -83,14 +126,25 @@ function pickSide(side){
 }
 function decide(s,side){
   s.decided=true; total++;
-  const ok=(side==='human')===shouldHuman(s.lab);
-  if(ok){ correct++; if(side==='auto')essAuto+=10; else essHuman+=10; Engine.blip(ok?660:200,.09,'sine',.18); }
-  else { if(side==='auto')essAuto-=10; else essHuman-=10; Engine.blip(150,.12,'sawtooth',.16); }
-  s.dead=true; s.fly=side;
+  const ok=(side==='human')===shouldHuman(s.src);
+  // Essence is ONE shared health pool (bible: +10 correct / -10 wrong), not per-pile.
+  if(ok){ correct++; essence+=10; Engine.blip(660,.09,'sine',.18); }
+  else   { essence-=10; Engine.blip(150,.12,'sawtooth',.16); }
+  s.ok=ok; s.dead=true; s.fly=side;
+  if(side==='auto') pileAuto++; else pileHuman++;
   solved++;
-  if(solved>=8){ wave++; if(wave>10){ return end(); } document.getElementById('wave').textContent=wave;
-    timerBase=Math.max(2,timerBase-0.3); setTimeout(spawnWave,400); }
+  advanceIfWaveDone();
 }
+function advanceIfWaveDone(){
+  if(solved < PER_WAVE) return;
+  wave++;
+  if(wave>WAVES){ end(); return; }
+  document.getElementById('wave').textContent=wave;
+  // linear ramp 5.0s -> 2.0s across the 10 waves (bible §03)
+  timerBase = T_START - (T_START-T_END) * ((wave-1)/(WAVES-1));
+  setTimeout(spawnWave,400);
+}
+let pileAuto=0, pileHuman=0;
 function frame(dt){
   if(state!=='playing') return;
   cx.clearRect(0,0,w,h);
@@ -100,8 +154,8 @@ function frame(dt){
   const gateY=h*0.62;
   cx.strokeStyle='rgba(125,211,224,.25)'; cx.lineWidth=2; cx.beginPath(); cx.moveTo(0,gateY); cx.lineTo(w,gateY); cx.stroke();
   // piles
-  drawPile(0.25*w, '#7dd3e0', 'AUTOMATE', essAuto);
-  drawPile(0.75*w, '#d4b778', 'KEEP HUMAN', essHuman);
+  drawPile(0.25*w, '#7dd3e0', 'AUTOMATE', pileAuto);
+  drawPile(0.75*w, '#d4b778', 'KEEP HUMAN', pileHuman);
   // souls
   for(const s of souls){
     if(s.decided){
@@ -109,17 +163,21 @@ function frame(dt){
       if(Math.abs(s.y-h*0.9)<6){ s.done=true; }
     } else { s.y += (gateY - s.y)*Math.min(1,dt*0.3) + dt*40; }
     const tleft=1-(performance.now()-s.t0)/s.life;
-    if(!s.decided && tleft<=0){ // timeout = miss
-      total++; s.decided=true; s.dead=true; s.fly=shouldHuman(s.lab)?'human':'auto';
-      if(s.fly==='auto')essAuto-=10; else essHuman-=10; solved++;
-      if(solved>=8){ wave++; if(wave>10){return end();} document.getElementById('wave').textContent=wave; timerBase=Math.max(2,timerBase-0.3); setTimeout(spawnWave,400);} }
+    if(!s.decided && tleft<=0){ // timeout = a wrong call: the queue decided for you
+      total++; s.decided=true; s.dead=true; s.ok=false;
+      s.fly=shouldHuman(s.src)?'human':'auto';
+      if(s.fly==='auto') pileAuto++; else pileHuman++;
+      essence-=10; solved++;
+      advanceIfWaveDone();
+    }
     drawSoul(s,tleft);
   }
   souls=souls.filter(s=>!(s.done&&s.decided)|| !s.decided);
-  // hud
-  const mins=(performance.now()-waveStart)/60000;
-  document.getElementById('spm').textContent= Math.round(solved/Math.max(mins,0.016));
+  // hud — souls/min measured across the WHOLE run (it used to reset every wave and read wildly high)
+  const mins=(performance.now()-gameStart)/60000;
+  document.getElementById('spm').textContent= Math.round(total/Math.max(mins,0.016));
   document.getElementById('acc').textContent= total?Math.round(correct/total*100):100;
+  const ee=document.getElementById('ess'); if(ee) ee.textContent=Math.max(0,essence);
 }
 function drawHel(){
   const cx0=w/2, cy0=h*0.16;
@@ -132,14 +190,25 @@ function drawHel(){
   cx.fillStyle=C.gold; cx.beginPath(); cx.moveTo(cx0-20,cy0-40); cx.lineTo(cx0,cy0-52); cx.lineTo(cx0+20,cy0-40); cx.lineTo(cx0+12,cy0-44); cx.lineTo(cx0-12,cy0-44); cx.closePath(); cx.fill();
 }
 function drawSoul(s,tleft){
-  const col = shouldHuman(s.lab)?C.gold:C.ice;
+  const human = shouldHuman(s.src);
+  const col = human?C.gold:C.ice;
   cx.save(); cx.translate(s.x,s.y);
-  cx.fillStyle='rgba(125,211,224,.18)'; cx.beginPath(); cx.arc(0,0,28,0,7); cx.fill();
-  cx.fillStyle=col; cx.font='600 13px Inter'; cx.textAlign='center';
-  cx.fillText(s.lab[0],0,-4); cx.fillText(s.lab[1],0,12);
+  cx.fillStyle='rgba(125,211,224,.18)'; cx.beginPath(); cx.arc(0,0,30,0,7); cx.fill();
+  // colourblind-safe: a SHAPE marks the routing hint, not colour alone
+  cx.strokeStyle=col; cx.lineWidth=2;
+  if(human){ cx.beginPath(); cx.arc(0,-16,5,0,7); cx.stroke(); }        // head = person
+  else { cx.strokeRect(-5,-21,10,10); }                                  // box = machine
+  // wrap the label onto up to two lines (the deck has multi-word tickets)
+  cx.fillStyle=col; cx.font='600 12px Inter'; cx.textAlign='center';
+  const words=s.lab.split(' '); const lines=[]; let cur='';
+  for(const wd of words){ const t=cur?cur+' '+wd:wd;
+    if(cx.measureText(t).width>66 && cur){ lines.push(cur); cur=wd; } else cur=t; }
+  if(cur) lines.push(cur);
+  const start = lines.length>1 ? -2 : 4;
+  lines.slice(0,2).forEach((ln,i)=>cx.fillText(ln,0,start+i*14));
   // timer ring
   cx.strokeStyle = tleft<0.25?'#ef4444':C.ice; cx.lineWidth=3;
-  cx.beginPath(); cx.arc(0,0,34,-Math.PI/2, -Math.PI/2 + Math.max(0,tleft)*2*Math.PI); cx.stroke();
+  cx.beginPath(); cx.arc(0,0,36,-Math.PI/2, -Math.PI/2 + Math.max(0,tleft)*2*Math.PI); cx.stroke();
   cx.restore();
 }
 function drawPile(px,col,label,ess){
@@ -147,13 +216,20 @@ function drawPile(px,col,label,ess){
   cx.fillStyle=col; cx.globalAlpha=0.12; cx.beginPath(); cx.ellipse(px,py,70,46,0,0,7); cx.fill(); cx.globalAlpha=1;
   cx.strokeStyle=col; cx.lineWidth=2; cx.beginPath(); cx.ellipse(px,py,70,46,0,0,7); cx.stroke();
   cx.fillStyle=col; cx.font='700 13px Cinzel'; cx.textAlign='center'; cx.fillText(label,px,py-54);
-  cx.fillStyle='#cbd5e1'; cx.font='600 12px Inter'; cx.fillText((ess>0?ess:0)+' essence',px,py+4);
+  cx.fillStyle='#cbd5e1'; cx.font='600 12px Inter'; cx.fillText((ess>0?ess:0)+' sorted',px,py+4);
 }
 function end(){
   state='lose'; Engine.startLoop(()=>{});
-  cv.removeEventListener('pointerdown',onDown); removeEventListener('keydown',onKey);
-  const spm=Math.round(solved/((performance.now()-waveStart)/60000)||1);
-  Engine.showEnd({ title:'⚖️ The Gate Holds', score:solved, sub:`${spm} souls/min · ${total?Math.round(correct/total*100):100}% acc`, lesson:G.lesson, deity:G.deity, shareCard:null });
+  cv.removeEventListener('pointerdown',onDown); cv.removeEventListener('pointerup',onUp);
+  removeEventListener('keydown',onKey);
+  const acc = total?Math.round(correct/total*100):0;
+  const spm = Math.round(total/Math.max((performance.now()-gameStart)/60000,0.016));
+  const rank = acc>=90 ? 'S — Hel\'s Equal' : acc>=75 ? 'A' : acc>=55 ? 'B' : 'C';
+  // Score = essence 0..800 + accuracy*2 + speed bonus (bible: max ~800 essence at 90%)
+  const score = Math.max(0,essence) + acc*2 + Math.min(40, spm*2);
+  Engine.showEnd({ won: acc>=90, title:'⚖️ The Gate Holds', score,
+    sub:`${spm} souls/min · ${acc}% acc · ${Math.max(0,essence)} essence · Rank ${rank}`,
+    lesson:G.lesson, deity:G.deity, meta:{acc,spm,essence:Math.max(0,essence),rank} });
 }
 G.mount();
 </script>

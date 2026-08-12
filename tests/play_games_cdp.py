@@ -133,6 +133,39 @@ def main():
         check("best score persisted",
               (t.ev("localStorage.getItem('loki_best_fenrir')") or "").startswith("{"))
 
+        # ---------- hel mechanics ----------
+        print("[2b] hel — soul sorting (bible §03)")
+        t.go("games/hel.html", 2.5)
+        # wait for the async deck fetch (fallback is built in if it fails)
+        time.sleep(1.2)
+        check("10 waves of 8 souls", t.ev("WAVES") == 10 and t.ev("PER_WAVE") == 8)
+        check("timer ramp 5.0s -> 2.0s", abs(t.ev("T_START") - 5.0) < 0.001 and abs(t.ev("T_END") - 2.0) < 0.001)
+        # the canonical deck loads (owner's artifact), 12 souls minimum
+        deck = t.ev("DECK.length")
+        check("owner soul deck loaded (>=12)", (deck or 0) >= 12, deck)
+        check("ambiguous wave pool present", t.ev("AMBIGUOUS.length") >= 4)
+        check("routing rule: VIP refund -> human", t.ev("DECK.find(s=>s.label.startsWith('VIP refund')).correct") == "human")
+        check("routing rule: Invoice $5k -> auto", t.ev("DECK.find(s=>s.label.startsWith('Invoice $5k')).correct") == "auto")
+        t.ev("document.getElementById('startBtn').click()")
+        time.sleep(0.6)
+        check("state -> playing after start", t.ev("Engine.state") == "playing")
+        # force a known soul + correct routing, then a wrong one
+        t.ev("souls.length=0; spawnSoul(); souls[0].src={label:'Invoice $5k',correct:'auto'};")
+        t.ev("essence=0; correct=0; total=0; decide(souls[0],'auto');")
+        check("correct auto route +10 essence", t.ev("essence") == 10 and t.ev("correct") == 1)
+        t.ev("spawnSoul(); souls[souls.length-1].src={label:'VIP refund? $2k',correct:'human'};")
+        t.ev("var s=souls[souls.length-1]; decide(s,'auto');")
+        check("wrong auto route -10 essence", t.ev("essence") == 0)
+        # timeout path: expired soul counts as a wrong call
+        t.ev("spawnSoul(); var s2=souls[souls.length-1]; s2.t0=1; s2.life=1;")
+        time.sleep(0.3)
+        check("timeout drains essence like a miss", t.ev("essence") < 0, t.ev("essence"))
+        # S-rank end screen computes and persists
+        t.ev("essence=800; correct=90; total=100; end();")
+        time.sleep(0.4)
+        check("end screen shows share button", t.ev("!!document.getElementById('shareBtn')"))
+        check("best score persisted", (t.ev("localStorage.getItem('loki_best_hel')") or "").startswith("{"))
+
         # ---------- pause / resume across all games ----------
         print("[3] pause/resume + no console errors, every game page")
         for p in ("games/fenrir.html", "games/hel.html", "games/jormungandr.html",

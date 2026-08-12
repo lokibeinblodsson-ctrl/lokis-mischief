@@ -1,0 +1,277 @@
+{
+ "_source": "Owner-shared Meta AI artifact loki-playable-5-games.html (recovered 2026-08-12)",
+ "_note": "Hel soul deck: 'correct' is the intended routing. Divinatory/business rune glosses are an interpretive layer, not historical scholarship.",
+ "souls": [
+  {
+   "label": "VIP refund? $2k",
+   "correct": "human",
+   "icon": "👤"
+  },
+  {
+   "label": "Duplicate entry",
+   "correct": "auto",
+   "icon": "📋"
+  },
+  {
+   "label": "Cold lead follow-up",
+   "correct": "auto",
+   "icon": "❄️"
+  },
+  {
+   "label": "Invoice $5k",
+   "correct": "auto",
+   "icon": "🧾"
+  },
+  {
+   "label": "Password reset",
+   "correct": "auto",
+   "icon": "🔑"
+  },
+  {
+   "label": "CEO approval needed",
+   "correct": "human",
+   "icon": "👑"
+  },
+  {
+   "label": "Custom quote",
+   "correct": "human",
+   "icon": "💎"
+  },
+  {
+   "label": "Escalated complaint",
+   "correct": "human",
+   "icon": "🔥"
+  },
+  {
+   "label": "Weekly report",
+   "correct": "auto",
+   "icon": "📊"
+  },
+  {
+   "label": "Contract redline",
+   "correct": "human",
+   "icon": "📝"
+  },
+  {
+   "label": "Lead enrichment",
+   "correct": "auto",
+   "icon": "⚡"
+  },
+  {
+   "label": "Strategy decision",
+   "correct": "human",
+   "icon": "♟️"
+  }
+ ],
+ "scans": [
+  {
+   "title": "Mischief Scan",
+   "promise": "Find where time, money, and attention quietly disappear.",
+   "icon": "🌀",
+   "color": "#d4b778"
+  },
+  {
+   "title": "Yggdrasil Health",
+   "promise": "See which branch is strained and affecting the whole tree.",
+   "icon": "🌳",
+   "color": "#7ee081"
+  },
+  {
+   "title": "Huginn & Muninn",
+   "promise": "Discover what your business knows, forgets, and loses.",
+   "icon": "🐦‍⬛",
+   "color": "#7dd3e0"
+  },
+  {
+   "title": "Heimdall Signal",
+   "promise": "Detect warning signs before they become expensive problems.",
+   "icon": "👁️",
+   "color": "#a78bfa"
+  },
+  {
+   "title": "Norns Workflow",
+   "promise": "Which workflows are destined to stay manual — and which can be rewritten.",
+   "icon": "🧶",
+   "color": "#f472b6"
+  },
+  {
+   "title": "Týr Accountability",
+   "promise": "Clear ownership or heroics holding it together?",
+   "icon": "⚖️",
+   "color": "#fb7185"
+  }
+ ],
+ "archetypes": [
+  {
+   "name": "The Fenrir Bottleneck",
+   "desc": "Growth choked by one person, approval, or system.",
+   "fix": "Map 3 workflows that depend on one person. Document triggers, inputs, owners."
+  },
+  {
+   "name": "The Raven's Nest",
+   "desc": "Knowledge scattered across inboxes, sheets, and memory.",
+   "fix": "Centralize knowledge, build searchable vault, kill repeat questions."
+  },
+  {
+   "name": "The Jörmungandr Loop",
+   "desc": "Trapped in duplicate work and rework cycles.",
+   "fix": "Standardize handoffs, integrate tools, automate forms."
+  },
+  {
+   "name": "The Bifröst Breakdown",
+   "desc": "Capable teams, unreliable handoffs.",
+   "fix": "Automated notifications, SLAs, cross-functional dashboards."
+  },
+  {
+   "name": "Valhalla of Heroics",
+   "desc": "Succeeds because heroes rescue broken processes.",
+   "fix": "Document SOPs, capture knowledge, reduce hero dependency."
+  }
+ ],
+ "runes_business": [
+  {
+   "s": "ᚠ",
+   "name": "Fehu",
+   "phon": "FEH-hoo",
+   "biz": "Wealth systems — cashflow, pricing, margin leaks."
+  },
+  {
+   "s": "ᚢ",
+   "name": "Uruz",
+   "phon": "OO-rooz",
+   "biz": "Capacity — team strength, throughput, resilience."
+  },
+  {
+   "s": "ᚦ",
+   "name": "Thurisaz",
+   "phon": "THOOR-ee-saz",
+   "biz": "Breakthrough barrier — what must be smashed first."
+  },
+  {
+   "s": "ᚨ",
+   "name": "Ansuz",
+   "phon": "AHN-sooz",
+   "biz": "Signal — communication, docs, message clarity."
+  },
+  {
+   "s": "ᚱ",
+   "name": "Raidho",
+   "phon": "RYE-dho",
+   "biz": "Journey — handoffs, customer journey, logistics."
+  },
+  {
+   "s": "ᚲ",
+   "name": "Kenaz",
+   "phon": "KAY-naz",
+   "biz": "Insight — visibility, reporting, truth-finding."
+  },
+  {
+   "s": "ᚷ",
+   "name": "Gebo",
+   "phon": "GEH-bo",
+   "biz": "Exchange — partnerships, contracts, value exchange."
+  },
+  {
+   "s": "ᚹ",
+   "name": "Wunjo",
+   "phon": "WOON-yo",
+   "biz": "Alignment — morale, motivation, retention."
+  },
+  {
+   "s": "ᚺ",
+   "name": "Hagalaz",
+   "phon": "HAH-ga-laz",
+   "biz": "Disruption — breakage points, fragile processes."
+  },
+  {
+   "s": "ᚾ",
+   "name": "Nauthiz",
+   "phon": "NOW-theez",
+   "biz": "Constraint — bottlenecks, scarcity mindset."
+  },
+  {
+   "s": "ᛁ",
+   "name": "Isa",
+   "phon": "EE-sa",
+   "biz": "Standstill — approvals stuck, frozen decisions."
+  },
+  {
+   "s": "ᛃ",
+   "name": "Jera",
+   "phon": "YAIR-a",
+   "biz": "Harvest — cycles, recurring revenue, retention loops."
+  },
+  {
+   "s": "ᛇ",
+   "name": "Eihwaz",
+   "phon": "EYE-waz",
+   "biz": "Root system — infrastructure, Yggdrasil backbone."
+  },
+  {
+   "s": "ᛈ",
+   "name": "Perthro",
+   "phon": "PER-thro",
+   "biz": "Hidden bag — shadow work, workarounds, secret steps."
+  },
+  {
+   "s": "ᛉ",
+   "name": "Algiz",
+   "phon": "AL-geez",
+   "biz": "Guard — risk, compliance, protection gaps."
+  },
+  {
+   "s": "ᛋ",
+   "name": "Sowilo",
+   "phon": "so-WEE-lo",
+   "biz": "Win — what lights up when it works."
+  },
+  {
+   "s": "ᛏ",
+   "name": "Tiwaz",
+   "phon": "TEE-waz",
+   "biz": "Ownership — Týr’s accountability, who owns what."
+  },
+  {
+   "s": "ᛒ",
+   "name": "Berkano",
+   "phon": "BER-ka-no",
+   "biz": "Growth — onboarding, nurturing new capability."
+  },
+  {
+   "s": "ᛖ",
+   "name": "Ehwaz",
+   "phon": "AY-waz",
+   "biz": "Tandem — cross-team trust, paired work."
+  },
+  {
+   "s": "ᛗ",
+   "name": "Mannaz",
+   "phon": "MAHN-naz",
+   "biz": "Human — judgment that must stay human."
+  },
+  {
+   "s": "ᛚ",
+   "name": "Laguz",
+   "phon": "LAH-gooz",
+   "biz": "Flow — information current, where it pools."
+  },
+  {
+   "s": "ᛝ",
+   "name": "Ingwaz",
+   "phon": "ING-waz",
+   "biz": "Store — knowledge vault, seed bank."
+  },
+  {
+   "s": "ᛟ",
+   "name": "Othala",
+   "phon": "OH-tha-la",
+   "biz": "Inheritance — legacy systems, institutional memory."
+  },
+  {
+   "s": "ᛞ",
+   "name": "Dagaz",
+   "phon": "DAH-gaz",
+   "biz": "Breakthrough — daylight moment, transformation."
+  }
+ ]
+}
