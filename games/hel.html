@@ -7,132 +7,151 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../games/engine.css">
-<style>
-  #game{position:fixed;inset:0;z-index:1}
-  .orb{position:absolute;width:96px;height:96px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-    text-align:center;font-size:11px;font-weight:600;color:#04121a;background:radial-gradient(circle at 35% 30%,#cfe9f2,#7dd3e0);
-    box-shadow:0 6px 18px rgba(0,0,0,.5);padding:6px;line-height:1.15}
-  .pile{position:fixed;bottom:0;width:50%;height:30%;z-index:2;display:flex;align-items:flex-end;justify-content:center;
-    font-family:'Cinzel',serif;font-weight:700;font-size:14px;padding-bottom:10px}
-  #autoPile{left:0;background:linear-gradient(180deg,transparent,rgba(125,211,224,.12));color:var(--ice);border-top:2px solid var(--ice)}
-  #humanPile{right:0;background:linear-gradient(180deg,transparent,rgba(212,183,120,.12));color:var(--gold);border-top:2px solid var(--gold)}
-  .timer{position:absolute;border:2px solid var(--ice);border-radius:50%;width:40px;height:40px;pointer-events:none}
-  @media(max-width:640px){.orb{width:74px;height:74px;font-size:9px}.pile{height:22%;font-size:12px}}
-  .hel{position:fixed;top:64px;left:50%;transform:translateX(-50%);z-index:2;text-align:center;font-size:12px;color:var(--muted)}
-</style>
+<style>#game{position:fixed;inset:0;z-index:1}</style>
 </head>
 <body>
 <canvas id="bg"></canvas>
 <div class="topbar"><a href="../index.html" class="brand">✦ LOKI'S MISCHIEF</a>
   <div><a href="../directory.html">Directory</a><a href="../services.html">Services</a><a href="../lore.html">Lore</a></div></div>
-<div class="hud"><span>Wave <b id="wave">1</b>/10</span><span>Souls/min <b id="spm">0</b></span><span>Accuracy <b id="acc">100</b>%</span></div>
-<div class="hel">⚖️ HEL — sort each soul: <b style="color:var(--ice)">A / swipe left = AUTOMATE</b> · <b style="color:var(--gold)">D / swipe right = KEEP HUMAN</b></div>
+<div class="hud"><span>Wave <b id="wave">1</b>/10</span><span>Souls/min <b id="spm">0</b></span><span>Acc <b id="acc">100</b>%</span></div>
+<div class="hel-tip" id="tip">⚖️ HEL — <b style="color:#7dd3e0">A / ← / swipe left = AUTOMATE</b> · <b style="color:#d4b778">D / → / swipe right = KEEP HUMAN</b></div>
 <div id="game"></div>
-<div id="autoPile" class="pile">⚙️ AUTOMATE</div>
-<div id="humanPile" class="pile">🕯️ KEEP HUMAN</div>
 <div id="stage"></div>
-
 <script src="../games/engine.js"></script>
 <script>
-const G = {
-  id:'hel', deity:'hel', lesson:'You built the boundary first — route every lead before the pile forms. Get Odin\'s Decision OS triage workflow.',
-  mount(){ buildIntro(); },
-  onResize(){}
-};
-Engine._game = G;
+const G={ id:'hel', deity:'hel',
+  lesson:'You built the boundary first — route every lead before the pile forms. Get Odin\'s Decision OS triage workflow.',
+  mount(){ buildIntro(); }, onResize(w,h){ if(cv){cv.width=w;cv.height=h;} } };
+Engine._game=G;
 
-const LABELS = [
-  ['VIP','refund','?'],['Cold','lead','?'],['Invoice','$5k','?'],['Angry','tweet','!'],
-  ['Demo','no-show','?'],['Upsell','ready','$'],['Charge','back','!'],['New','signup','+'],
-  ['Support','ticket','?'],['Renewal','due','$'],['Bug','report','!'],['Referral','in','+']
+const C=Engine.C;
+let cv,cx,w,h,state='idle';
+let souls=[], wave=1, solved=0, correct=0, total=0, waveStart=0, essAuto=0, essHuman=0, timerBase=5;
+const LABELS=[
+  ['VIP','refund'],['Cold','lead'],['Invoice','$5k'],['Angry','tweet'],['Demo','no-show'],
+  ['Upsell','ready'],['Charge','back'],['New','signup'],['Support','ticket'],['Renewal','due'],['Bug','report'],['Referral','in']
 ];
-let orbs=[], wave=1, solved=0, correct=0, total=0, waveStart=0, spawnTimer=0, orbTime=5, essAuto=0, essHuman=0;
+// a soul should be KEEP HUMAN if it needs a person (VIP, Referral, New, Upsell, Angry, Charge, Bug, Support) else AUTOMATE
+function shouldHuman(l){ return ['VIP','Referral','New','Upsell','Angry','Charge','Bug','Support','Demo'].includes(l[0]); }
 
 function buildIntro(){
-  document.getElementById('stage').innerHTML = `<div class="panel">
+  document.getElementById('stage').innerHTML=`<div class="panel">
     <h1>⚖️ Hel — Soul Sorting</h1>
-    <p>Souls arrive at Hel's gate. Decide fast: <b style="color:var(--ice)">A / swipe left = AUTOMATE</b> the routine ones, <b style="color:var(--gold)">D / swipe right = KEEP HUMAN</b> the ones needing a soul.</p>
-    <p style="color:var(--muted);font-size:12px">5-second ring on each orb. Wrong call costs essence. 10 waves of 8. Fast + accurate = high souls/min.</p>
+    <p>Souls drift toward Hel's gate. Sort fast: <b style="color:#7dd3e0">A / ← / swipe left = AUTOMATE</b> the routine ones, <b style="color:#d4b778">D / → / swipe right = KEEP HUMAN</b> the ones needing a soul.</p>
+    <p style="color:var(--muted);font-size:12px">A 5-second ring ticks each soul. Wrong call costs essence. 10 waves of 8. Fast + accurate = a high souls/min.</p>
     <div class="lesson">✦ Best converter: this is your agency's triage in 60 seconds.</div>
-    <div class="row"><button class="btn" id="startBtn">Open the Gate →</button></div>
-  </div>`;
-  document.getElementById('startBtn').onclick = startGame;
+    <div class="row"><button class="btn" id="startBtn">Open the Gate →</button></div></div>`;
+  document.getElementById('startBtn').onclick=start;
 }
-function startGame(){
-  document.getElementById('stage').innerHTML='';
+function start(){
+  document.getElementById('stage').innerHTML=''; cv=document.createElement('canvas'); cv.className='game';
+  cv.width=innerWidth; cv.height=innerHeight; document.getElementById('game').appendChild(cv); cx=cv.getContext('2d');
+  Engine.fitCanvas(cv); w=cv.width; h=cv.height;
+  cv.addEventListener('pointerdown',onDown);
+  addEventListener('keydown',onKey);
+  state='playing';
   Engine.setState('playing'); Engine.startLoop(frame);
-  wave=1; solved=0; correct=0; total=0; orbTime=5; waveStart=performance.now(); spawnTimer=0;
-  orbs=[]; essAuto=0; essHuman=0;
-  document.getElementById('autoPile').textContent='⚙️ AUTOMATE'; document.getElementById('humanPile').textContent='🕯️ KEEP HUMAN';
-  spawnWave();
+  wave=1; solved=0; correct=0; total=0; essAuto=0; essHuman=0; timerBase=5; waveStart=performance.now();
+  document.getElementById('wave').textContent=1; spawnWave();
 }
 function spawnWave(){
-  const g=document.getElementById('game'); g.innerHTML='';
-  orbs=[];
-  for(let i=0;i<8;i++){ setTimeout(()=>spawnOrb(), i*450); }
+  souls=[]; solved=0;
+  for(let i=0;i<8;i++) setTimeout(()=>{ if(state==='playing') spawnSoul(); }, i*430);
   waveStart=performance.now();
 }
-function spawnOrb(){
-  const g=document.getElementById('game');
-  const label=LABELS[Math.floor(Math.random()*LABELS.length)];
-  const el=document.createElement('div'); el.className='orb';
-  el.innerHTML=label.join('<br>');
-  const x=Math.random()*(innerWidth-160)+40, y=120;
-  el.style.left=x+'px'; el.style.top=y+'px'; g.appendChild(el);
-  const t=document.createElement('div'); t.className='timer'; g.appendChild(t);
-  const o={el,t,x,y,label,dead:false,t0:performance.now(),life:orbTime*1000,swiped:false};
-  orbs.push(o);
-  // swipe handling
-  let sx=null;
-  el.addEventListener('pointerdown',e=>{sx=e.clientX;});
-  el.addEventListener('pointerup',e=>{ if(sx===null)return; const dx=e.clientX-sx;
-    if(dx<-30) decide(o,'auto'); else if(dx>30) decide(o,'human'); });
+function spawnSoul(){
+  const lab=LABELS[Math.floor(Math.random()*LABELS.length)];
+  const x=w/2 + (Math.random()*2-1)*(w*0.30);
+  souls.push({lab, x, y:-40, decided:false, dead:false, t0:performance.now(), life:timerBase*1000});
 }
-function decide(o,side){
-  if(o.swiped) return; o.swiped=true;
-  const autoWords=['Invoice','Charge','Angry','Bug','Support','Renewal','Demo','Cold'];
-  const wantsHuman = o.label[1]==='?' && ['VIP','Referral','New','Upsell'].includes(o.label[0]) ? false :
-                     (o.label[1]==='!' || o.label[0]==='VIP');
-  // simpler rule: '!' or 'VIP' -> keep human; '$' or routine -> automate
-  const shouldHuman = o.label[1]==='!' || o.label[0]==='VIP';
-  const ok = (side==='human')===shouldHuman;
-  total++; if(ok){ correct++; if(side==='auto') essAuto+=10; else essHuman+=10; } else { if(side==='auto') essAuto-=10; else essHuman-=10; }
-  o.el.style.transition='transform .25s, opacity .25s';
-  o.el.style.transform=`translateX(${side==='auto'?-200:200}px) scale(.4)`; o.el.style.opacity='0';
-  o.dead=true; solved++;
-  Engine.blip(ok?660:180, .09, ok?'sine':'sawtooth', .18);
-  setTimeout(()=>{ o.el.remove(); o.t.remove(); }, 250);
-  if(solved>=8){ wave++; if(wave>10){ endGame(); } else { document.getElementById('wave').textContent=wave; orbTime=Math.max(2,5-wave*0.3); setTimeout(spawnWave,500); } }
+function onDown(e){
+  const r=cv.getBoundingClientRect(); const x=e.clientX-r.left, y=e.clientY-r.top;
+  for(const s of souls){ if(s.decided||s.dead) continue;
+    if((x-s.x)**2+(y-s.y)**2 < 60*60){ decide(s, x < w/2 ? 'auto':'human'); return; } }
+}
+function onKey(e){
+  if(e.key==='a'||e.key==='A'||e.key==='ArrowLeft'){ pickSide('auto'); }
+  else if(e.key==='d'||e.key==='D'||e.key==='ArrowRight'){ pickSide('human'); }
+}
+function pickSide(side){
+  // decide the lowest (closest to gate) undecided soul
+  let best=null; for(const s of souls){ if(!s.decided&&!s.dead){ if(!best||s.y>best.y) best=s; } }
+  if(best) decide(best, side);
+}
+function decide(s,side){
+  s.decided=true; total++;
+  const ok=(side==='human')===shouldHuman(s.lab);
+  if(ok){ correct++; if(side==='auto')essAuto+=10; else essHuman+=10; Engine.blip(ok?660:200,.09,'sine',.18); }
+  else { if(side==='auto')essAuto-=10; else essHuman-=10; Engine.blip(150,.12,'sawtooth',.16); }
+  s.dead=true; s.fly=side;
+  solved++;
+  if(solved>=8){ wave++; if(wave>10){ return end(); } document.getElementById('wave').textContent=wave;
+    timerBase=Math.max(2,timerBase-0.3); setTimeout(spawnWave,400); }
 }
 function frame(dt){
-  const now=performance.now();
-  for(const o of orbs){
-    if(o.dead) continue;
-    const tleft=1-(now-o.t0)/o.life;
-    o.el.style.top=(120+ (1-tleft)*0 + Math.sin(now/300)*4)+'px';
-    o.t.style.left=(o.x+28)+'px'; o.t.style.top=(o.y-6)+'px';
-    o.t.style.borderColor = tleft<0.25?'#ef4444':'#7dd3e0';
-    o.t.style.clipPath=`polygon(50% ${50-(tleft*50)}%, 100% 0,50% 50, 0 0)`;
-    if(tleft<=0){ // timeout = wrong (missed)
-      total++; o.swiped=true; o.dead=true;
-      if(o.label[1]==='auto') essAuto-=10; else essHuman-=10;
-      o.el.style.opacity='0'; o.el.remove(); o.t.remove(); solved++;
-      if(solved>=8){ wave++; if(wave>10) endGame(); else {document.getElementById('wave').textContent=wave; orbTime=Math.max(2,5-wave*0.3); setTimeout(spawnWave,500);} }
-    }
+  if(state!=='playing') return;
+  cx.clearRect(0,0,w,h);
+  // Hel half-alive/half-corpse at top center
+  drawHel();
+  // gate line
+  const gateY=h*0.62;
+  cx.strokeStyle='rgba(125,211,224,.25)'; cx.lineWidth=2; cx.beginPath(); cx.moveTo(0,gateY); cx.lineTo(w,gateY); cx.stroke();
+  // piles
+  drawPile(0.25*w, '#7dd3e0', 'AUTOMATE', essAuto);
+  drawPile(0.75*w, '#d4b778', 'KEEP HUMAN', essHuman);
+  // souls
+  for(const s of souls){
+    if(s.decided){
+      const tx=s.fly==='auto'?0.25*w:0.75*w; s.x+=(tx-s.x)*Math.min(1,dt*8); s.y+=(h*0.9-s.y)*Math.min(1,dt*6);
+      if(Math.abs(s.y-h*0.9)<6){ s.done=true; }
+    } else { s.y += (gateY - s.y)*Math.min(1,dt*0.3) + dt*40; }
+    const tleft=1-(performance.now()-s.t0)/s.life;
+    if(!s.decided && tleft<=0){ // timeout = miss
+      total++; s.decided=true; s.dead=true; s.fly=shouldHuman(s.lab)?'human':'auto';
+      if(s.fly==='auto')essAuto-=10; else essHuman-=10; solved++;
+      if(solved>=8){ wave++; if(wave>10){return end();} document.getElementById('wave').textContent=wave; timerBase=Math.max(2,timerBase-0.3); setTimeout(spawnWave,400);} }
+    drawSoul(s,tleft);
   }
-  const mins=(now-waveStart)/60000;
-  document.getElementById('spm').textContent = mins>0?Math.round(solved/Math.max(mins,0.016)):0;
-  document.getElementById('acc').textContent = total?Math.round(correct/total*100):100;
-  document.getElementById('autoPile').textContent='⚙️ AUTOMATE · '+(essAuto>0?essAuto:0);
-  document.getElementById('humanPile').textContent='🕯️ KEEP HUMAN · '+(essHuman>0?essHuman:0);
+  souls=souls.filter(s=>!(s.done&&s.decided)|| !s.decided);
+  // hud
+  const mins=(performance.now()-waveStart)/60000;
+  document.getElementById('spm').textContent= Math.round(solved/Math.max(mins,0.016));
+  document.getElementById('acc').textContent= total?Math.round(correct/total*100):100;
 }
-function endGame(){
-  Engine.startLoop(()=>{}); 
+function drawHel(){
+  const cx0=w/2, cy0=h*0.16;
+  // body
+  cx.fillStyle='#1a2433'; cx.beginPath(); cx.ellipse(cx0,cy0,34,46,0,0,7); cx.fill();
+  // two halves: left alive (blue), right corpse (grey)
+  cx.fillStyle='rgba(125,211,224,.5)'; cx.beginPath(); cx.ellipse(cx0-12,cy0-6,10,8,0,0,7); cx.fill();
+  cx.fillStyle='#64748b'; cx.fillRect(cx0+4,cy0-14,16,20);
+  // crown
+  cx.fillStyle=C.gold; cx.beginPath(); cx.moveTo(cx0-20,cy0-40); cx.lineTo(cx0,cy0-52); cx.lineTo(cx0+20,cy0-40); cx.lineTo(cx0+12,cy0-44); cx.lineTo(cx0-12,cy0-44); cx.closePath(); cx.fill();
+}
+function drawSoul(s,tleft){
+  const col = shouldHuman(s.lab)?C.gold:C.ice;
+  cx.save(); cx.translate(s.x,s.y);
+  cx.fillStyle='rgba(125,211,224,.18)'; cx.beginPath(); cx.arc(0,0,28,0,7); cx.fill();
+  cx.fillStyle=col; cx.font='600 13px Inter'; cx.textAlign='center';
+  cx.fillText(s.lab[0],0,-4); cx.fillText(s.lab[1],0,12);
+  // timer ring
+  cx.strokeStyle = tleft<0.25?'#ef4444':C.ice; cx.lineWidth=3;
+  cx.beginPath(); cx.arc(0,0,34,-Math.PI/2, -Math.PI/2 + Math.max(0,tleft)*2*Math.PI); cx.stroke();
+  cx.restore();
+}
+function drawPile(px,col,label,ess){
+  const py=h*0.9;
+  cx.fillStyle=col; cx.globalAlpha=0.12; cx.beginPath(); cx.ellipse(px,py,70,46,0,0,7); cx.fill(); cx.globalAlpha=1;
+  cx.strokeStyle=col; cx.lineWidth=2; cx.beginPath(); cx.ellipse(px,py,70,46,0,0,7); cx.stroke();
+  cx.fillStyle=col; cx.font='700 13px Cinzel'; cx.textAlign='center'; cx.fillText(label,px,py-54);
+  cx.fillStyle='#cbd5e1'; cx.font='600 12px Inter'; cx.fillText((ess>0?ess:0)+' essence',px,py+4);
+}
+function end(){
+  state='lose'; Engine.startLoop(()=>{});
+  cv.removeEventListener('pointerdown',onDown); removeEventListener('keydown',onKey);
   const spm=Math.round(solved/((performance.now()-waveStart)/60000)||1);
-  Engine.showEnd({ title:'⚖️ The Gate Holds', score:solved, sub:`${spm} souls/min · ${total?Math.round(correct/total*100):100}% acc`,
-    lesson:G.lesson, deity:G.deity, shareCard:null });
+  Engine.showEnd({ title:'⚖️ The Gate Holds', score:solved, sub:`${spm} souls/min · ${total?Math.round(correct/total*100):100}% acc`, lesson:G.lesson, deity:G.deity, shareCard:null });
 }
 G.mount();
 </script>
-</body>
-</html>
+</body></html>
