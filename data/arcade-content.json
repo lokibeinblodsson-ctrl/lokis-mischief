@@ -1,6 +1,6 @@
 {
  "_source": "Owner-shared Meta AI artifact loki-playable-5-games.html (recovered 2026-08-12)",
- "_note": "Hel soul deck: 'correct' is the intended routing. Divinatory/business rune glosses are an interpretive layer, not historical scholarship.",
+ "_note": "Canonical owner content recovered from Meta AI artifacts (design bible 3e704ccf, arcade+funnel f525998f, empire site a1 5aa2e1e5). Rune business glosses are the owner's interpretive layer, not historical scholarship. Funnel maps each game end screen to one diagnostic + archetype.",
  "souls": [
   {
    "label": "VIP refund? $2k",
@@ -103,29 +103,94 @@
  ],
  "archetypes": [
   {
-   "name": "The Fenrir Bottleneck",
-   "desc": "Growth choked by one person, approval, or system.",
-   "fix": "Map 3 workflows that depend on one person. Document triggers, inputs, owners."
+   "id": "mimir",
+   "name": "Mimir Deep Dive",
+   "price": "$1.5k",
+   "time": "1 day",
+   "deliverable": "Mischief map + Loom teardown",
+   "ideal": "Pre-product-market-fit teams",
+   "desc": "We drink from your knowledge well and extract what only Mimir knows."
   },
   {
-   "name": "The Raven's Nest",
-   "desc": "Knowledge scattered across inboxes, sheets, and memory.",
-   "fix": "Centralize knowledge, build searchable vault, kill repeat questions."
+   "id": "raven",
+   "name": "Raven Audit",
+   "price": "$2.5k",
+   "time": "3 days",
+   "deliverable": "Second Brain necropsy + 10 fixes",
+   "ideal": "Notion-obsessed teams",
+   "desc": "Your docs are a nest. We find the shiny things and the rot."
   },
   {
-   "name": "The Jörmungandr Loop",
-   "desc": "Trapped in duplicate work and rework cycles.",
-   "fix": "Standardize handoffs, integrate tools, automate forms."
+   "id": "bifrost-blue",
+   "name": "Bifröst Blueprint",
+   "price": "$4k",
+   "time": "1 week",
+   "deliverable": "Handoff contract + lane design",
+   "ideal": "Teams with dropped balls",
+   "desc": "Design the rainbow bridge so work doesn’t fall into void."
   },
   {
-   "name": "The Bifröst Breakdown",
-   "desc": "Capable teams, unreliable handoffs.",
-   "fix": "Automated notifications, SLAs, cross-functional dashboards."
+   "id": "norns",
+   "name": "Norns Roadmap",
+   "price": "$5k",
+   "time": "1 week",
+   "deliverable": "3-thread roadmap + decision log",
+   "ideal": "Strategy drifters",
+   "desc": "Weave past, present, future into one thread you can actually pull."
   },
   {
-   "name": "Valhalla of Heroics",
-   "desc": "Succeeds because heroes rescue broken processes.",
-   "fix": "Document SOPs, capture knowledge, reduce hero dependency."
+   "id": "heimdall-room",
+   "name": "Heimdall Control Room",
+   "price": "$6k",
+   "time": "2 weeks",
+   "deliverable": "Ops dashboard + alert system",
+   "ideal": "Blind leadership",
+   "desc": "See everything. Miss nothing. Sleep finally."
+  },
+  {
+   "id": "skald",
+   "name": "Skald Manual",
+   "price": "$3.5k",
+   "time": "1 week",
+   "deliverable": "Playbook + onboarding saga",
+   "ideal": "Scaling from 5 to 15",
+   "desc": "Turn tribal knowledge into repeatable lore."
+  },
+  {
+   "id": "fenrir",
+   "name": "Fenrir Release",
+   "price": "$7k",
+   "time": "2 weeks",
+   "deliverable": "Bottleneck cut + capacity freed",
+   "ideal": "Stuck launches",
+   "desc": "Find the chain. Strike it. Release the wolf before it eats you."
+  },
+  {
+   "id": "valkyrie",
+   "name": "Valkyrie Capacity",
+   "price": "$8k",
+   "time": "2 weeks",
+   "deliverable": "Capacity model + hiring plan",
+   "ideal": "Overloaded A-players",
+   "desc": "Stop sending heroes to die. Measure true capacity."
+  },
+  {
+   "id": "bifrost-build",
+   "name": "Bifröst Build",
+   "price": "$12k",
+   "time": "3 weeks",
+   "deliverable": "Automated handoff system in n8n",
+   "ideal": "Manual handoff hell",
+   "desc": "We build the bridge. You walk it."
+  },
+  {
+   "id": "heimdall-watch",
+   "name": "Heimdall Watch",
+   "price": "$15k/mo",
+   "time": "Ongoing",
+   "deliverable": "Weekly mischief scan + fixes",
+   "ideal": "Post-build chaos",
+   "desc": "Permanent watch. Mischief never sleeps, so neither do we."
   }
  ],
  "runes_business": [
@@ -272,6 +337,78 @@
    "name": "Dagaz",
    "phon": "DAH-gaz",
    "biz": "Breakthrough — daylight moment, transformation."
+  }
+ ],
+ "diagnostics": [
+  {
+   "id": "mischief",
+   "title": "Mischief Scan",
+   "promise": "Find the 3 mischiefs hiding in your ops",
+   "time": "8 min",
+   "audience": "Founders & COOs",
+   "qs": 30
+  },
+  {
+   "id": "fenrir",
+   "title": "Fenrir Bottleneck Audit",
+   "promise": "Locate the chain about to snap",
+   "time": "12 min",
+   "audience": "Ops Leads",
+   "qs": 25
+  },
+  {
+   "id": "bifrost",
+   "title": "Bifröst Breakdown Assessment",
+   "promise": "Map where handoffs die",
+   "time": "10 min",
+   "audience": "Cross-functional teams",
+   "qs": 25
+  },
+  {
+   "id": "heimdall",
+   "title": "Heimdall Control Gap",
+   "promise": "Spot what you can’t see until it’s too late",
+   "time": "9 min",
+   "audience": "Leadership",
+   "qs": 25
+  },
+  {
+   "id": "norns",
+   "title": "Norns Strategy Knot",
+   "promise": "Link daily work to 90-day bets",
+   "time": "11 min",
+   "audience": "Founders",
+   "qs": 25
+  },
+  {
+   "id": "raven",
+   "title": "Raven Knowledge Rot",
+   "promise": "Find where your second brain is rotting",
+   "time": "7 min",
+   "audience": "Knowledge workers",
+   "qs": 25
+  }
+ ],
+ "product_ladder": [
+  {
+   "t": "Free Mischief",
+   "p": "$0",
+   "d": "Scan + 6 games + blog"
+  },
+  {
+   "t": "Tools Vault",
+   "p": "$19-$299",
+   "d": "50 templates, canvases, n8n"
+  },
+  {
+   "t": "Guided Fixes",
+   "p": "$1.5k-$8k",
+   "d": "Audits & blueprints with deliverables"
+  },
+  {
+   "t": "Done-for-you",
+   "p": "$12k-$15k/mo",
+   "d": "Build + Watch, exclusive directory"
   }
  ]
 }

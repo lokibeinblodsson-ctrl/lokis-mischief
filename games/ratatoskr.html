@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ratatoskr — Branch Relay | Loki's Mischief</title>
+  <meta name="description" content="Ratatoskr — Branch Relay | Loki's Mischief — deliver the payload AND confirm receipt, or nothing was delivered. The game version of the Bifröst Blueprint.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../games/engine.css">
+<style>
+  #game{position:fixed;inset:0;z-index:1}
+  #branches{position:fixed;left:0;right:0;bottom:14px;z-index:6;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 12px}
+  #branches button{pointer-events:auto;min-height:48px;border-radius:12px;font-size:13px;font-weight:600;
+    background:rgba(17,26,38,.85);border:1px solid var(--border);color:var(--ice)}
+</style>
+
+  <link rel="stylesheet" href="../mobile.css">
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div class="topbar"><a href="../index.html" class="brand">✦ LOKI'S MISCHIEF</a>
+  <div><a href="../directory.html">Directory</a><a href="../services.html">Services</a><a href="../lore.html">Lore</a></div></div>
+<div class="hud"><span>Score <b id="score">0</b></span><span>Streak <b id="streak">0</b></span><span>Queue <b id="q">0</b></span><span id="mode">IDLE</span></div>
+<div id="game"></div>
+<div id="branches">
+  <button data-b="0">Root · CRM</button><button data-b="1">Mid · Acct</button>
+  <button data-b="2">Canopy · Proj</button><button data-b="3">Crown · Email</button>
+</div>
+<div id="stage"></div>
+<script src="../games/engine.js"></script>
+<script>
+const G={ id:'ratatoskr', deity:'ratatoskr',
+  lesson:'Deliver the payload AND confirm receipt — otherwise nothing was delivered. Your Hermod relay must acknowledge, or the message is lost.',
+  mount(){ buildIntro(); }, onResize(w,h){ if(cv){ cv.width=w; cv.height=h; } } };
+Engine._game=G;
+
+const C=Engine.C;
+// 4 branches mapped to the owner's systems; delivering + receipt-confirming builds the score.
+const BRANCHES=[
+  {name:'Root',   sys:'CRM',     col:'#7dd3e0'},
+  {name:'Mid',    sys:'Accounting',col:'#7ee081'},
+  {name:'Canopy', sys:'Project', col:'#d4b778'},
+  {name:'Crown',  sys:'Email',   col:'#c084fc'},
+];
+let cv,cx,score=0,streak=0,queue=[],acorn=null,speed=1,branchY=[],squirrel={b:0,t:0},ping=null,state='idle';
+
+function buildIntro(){
+  document.getElementById('stage').innerHTML=`<div class="panel">
+    <h1>🐿️ Ratatoskr — Branch Relay</h1>
+    <p>Ratatoskr carries acorns (payloads) up and down Yggdrasil. An acorn spawns with a <b>destination colour</b>. Tap that branch to run the squirrel there. Deliver it — the branch flashes green and a <b>1.5s receipt ping</b> (blue dot) travels back. <b>Stay until the ping returns</b>, or the message is lost and your streak resets.</p>
+    <p style="color:var(--muted);font-size:12px">+20 delivery · +30 receipt. The queue builds and speed ramps. This is your Bifröst Blueprint: deliver AND confirm.</p>
+    <div class="lesson">✦ Models cross-system relay + receipt confirmation — Hermod's missing lesson.</div>
+    <div class="row"><button class="btn" id="startBtn">Climb →</button></div></div>`;
+  document.getElementById('startBtn').onclick=start;
+}
+function start(){
+  document.getElementById('stage').innerHTML=''; cv=document.createElement('canvas'); cv.className='game';
+  cv.width=innerWidth; cv.height=innerHeight; document.getElementById('game').appendChild(cv); cx=cv.getContext('2d');
+  Engine.fitCanvas(cv);
+  score=0; streak=0; queue=[]; acorn=null; ping=null; speed=1; state='playing';
+  branchY=[0.22,0.43,0.64,0.85].map(f=>cv.height*f);
+  squirrel={b:0,t:performance.now()};
+  // seed the queue
+  for(let i=0;i<3;i++) queue.push(spawnAcorn());
+  Engine.setState('playing'); Engine.startLoop(frame);
+  document.querySelectorAll('#branches button').forEach(b=>b.onclick=()=>goTo(parseInt(b.dataset.b)));
+  G._cleanup=()=>{ document.querySelectorAll('#branches button').forEach(b=>b.onclick=null); };
+  nextAcorn();
+}
+function spawnAcorn(){ const dest=Math.floor(Math.random()*4); return {dest, col:BRANCHES[dest].col, t:performance.now()}; }
+function nextAcorn(){ acorn = queue.shift(); if(queue.length<3) queue.push(spawnAcorn()); if(acorn){ squirrel.b=0; } document.getElementById('q').textContent=queue.length;
+  // observable cue of the acorn's destination (what a human reads from its colour) — also a11y/test hook
+  document.getElementById('game').dataset.dest = acorn ? acorn.dest : ''; }
+function goTo(b){
+  if(state!=='playing'||!acorn) return;
+  squirrel.b=b; // tween handled in frame
+  if(b===acorn.dest){
+    // delivered — flash + start receipt ping
+    state='receipt'; acorn.delivered=true; streak++;
+    Engine.blip(660,.1,'sine',.2);
+    ping={from:b, t:performance.now(), ok:false};
+    score+=20;
+    setTimeout(()=>{ if(state==='receipt'){ ping.ok=true; score+=30; Engine.blip(990,.12,'sine',.2);
+      setTimeout(()=>{ ping=null; state='playing'; nextAcorn(); },400); } },1500);
+  } else {
+    // wrong branch — acorn lost
+    streak=0; Engine.blip(150,.12,'sawtooth',.16); acorn=null; state='playing'; nextAcorn();
+  }
+  document.getElementById('score').textContent=score;
+  document.getElementById('streak').textContent=streak;
+}
+function frame(dt){
+  if(Engine.state!=='playing' && Engine.state!=='win' && Engine.state!=='lose') return;
+  const w=cv.width,h=cv.height;
+  speed=Math.min(2.4, 1+score/600); // ramp
+  cx.clearRect(0,0,w,h);
+  // trunk
+  cx.fillStyle='#1c140d'; cx.fillRect(w*0.46,h*0.1,w*0.08,h*0.85);
+  // branches with labels
+  branchY.forEach((by,i)=>{
+    const B=BRANCHES[i];
+    cx.strokeStyle=B.col; cx.globalAlpha=0.5; cx.lineWidth=4;
+    cx.beginPath(); cx.moveTo(w*0.5,by); cx.lineTo(i%2? w*0.78:w*0.22,by); cx.stroke(); cx.globalAlpha=1;
+    cx.fillStyle=B.col; cx.font='600 13px Inter'; cx.textAlign=i%2?'left':'right';
+    cx.fillText(B.name+' · '+B.sys, i%2? w*0.80:w*0.20, by-6);
+    if(acorn&&acorn.delivered&&i===acorn.dest&&state==='receipt'){ cx.fillStyle='rgba(126,224,129,.3)'; cx.beginPath(); cx.arc(w*0.5,by,40,0,7); cx.fill(); }
+  });
+  // squirrel (tween branch position)
+  const sy=branchY[squirrel.b];
+  if(squirrel._y===undefined) squirrel._y=sy;
+  squirrel._y += (sy-squirrel._y)*Math.min(1,dt*8);
+  drawSquirrel(w*0.5, squirrel._y);
+  // acorn in paw (if carrying & not delivered)
+  if(acorn&&!acorn.delivered){
+    cx.fillStyle=acorn.col; cx.shadowColor=acorn.col; cx.shadowBlur=14;
+    cx.beginPath(); cx.arc(w*0.5+18,squirrel._y-10,8,0,7); cx.fill(); cx.shadowBlur=0;
+  }
+  // receipt ping travelling back down
+  if(ping){
+    const p=(performance.now()-ping.t)/1500; const py=branchY[ping.from]+(h*0.1-branchY[ping.from])*Math.min(1,p);
+    cx.fillStyle=ping.ok?'#7dd3e0':'#7dd3e0'; cx.beginPath(); cx.arc(w*0.5,py,6,0,7); cx.fill();
+  }
+  document.getElementById('mode').textContent = state==='receipt' ? 'AWAITING RECEIPT' : 'CARRYING';
+  document.getElementById('score').textContent=score;
+}
+function drawSquirrel(x,y){
+  cx.save(); cx.translate(x,y);
+  // tail
+  cx.fillStyle='#b8954f'; cx.beginPath(); cx.ellipse(-22,-6,14,18,0.4,0,7); cx.fill();
+  // body
+  cx.fillStyle='#d4b778'; cx.beginPath(); cx.ellipse(0,0,14,18,0,0,7); cx.fill();
+  // head
+  cx.fillStyle='#e6c98a'; cx.beginPath(); cx.arc(10,-12,9,0,7); cx.fill();
+  // eye
+  cx.fillStyle='#111'; cx.beginPath(); cx.arc(13,-13,2,0,7); cx.fill();
+  // glowing acorn indicator handled by caller
+  cx.restore();
+}
+function end(){
+  if(G._cleanup)G._cleanup();
+  Engine.startLoop(()=>{});
+  Engine.showEnd({ won:true, title:'🐿️ Relay Complete', score,
+    sub:`${streak} best streak`, lesson:G.lesson, deity:G.deity, meta:{streak} });
+}
+G.mount();
+</script>
+</body></html>
