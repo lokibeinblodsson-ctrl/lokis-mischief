@@ -48,6 +48,14 @@ class Tab:
         self.cmd("Page.navigate", {"url": f"{BASE}/{path}"}, sid=True)
         time.sleep(settle)
 
+    def clear_storage(self):
+        # Navigate to the origin root first (localStorage is origin-scoped), clear it, so the
+        # next game load reads engine DEFAULTS instead of a stale persisted profile value
+        # (e.g. loki_muted left '0' by a previous run in the long-lived Chrome profile).
+        self.cmd("Page.navigate", {"url": BASE + "/"}, sid=True)
+        time.sleep(1.0)
+        self.ev("try{localStorage.clear()}catch(e){}")
+
     def ev(self, expr):
         r = self.cmd("Runtime.evaluate",
                      {"expression": expr, "returnByValue": True, "awaitPromise": True}, sid=True)
@@ -83,6 +91,7 @@ def main():
     try:
         # ---------- engine contract ----------
         print("[1] engine v2 contract")
+        t.clear_storage()
         t.go("games/fenrir.html", 2.5)
         api = t.ev("Object.keys(Engine).sort().join(',')") or ""
         for fn in ("pause", "resume", "share", "shareCard", "getBest", "setBest", "toggleMute", "stopLoop"):

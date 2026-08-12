@@ -39,8 +39,8 @@ const C=Engine.C;
 // 4 branches mapped to the owner's systems; delivering + receipt-confirming builds the score.
 const BRANCHES=[
   {name:'Root',   sys:'CRM',     col:'#7dd3e0'},
-  {name:'Mid',    sys:'Accounting',col:'#7ee081'},
-  {name:'Canopy', sys:'Project', col:'#d4b778'},
+  {name:'Mid',    sys:'Acct',    col:'#7ee081'},
+  {name:'Canopy', sys:'Proj',    col:'#d4b778'},
   {name:'Crown',  sys:'Email',   col:'#c084fc'},
 ];
 let cv,cx,score=0,streak=0,queue=[],acorn=null,speed=1,branchY=[],squirrel={b:0,t:0},ping=null,state='idle';
@@ -102,8 +102,11 @@ function frame(dt){
     const B=BRANCHES[i];
     cx.strokeStyle=B.col; cx.globalAlpha=0.5; cx.lineWidth=4;
     cx.beginPath(); cx.moveTo(w*0.5,by); cx.lineTo(i%2? w*0.78:w*0.22,by); cx.stroke(); cx.globalAlpha=1;
-    cx.fillStyle=B.col; cx.font='600 13px Inter'; cx.textAlign=i%2?'left':'right';
-    cx.fillText(B.name+' · '+B.sys, i%2? w*0.80:w*0.20, by-6);
+    cx.fillStyle=B.col; cx.font='600 12px Inter';
+    const right = i%2;
+    cx.textAlign = right ? 'left' : 'right';
+    const lx = right ? Math.min(w*0.78, w-86) : Math.max(w*0.22, 86);
+    cx.fillText(B.name+' · '+B.sys, lx, by-6);
     if(acorn&&acorn.delivered&&i===acorn.dest&&state==='receipt'){ cx.fillStyle='rgba(126,224,129,.3)'; cx.beginPath(); cx.arc(w*0.5,by,40,0,7); cx.fill(); }
   });
   // squirrel (tween branch position)
