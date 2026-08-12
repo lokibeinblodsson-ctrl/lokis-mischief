@@ -143,3 +143,4 @@ article text is untouched. Re-audited with cache disabled: **0 tap-target findin
 **Pitfall locked in:** ANY CDP measurement against the theo VM Chrome MUST disable cache, otherwise it
 silently tests the previous version of the file. This now applies to both `lokis_browser_audit.py`
 and `tests/play_games_cdp.py`.
+2026-08-12T04:46:54-06:00 | QA tick (quality-first visual pass): Ratatoskr trunk labels no longer clip at 390px (vision-verified); play_games test isolation fixed (clear_storage) -> 46/0; homepage secondary CTA + Available-on contrast raised (vision-verified). All gates green: human-driv=18/0, play=46/0, typecheck=0, run.js=94/0. Pushed 5f4e9fc.
