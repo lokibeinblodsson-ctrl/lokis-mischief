@@ -144,3 +144,5 @@ article text is untouched. Re-audited with cache disabled: **0 tap-target findin
 silently tests the previous version of the file. This now applies to both `lokis_browser_audit.py`
 and `tests/play_games_cdp.py`.
 2026-08-12T04:46:54-06:00 | QA tick (quality-first visual pass): Ratatoskr trunk labels no longer clip at 390px (vision-verified); play_games test isolation fixed (clear_storage) -> 46/0; homepage secondary CTA + Available-on contrast raised (vision-verified). All gates green: human-driv=18/0, play=46/0, typecheck=0, run.js=94/0. Pushed 5f4e9fc.
+
+2026-08-12T05:47:57-06:00 | QA tick (defect fixes): self-hosted Inter+Cinzel -> killed gstatic 404 (Google serves both as VARIABLE fonts; 4 woff2 back 18 latin+latin-ext faces, valid); services.html duplicate id #automation resolved (card -> automation-card, section anchor kept); 10 placeholder lokis-assets JSON stubs -> valid JSON (JSON lint now 0-fail). All gates green: human-driv=18/0, play=46/0, typecheck=0, run.js=94/0. Pushed 06a779e.
