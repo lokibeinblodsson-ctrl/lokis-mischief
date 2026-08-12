@@ -48,3 +48,18 @@ canvas.game{display:block;touch-action:none}
   .btn{padding:11px 18px;font-size:14px}
   canvas.game{touch-action:none}
 }
+
+/* ---- engine v2 additions: HUD controls, pause overlay, a11y (design-bible 00//CORE) ---- */
+/* Purpose: persistent mute + pause controls with the bible's 44px minimum touch target,
+   a focus ring in ice blue, and a reduced-motion escape hatch. */
+#engineCtl{position:fixed;top:44px;right:10px;z-index:7;display:flex;gap:8px}
+.ectl{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;
+  font-size:17px;line-height:1;border-radius:12px;cursor:pointer;
+  background:rgba(17,26,38,.82);border:1px solid var(--border);color:var(--ice)}
+.ectl:hover{border-color:var(--ice)}
+#pauseOv{position:fixed;inset:0;z-index:9;display:flex;align-items:center;justify-content:center;
+  background:rgba(8,12,18,.72);backdrop-filter:blur(3px)}
+/* focus rings: keyboard players must always see where they are */
+.btn:focus-visible,.ectl:focus-visible,a:focus-visible{outline:2px solid var(--ice);outline-offset:2px}
+@media(max-width:640px){#engineCtl{top:40px;right:8px}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001s!important;transition-duration:.001s!important}}

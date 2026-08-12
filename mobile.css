@@ -32,3 +32,21 @@
   h1, .hero h1 { font-size: 26px !important; }
   .slot { width: 72px; height: 96px; font-size: 38px; }
 }
+
+/* lokis-qa-loop: 44px minimum tap targets (auto-managed, do not duplicate) */
+@media (max-width: 480px) {
+  nav a, .nav a, header a, footer a,
+  a.btn, button, .btn, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* inline links inside prose must NOT be inflated — only chrome/controls get the 44px floor */
+  main p a, article p a, .prose a, li a.inline {
+    min-height: 0;
+    min-width: 0;
+    display: inline;
+  }
+}

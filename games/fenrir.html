@@ -16,7 +16,7 @@
 <canvas id="bg"></canvas>
 <div class="topbar"><a href="../index.html" class="brand">✦ LOKI'S MISCHIEF</a>
   <div><a href="../directory.html">Directory</a><a href="../services.html">Services</a><a href="../lore.html">Lore</a></div></div>
-<div class="hud"><span>Chain <b id="chain">Laeding</b></span><span>Hits <b id="hits">0</b>/3</span><span>Score <b id="score">0</b></span></div>
+<div class="hud"><span>Chain <b id="chain">Laeding</b></span><span>Hits <b id="hits">0</b>/3</span><span>Time <b id="time">90</b>s</span><span>Score <b id="score">0</b></span></div>
 <div id="game"></div>
 <div id="stage"></div>
 <script src="../games/engine.js"></script>
@@ -26,15 +26,20 @@ const G={ id:'fenrir', deity:'fenrir',
   mount(){ buildIntro(); }, onResize(w,h){ if(cv){ cv.width=w; cv.height=h; } } };
 Engine._game=G;
 
-const CHAINS=[ {name:'Laeding',green:0.40,spd:1.0,dmg:40},{name:'Dromi',green:0.20,spd:1.3,dmg:20},{name:'Gleipnir',green:0.12,spd:1.6,dmg:12} ];
+// Design-bible spec: sweet-spot width + pendulum speed per chain; every clean hit removes a third
+// of chain integrity, so exactly 3 hits break a chain. Miss reforms it by 10%.
+const CHAINS=[ {name:'Laeding',green:0.40,spd:1.0},{name:'Dromi',green:0.20,spd:1.4},{name:'Gleipnir',green:0.12,spd:1.8} ];
+const HIT_DMG=100/3, MISS_REFORM=10, TIME_LIMIT=90;
 const C=Engine.C;
-let cv,cx,chainIdx=0,pend=0,dir=1,hp=100,hits=0,score=0,greenPhase=0,swing=0,shake=0;
+let cv,cx,chainIdx=0,pend=0,dir=1,hp=100,hits=0,score=0,shake=0;
+let timeLeft=TIME_LIMIT, perfects=0, misses=0;
 
 function buildIntro(){
   document.getElementById('stage').innerHTML=`<div class="panel">
     <h1>🐺 Fenrir — Chain Strike</h1>
     <p>A pendulum swings over Fenrir. <b>Tap / click / Space</b> when its head is inside the green sweet spot to crack the chain. Three perfect hits break each of the three chains.</p>
-    <p style="color:var(--muted);font-size:12px">Laeding (easy) → Dromi (faster) → Gleipnir (narrow + drifts). Miss = chain reforms + screen shake.</p>
+    <p style="color:var(--muted);font-size:12px">Læding 40% window (1.0×) → Dromi 20% (1.4×) → Gleipnir 12% + drifts (1.8×). Hit the centre of the window for a perfect (+50). Miss = chain reforms +10%. 90 seconds for all three.</p>
+    <p style="color:var(--muted);font-size:12px">Keys: <b>Space</b> strike · <b>P</b>/<b>Esc</b> pause · <b>M</b> sound</p>
     <div class="lesson">✦ Models compliance guard-rails — quiet limits that actually hold.</div>
     <div class="row"><button class="btn" id="startBtn">Strike →</button></div></div>`;
   document.getElementById('startBtn').onclick=start;
@@ -45,6 +50,7 @@ function start(){
   Engine.fitCanvas(cv);
   Engine.setState('playing'); Engine.startLoop(frame);
   chainIdx=0; pend=0; dir=1; hp=100; hits=0; score=0; shake=0;
+  timeLeft=TIME_LIMIT; perfects=0; misses=0;
   document.getElementById('chain').textContent=CHAINS[0].name;
   addEventListener('pointerdown',onTap); addEventListener('keydown',onKey);
   G._cleanup=()=>{removeEventListener('pointerdown',onTap);removeEventListener('keydown',onKey);};
@@ -53,21 +59,44 @@ function onKey(e){ if(e.code==='Space'){e.preventDefault();onTap();} }
 function onTap(){
   if(Engine.state!=='playing') return;
   const c=CHAINS[chainIdx];
-  const inGreen = Math.abs(pend)<(c.green/2);
-  if(inGreen){ hp-=c.dmg; hits++; score+=100+(c.green<0.3?50:0);
-    Engine.blip(720,.07,'sine',.2); burst(); }
-  else { hp=Math.min(100,hp+c.dmg*0.25); shake=4; Engine.blip(150,.12,'sawtooth',.18); hits=Math.max(0,hits-0); }
+  const half=c.green/2;
+  const off=Math.abs(pend);
+  const inGreen = off < half;
+  if(inGreen){
+    // "perfect" = inside the central 40% of the green window (bible scoring)
+    const perfect = off < half*0.4;
+    hp -= HIT_DMG; hits++;
+    score += 100 + (perfect?50:0);
+    if(perfect) perfects++;
+    Engine.blip(perfect?880:720,.07,'sine',.2); burst(perfect);
+  } else {
+    // miss: chain reforms 10% and the cave shakes — never a hard fail, just lost time
+    hp=Math.min(100,hp+MISS_REFORM); shake=6; misses++;
+    Engine.blip(150,.12,'sawtooth',.18);
+  }
   document.getElementById('hits').textContent=hits; document.getElementById('score').textContent=score;
-  if(hp<=0){ hp=100; hits=0; chainIdx++; document.getElementById('chain').textContent=CHAINS[Math.min(chainIdx,2)].name;
-    Engine.blip(90,.3,'sine',.22); if(chainIdx>=3){ end(); } }
+  if(hp<=0.5){
+    hp=100; hits=0; chainIdx++;
+    Engine.blip(90,.3,'sine',.22);
+    if(chainIdx>=CHAINS.length){ end(true); }
+    else document.getElementById('chain').textContent=CHAINS[chainIdx].name;
+  }
 }
 let parts=[];
-function burst(){ const w=cv.width/2,h=cv.height*0.42; for(let i=0;i<14;i++) parts.push({x:w,y:h,vx:(Math.random()-.5)*6,vy:(Math.random()-.5)*6,a:1}); }
+function burst(perfect){ const w=cv.width/2,h=cv.height*0.42; const n=Engine.REDUCED?4:(perfect?22:14);
+  for(let i=0;i<n;i++) parts.push({x:w,y:h,vx:(Math.random()-.5)*6,vy:(Math.random()-.5)*6,a:1,g:perfect}); }
 function frame(dt){
+  // countdown: the bible gives a 90s budget for all three chains; expiry = fail
+  timeLeft -= dt;
+  if(timeLeft<=0){ timeLeft=0; end(false); return; }
   const c=CHAINS[chainIdx];
-  pend += dir*c.spd*dt*(CHAINS[chainIdx].name==='Gleipnir'?1:1);
-  if(chainIdx===2) pend += Math.sin(performance.now()/600)*0.4*dt; // Gleipnir drifts
+  pend += dir*c.spd*dt;
+  // Gleipnir drifts sinusoidally — the "invisible, light, unbreakable" chain never sits still
+  if(chainIdx===2) pend += Math.sin(performance.now()/600)*0.36*dt;
   if(pend>1){pend=1;dir=-1} if(pend<-1){pend=-1;dir=1}
+  // HUD timer turns ice-blue -> red under 15s so urgency reads without colour alone (numeric too)
+  const te=document.getElementById('time');
+  if(te){ te.textContent=Math.ceil(timeLeft); te.style.color = timeLeft<15 ? '#ff6b5e' : ''; }
   const w=cv.width,h=cv.height; const t=performance.now()/1000;
   cx.clearRect(0,0,w,h);
   cx.save(); if(shake>0){cx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);shake*=0.85;}
@@ -98,7 +127,7 @@ function frame(dt){
   cx.fillStyle=C.gold; cx.font='600 13px Inter'; cx.textAlign='center';
   cx.fillText(CHAINS[chainIdx].name+'  —  '+Math.max(0,Math.round(hp))+'% chain integrity', w/2, by-14);
   // particles
-  for(const p of parts){ p.x+=p.vx;p.y+=p.vy;p.a-=dt*2; cx.globalAlpha=Math.max(0,p.a);cx.fillStyle='#7dd3e0'; cx.fillRect(p.x,p.y,3,3);} cx.globalAlpha=1;
+  for(const p of parts){ p.x+=p.vx;p.y+=p.vy;p.vy+=0.3*dt*10;p.a-=dt*2; cx.globalAlpha=Math.max(0,p.a);cx.fillStyle=p.g?'#f0d998':'#7dd3e0'; cx.fillRect(p.x,p.y,3,3);} cx.globalAlpha=1;
   parts=parts.filter(p=>p.a>0);
   cx.restore();
 }
@@ -139,8 +168,21 @@ function drawWolf(cx0,cy0,s,c){
   cx.restore();
 }
 function roundRect(x,y,w,h,r){ cx.beginPath(); cx.moveTo(x+r,y); cx.arcTo(x+w,y,x+w,y+h,r); cx.arcTo(x+w,y+h,x,y+h,r); cx.arcTo(x,y+h,x,y,r); cx.arcTo(x,y,x+w,y,r); cx.closePath(); }
-function end(){ if(G._cleanup)G._cleanup(); Engine.setState('lose');
-  Engine.showEnd({ title:'🐺 Freed', score, sub:`best chain time saved`, lesson:G.lesson, deity:G.deity, shareCard:null }); }
+function end(won){
+  if(G._cleanup)G._cleanup();
+  // time bonus: 2 points per remaining second (bible); max clean run ~750
+  const timeBonus = won ? Math.round(timeLeft*2) : 0;
+  const total = score + timeBonus;
+  const badge = (won && misses===0 && perfects>=9) ? ' · 🏅 Gleipnir Unbound' : '';
+  Engine.showEnd({
+    won: !!won,
+    title: won ? '🐺 Chains Broken' : '⏳ Fenrir Held',
+    score: total,
+    sub: (won?`+${timeBonus} time bonus · ${perfects} perfect`:'time expired')+badge,
+    lesson: G.lesson, deity: G.deity,
+    meta: {perfects, misses, seconds: Math.round(TIME_LIMIT-timeLeft)}
+  });
+}
 G.mount();
 </script>
 </body></html>
