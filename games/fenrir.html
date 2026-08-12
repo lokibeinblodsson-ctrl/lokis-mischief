@@ -24,6 +24,7 @@ const G={ id:'fenrir', deity:'fenrir',
 Engine._game=G;
 
 const CHAINS=[ {name:'Laeding',green:0.40,spd:1.0,dmg:40},{name:'Dromi',green:0.20,spd:1.3,dmg:20},{name:'Gleipnir',green:0.12,spd:1.6,dmg:12} ];
+const C=Engine.C;
 let cv,cx,chainIdx=0,pend=0,dir=1,hp=100,hits=0,score=0,greenPhase=0,swing=0,shake=0;
 
 function buildIntro(){
@@ -54,7 +55,7 @@ function onTap(){
     Engine.blip(720,.07,'sine',.2); burst(); }
   else { hp=Math.min(100,hp+c.dmg*0.25); shake=4; Engine.blip(150,.12,'sawtooth',.18); hits=Math.max(0,hits-0); }
   document.getElementById('hits').textContent=hits; document.getElementById('score').textContent=score;
-  if(hp<=0){ hp=100; hits=0; chainIdx++; document.getElementById('chain').textContent=CHAINS[chainIdx].name;
+  if(hp<=0){ hp=100; hits=0; chainIdx++; document.getElementById('chain').textContent=CHAINS[Math.min(chainIdx,2)].name;
     Engine.blip(90,.3,'sine',.22); if(chainIdx>=3){ end(); } }
 }
 let parts=[];
@@ -64,26 +65,74 @@ function frame(dt){
   pend += dir*c.spd*dt*(CHAINS[chainIdx].name==='Gleipnir'?1:1);
   if(chainIdx===2) pend += Math.sin(performance.now()/600)*0.4*dt; // Gleipnir drifts
   if(pend>1){pend=1;dir=-1} if(pend<-1){pend=-1;dir=1}
-  const w=cv.width,h=cv.height; cx.clearRect(0,0,w,h);
+  const w=cv.width,h=cv.height; const t=performance.now()/1000;
+  cx.clearRect(0,0,w,h);
   cx.save(); if(shake>0){cx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);shake*=0.85;}
-  // chain bar
-  const bw=Math.min(620,w*0.8), bx=(w-bw)/2, by=h*0.42, bh=26;
-  cx.fillStyle='#111a26'; cx.strokeStyle='#1e2e45'; cx.lineWidth=2; roundRect(bx,by,bw,bh,bh/2); cx.fill(); cx.stroke();
-  // green sweet spot
+  drawCave(w,h,t);
+  drawWolf(w,h*0.62, 1+Math.sin(t*2)*0.02, c);
+  // three chain status pips top-center
+  const pipY=h*0.16, pw=18, gap=34, x0=w/2-(CHAINS.length-1)*gap/2;
+  for(let i=0;i<CHAINS.length;i++){
+    cx.fillStyle = i<chainIdx ? '#33405a' : (i===chainIdx ? C.gold : 'rgba(255,255,255,.18)');
+    cx.beginPath(); cx.arc(x0+i*gap, pipY, i===chainIdx?9:6,0,7); cx.fill();
+    cx.fillStyle='#cbd5e1'; cx.font='600 11px Cinzel'; cx.textAlign='center';
+    cx.fillText(CHAINS[i].name, x0+i*gap, pipY+22);
+  }
+  // tension meter (the chain Fenrir strains against)
+  const bw=Math.min(620,w*0.82), bx=(w-bw)/2, by=h*0.40, bh=30;
+  cx.fillStyle='#0c1420'; cx.strokeStyle='#1e2e45'; cx.lineWidth=2; roundRect(bx,by,bw,bh,bh/2); cx.fill(); cx.stroke();
   const gw=bw*c.green, gx=bx+(bw-gw)/2;
-  cx.fillStyle='rgba(125,211,224,0.25)'; roundRect(gx,by,gw,bh,bh/2); cx.fill();
+  const grad=cx.createLinearGradient(gx,0,gx+gw,0); grad.addColorStop(0,'rgba(125,211,224,.18)'); grad.addColorStop(.5,'rgba(125,211,224,.45)'); grad.addColorStop(1,'rgba(125,211,224,.18)');
+  cx.fillStyle=grad; roundRect(gx,by,gw,bh,bh/2); cx.fill();
   cx.fillStyle='#7dd3e0'; roundRect(gx,by,gw,bh/2,bh/2); cx.fill();
-  // pendulum head
+  // swinging strike orb
   const px=bx+((pend+1)/2)*bw;
-  cx.fillStyle='#d4b778'; cx.beginPath(); cx.arc(px,by+bh/2,16,0,7); cx.fill();
-  // chain hp
-  cx.fillStyle='#d4b778'; cx.font='13px Inter'; cx.textAlign='center';
-  cx.fillText(CHAINS[chainIdx].name+'  —  '+Math.max(0,Math.round(hp))+'% chain left', w/2, by-14);
-  // wolf label
-  cx.fillStyle='#64748b'; cx.font='600 15px Cinzel'; cx.fillText('🐺 FENRIR', w/2, by+bh+40);
+  const inGreen = Math.abs(pend)<(c.green/2);
+  cx.shadowColor = inGreen?'#7dd3e0':'#d4b778'; cx.shadowBlur=18;
+  cx.fillStyle = inGreen?'#7dd3e0':'#d4b778'; cx.beginPath(); cx.arc(px,by+bh/2,15,0,7); cx.fill();
+  cx.shadowBlur=0;
+  // chain hp readout
+  cx.fillStyle=C.gold; cx.font='600 13px Inter'; cx.textAlign='center';
+  cx.fillText(CHAINS[chainIdx].name+'  —  '+Math.max(0,Math.round(hp))+'% chain integrity', w/2, by-14);
   // particles
   for(const p of parts){ p.x+=p.vx;p.y+=p.vy;p.a-=dt*2; cx.globalAlpha=Math.max(0,p.a);cx.fillStyle='#7dd3e0'; cx.fillRect(p.x,p.y,3,3);} cx.globalAlpha=1;
   parts=parts.filter(p=>p.a>0);
+  cx.restore();
+}
+function drawCave(w,h,t){
+  const g=cx.createRadialGradient(w/2,h*0.5,40,w/2,h*0.5,Math.max(w,h)*0.7);
+  g.addColorStop(0,'#0e1622'); g.addColorStop(1,'#05080d');
+  cx.fillStyle=g; cx.fillRect(0,0,w,h);
+  // stalactites
+  cx.fillStyle='#0a1119';
+  for(let i=0;i<10;i++){ const x=(i+0.5)*w/10; const len=40+((i*53)%60); cx.beginPath(); cx.moveTo(x-10,0); cx.lineTo(x+10,0); cx.lineTo(x,len); cx.closePath(); cx.fill(); }
+  // floor glow
+  cx.fillStyle='rgba(125,211,224,.05)'; cx.beginPath(); cx.ellipse(w/2,h,Math.min(w*0.5,420),60,0,0,7); cx.fill();
+}
+function drawWolf(cx0,cy0,s,c){
+  cx.save(); cx.translate(cx0,cy0); cx.scale(s,s);
+  // shoulders
+  cx.fillStyle='#1b2636'; cx.beginPath(); cx.ellipse(0,60,120,70,0,0,7); cx.fill();
+  // head
+  cx.fillStyle='#243349'; cx.beginPath(); cx.ellipse(0,-10,86,74,0,0,7); cx.fill();
+  // ears
+  cx.beginPath(); cx.moveTo(-70,-60); cx.lineTo(-44,-110); cx.lineTo(-26,-66); cx.closePath(); cx.fill();
+  cx.beginPath(); cx.moveTo(70,-60); cx.lineTo(44,-110); cx.lineTo(26,-66); cx.closePath(); cx.fill();
+  // snout
+  cx.fillStyle='#1b2838'; cx.beginPath(); cx.ellipse(0,28,42,34,0,0,7); cx.fill();
+  cx.fillStyle='#0c1420'; cx.beginPath(); cx.ellipse(0,40,16,10,0,0,7); cx.fill();
+  // eyes (glow red, brighter as chain weakens)
+  const inten = 0.5 + (1-hp/100)*0.5;
+  const eg = 6+inten*6;
+  for(const sx of [-34,34]){
+    cx.shadowColor='#ff3b30'; cx.shadowBlur=18*inten;
+    cx.fillStyle=`rgba(255,${60-inten*40},${50-inten*40},1)`;
+    cx.beginPath(); cx.ellipse(sx,-14,eg,eg*0.7,0,0,7); cx.fill();
+  }
+  cx.shadowBlur=0;
+  // chain across the muzzle (the binding)
+  cx.strokeStyle = chainIdx>=2 ? '#caa15a' : '#8a94a8'; cx.lineWidth=5;
+  cx.beginPath(); cx.moveTo(-120,-4); for(let x=-120;x<=120;x+=20){ cx.lineTo(x, -4 + (Math.floor(x/20)%2?6:-6)); } cx.lineTo(120,-4); cx.stroke();
   cx.restore();
 }
 function roundRect(x,y,w,h,r){ cx.beginPath(); cx.moveTo(x+r,y); cx.arcTo(x+w,y,x+w,y+h,r); cx.arcTo(x+w,y+h,x,y+h,r); cx.arcTo(x,y+h,x,y,r); cx.arcTo(x,y,x+w,y,r); cx.closePath(); }

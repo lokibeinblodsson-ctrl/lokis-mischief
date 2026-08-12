@@ -56,7 +56,7 @@ for (const f of htmlFiles) {
 
 console.log('\n[3] Game function presence');
 const gameChecks = [
-  ['games/hel.html', ['function startGame', 'function decide', 'Engine.showEnd']],
+  ['games/hel.html', ['function start', 'function decide', 'Engine.showEnd']],
   ['games/fenrir.html', ['function onTap', 'Engine.showEnd', 'CHAINS']],
   ['games/runecast.html', ['function cast', 'RUNES', 'Engine.getBest']],
   ['games/jormungandr.html', ['function start', 'Engine.showEnd', 'seq']],
