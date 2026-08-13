@@ -97,7 +97,6 @@ The React/Vite implementation of Loki’s Mischief differs from the original van
 <!-- TODO: operator must review and update this document after comparing each game against the live vanilla implementation -->
 - [ ] Decide whether the React games need full canvas parity  [USER]
 - [ ] Decide whether audio behavior should be restored  [USER]
-- [ ] Verify game instructions are understandable without external context
 - [ ] Verify every game has a meaningful result screen
 - [ ] Verify every game has a clear restart action
 - [ ] Verify every game has a clear exit action
@@ -716,6 +715,7 @@ Expansion
 - [ ] Loki gives explicit go/no-go approval  [USER]
 
 ## Done
+- [x] Verify game instructions are understandable without external context  _(cb26f9a8e3456c5e897c8e22fd931ad33933be80)_
 - [x] Document intentional behavioral differences  _(5d7f29ee46a1d65adf2197360731e927bf67d4c0)_
 - [x] Compare each recovered game against the live vanilla implementation  _(4c460e6d57908152e8b7ad642b41622728c832ea)_
 <!-- items completed by the loop get moved here with the commit SHA -->
