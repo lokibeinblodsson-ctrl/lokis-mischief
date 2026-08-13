@@ -15,16 +15,16 @@ Loki’s Mischief — Full Feature TODO List
 - [x] Original artifacts preserved byte-identically
 - [x] Public push remains guarded
 ## Current limitations
-- [ ] Only five recovered reflection prompts are available
-- [ ] Full 155-question content set is missing
-- [ ] No approved archetype scoring model exists
-- [ ] No purchasable products exist
-- [ ] Product/service commercial data is incomplete
-- [ ] No backend or purchase verification exists
-- [ ] Directory is not production-backed
-- [ ] No public deployment is authorized
-- [ ] Full behavioral parity with the live vanilla site remains unverified
-- [ ] Ratatoskr is engagement-only and contributes nothing to scoring
+- [ ] Only five recovered reflection prompts are available  [USER]
+- [ ] Full 155-question content set is missing  [USER]
+- [ ] No approved archetype scoring model exists  [USER]
+- [ ] No purchasable products exist  [USER]
+- [ ] Product/service commercial data is incomplete  [USER]
+- [ ] No backend or purchase verification exists  [USER]
+- [ ] Directory is not production-backed  [USER]
+- [ ] No public deployment is authorized  [USER]
+- [ ] Full behavioral parity with the live vanilla site remains unverified  [USER]
+- [ ] Ratatoskr is engagement-only and contributes nothing to scoring  [USER]
 
 
 ---
@@ -32,23 +32,23 @@ Loki’s Mischief — Full Feature TODO List
 
 Immediate Priority: Private Preview
 ## Private viewing and testing
-- [ ] Run the production build locally with npm run preview
-- [ ] Verify the preview works on desktop
-- [ ] Verify the preview works on a phone over local network
-- [ ] Test all six games manually
-- [ ] Test the reflection flow
-- [ ] Test resume after refresh
-- [ ] Review all visible copy for prototype honesty
-- [ ] Confirm no product CTA appears purchasable
-- [ ] Confirm no diagnostic or archetype claims appear
-- [ ] Confirm no fake activity is presented as real
+- [ ] Run the production build locally with npm run preview  [USER]
+- [ ] Verify the preview works on desktop  [USER]
+- [ ] Verify the preview works on a phone over local network  [USER]
+- [ ] Test all six games manually  [USER]
+- [ ] Test the reflection flow  [USER]
+- [ ] Test resume after refresh  [USER]
+- [ ] Review all visible copy for prototype honesty  [USER]
+- [ ] Confirm no product CTA appears purchasable  [USER]
+- [ ] Confirm no diagnostic or archetype claims appear  [USER]
+- [ ] Confirm no fake activity is presented as real  [USER]
 - [ ] Decide whether a protected remote staging preview is needed  [USER]
-- [ ] If remote preview is created:
-  - [ ] protect it from indexing;
-  - [ ] use staging credentials only;
-  - [ ] avoid production domain changes;
-  - [ ] avoid production webhooks;
-  - [ ] label it as a private reflection prototype.
+- [ ] If remote preview is created:  [USER]
+  - [ ] protect it from indexing;  [USER]
+  - [ ] use staging credentials only;  [USER]
+  - [ ] avoid production domain changes;  [USER]
+  - [ ] avoid production webhooks;  [USER]
+  - [ ] label it as a private reflection prototype.  [USER]
 
 
 ---
