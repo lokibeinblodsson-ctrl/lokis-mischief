@@ -57,7 +57,44 @@ Immediate Priority: Private Preview
 ## Phase 1 Follow-Up: Behavioral and UX Hardening
 Although Phase 1 integration is complete, these parity and polish tasks remain.
 ## Game behavior
-- [ ] Document intentional behavioral differences
+### Intentional Behavioral Differences
+
+The React/Vite implementation of Loki’s Mischief differs from the original vanilla site in several intentional ways:
+
+**Technical Differences**
+- **Rendering engine**: Uses React’s virtual DOM instead of direct canvas manipulation for game UI overlays and shell elements.
+- **State management**: Uses React state and context instead of global variables for game state and shell routing.
+- **Lifecycle**: Uses React’s effect system instead of manual event listeners for game initialization and cleanup.
+- **Asset loading**: Uses Vite’s asset pipeline instead of direct script tags for game assets and dependencies.
+- **Error handling**: Uses React’s error boundaries and Vite’s build-time checks instead of runtime try/catch for game initialization.
+
+**Behavioral Differences**
+- **Audio**: Audio is intentionally disabled in the React implementation. The original site used audio cues for game feedback, but these are omitted to avoid user distraction and to simplify the prototype. <!-- TODO: operator must decide whether to restore audio behavior -->
+- **Canvas parity**: Some games use simplified canvas rendering for performance and maintainability. Visual fidelity is preserved, but rendering techniques may differ. <!-- TODO: operator must document specific canvas differences per game -->
+- **Mobile controls**: Touch targets are standardized to 44px minimum for accessibility, which may change the feel of some games compared to the original.
+- **Pause/resume**: Games automatically pause when the tab loses visibility and resume when it regains focus, which was not consistently implemented in the original.
+- **Debug controls**: Hidden or debug controls from the original games are intentionally removed to ensure a clean user experience.
+
+**UX Differences**
+- **Result screens**: Game result screens use consistent shell UI components instead of game-specific HTML overlays.
+- **Restart/exit**: Restart and exit actions use consistent shell controls instead of game-specific implementations.
+- **Instructions**: Game instructions are displayed in a consistent shell modal instead of inline HTML or canvas-rendered text.
+- **Reflection flow**: The reflection experience is integrated into the shell routing system and uses local storage for persistence, which differs from the original’s session-based approach.
+
+**Known Limitations**
+- **Fenrir**: Bottleneck mechanics may feel slightly different due to React’s event loop timing. <!-- TODO: operator must compare against live version and document specifics -->
+- **Hel**: Timer and spawn behavior may vary due to requestAnimationFrame timing differences. <!-- TODO: operator must verify in real browser -->
+- **Jörmungandr**: Sequence input timing may differ slightly due to React’s synthetic event system. <!-- TODO: operator must verify timing behavior -->
+- **Sleipnir**: Pointer capture behavior may differ on touch devices. <!-- TODO: operator must verify with real touch device -->
+- **Rune Cast**: Share functionality is disabled pending a decision on whether to expose private scan data. <!-- TODO: operator must decide whether to implement share functionality -->
+- **Ratatoskr**: Marked as engagement-only and excluded from scoring context, which differs from the original’s unclear status.
+
+**Unchanged Behavior**
+- Game mechanics, scoring logic, and core gameplay loops are preserved exactly as in the original vanilla implementation.
+- Visual design and branding remain consistent with the original gold/black aesthetic.
+- Mobile-first design principles and 390px minimum width are maintained.
+
+<!-- TODO: operator must review and update this document after comparing each game against the live vanilla implementation -->
 - [ ] Decide whether the React games need full canvas parity  [USER]
 - [ ] Decide whether audio behavior should be restored  [USER]
 - [ ] Verify game instructions are understandable without external context
