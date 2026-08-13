@@ -57,7 +57,6 @@ Immediate Priority: Private Preview
 ## Phase 1 Follow-Up: Behavioral and UX Hardening
 Although Phase 1 integration is complete, these parity and polish tasks remain.
 ## Game behavior
-- [ ] Compare each recovered game against the live vanilla implementation
 - [ ] Document intentional behavioral differences
 - [ ] Decide whether the React games need full canvas parity  [USER]
 - [ ] Decide whether audio behavior should be restored  [USER]
@@ -680,4 +679,5 @@ Expansion
 - [ ] Loki gives explicit go/no-go approval  [USER]
 
 ## Done
+- [x] Compare each recovered game against the live vanilla implementation  _(4c460e6d57908152e8b7ad642b41622728c832ea)_
 <!-- items completed by the loop get moved here with the commit SHA -->
