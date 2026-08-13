@@ -716,5 +716,6 @@ Expansion
 - [ ] Loki gives explicit go/no-go approval  [USER]
 
 ## Done
+- [x] Document intentional behavioral differences  _(5d7f29ee46a1d65adf2197360731e927bf67d4c0)_
 - [x] Compare each recovered game against the live vanilla implementation  _(4c460e6d57908152e8b7ad642b41622728c832ea)_
 <!-- items completed by the loop get moved here with the commit SHA -->
