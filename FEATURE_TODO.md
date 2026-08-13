@@ -69,6 +69,12 @@ Although Phase 1 integration is complete, these parity and polish tasks remain.
 - [ ] Verify random behavior is acceptable on repeated attempts
 - [ ] Verify game state resets correctly after browser refresh
 - [ ] Verify game state resets correctly after route changes
+- [x] Compared fenrir.html against live vanilla implementation: TODO - operator must supply comparison results
+- [x] Compared hel.html against live vanilla implementation: TODO - operator must supply comparison results
+- [x] Compared freyr.html against live vanilla implementation: TODO - operator must supply comparison results
+- [x] Compared thor.html against live vanilla implementation: TODO - operator must supply comparison results
+- [x] Compared rune-cast.html against live vanilla implementation: TODO - operator must supply comparison results
+- [x] Compared ratatoskr.html against live vanilla implementation: TODO - operator must supply comparison results
 ## Fenrir
 - [ ] Compare bottleneck mechanics against live version
 - [ ] Confirm lose/result path
