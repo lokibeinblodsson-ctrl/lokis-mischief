@@ -32,8 +32,8 @@ let seq=[],input=[],round=1,streak=0,lives=3,phase='idle',nodes=[],playing=false
 function buildIntro(){
   document.getElementById('stage').innerHTML=`<div class="panel">
     <h1>🐍 Jormungandr — Serpent Memory</h1>
-    <p>The World-Serpent coils into the board. Watch the rune nodes light in sequence, then tap them in the same order. One wrong tap and the loop closes.</p>
-    <p style="color:var(--muted);font-size:12px">Starts at length 3, grows to 12. Speed +5% per round. Three lives.</p>
+    <p>The World-Serpent coils into the board. Watch the four rune nodes light up in a sequence, then tap them back in that exact order. One wrong tap and the loop closes on you.</p>
+    <p style="color:var(--muted);font-size:12px">You start at length 3 and the sequence grows by one each round. Speed rises about 5% per round. You have three lives — lose them all and the run ends. Reach the longest sequence you can.</p>
     <div class="lesson">✦ Models integration / routing loops — remember the route, don't circle back.</div>
     <div class="row"><button class="btn" id="startBtn">Uncoil →</button></div></div>`;
   document.getElementById('startBtn').onclick=start;

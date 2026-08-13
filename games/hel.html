@@ -54,8 +54,8 @@ function shouldHuman(s){ return s.correct==='human'; }
 function buildIntro(){
   document.getElementById('stage').innerHTML=`<div class="panel">
     <h1>⚖️ Hel — Soul Sorting</h1>
-    <p>Souls drift toward Hel's gate. Sort fast: <b style="color:#7dd3e0">A / ← / swipe left = AUTOMATE</b> the routine ones, <b style="color:#d4b778">D / → / swipe right = KEEP HUMAN</b> the ones needing a soul.</p>
-    <p>10 waves of 8 souls. Each gets a 5.0s→2.0s ring tick. Wrong call (or a timeout) drains essence. Wave 4+ hides ambiguous souls that look routine but need a human; wave 7+ sends them in pairs — sort faster. <b style="color:#7dd3e0">A / ← / swipe left = AUTOMATE</b> · <b style="color:#d4b778">D / → / swipe right = KEEP HUMAN</b>. 90%+ accuracy = S rank.</p>
+    <p>Tickets drift toward Hel's gate. Sort each one fast: <b style="color:#7dd3e0">A / ← / swipe left = AUTOMATE</b> the routine, repetitive ones (password resets, invoices, reports); <b style="color:#d4b778">D / → / swipe right = KEEP HUMAN</b> the ones needing a person's judgement (VIPs, refunds, contracts, strategy).</p>
+    <p>10 waves of 8 tickets. Each gets a 5.0s→2.0s ring tick. A wrong call or a timeout drains your shared essence. Wave 4+ hides tricky tickets that look routine but need a human; wave 7+ sends them in pairs, so sort quicker. <b style="color:#7dd3e0">A / ← / swipe left = AUTOMATE</b> · <b style="color:#d4b778">D / → / swipe right = KEEP HUMAN</b>. Aim for 90%+ accuracy to earn an S rank.</p>
     <p style="color:var(--muted);font-size:12px">Keys: <b>A/D</b> or <b>←/→</b> route · <b>P</b>/<b>Esc</b> pause · <b>M</b> sound. On touch, a 60px swipe left/right routes; a tap uses the side you pressed.</p>
     <div class="lesson">✦ Best converter: this is your agency's triage in 60 seconds.</div>
     <div class="row"><button class="btn" id="startBtn">Open the Gate →</button></div></div>`;

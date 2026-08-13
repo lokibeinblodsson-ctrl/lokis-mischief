@@ -36,8 +36,8 @@ let timeLeft=TIME_LIMIT, perfects=0, misses=0;
 function buildIntro(){
   document.getElementById('stage').innerHTML=`<div class="panel">
     <h1>🐺 Fenrir — Chain Strike</h1>
-    <p>A pendulum swings over Fenrir. <b>Tap / click / Space</b> when its head is inside the green sweet spot to crack the chain. Three perfect hits break each of the three chains.</p>
-    <p style="color:var(--muted);font-size:12px">Læding 40% window (1.0×) → Dromi 20% (1.4×) → Gleipnir 12% + drifts (1.8×). Hit the centre of the window for a perfect (+50). Miss = chain reforms +10%. 90 seconds for all three.</p>
+    <p>A pendulum swings over Fenrir. <b>Tap / click / Space</b> when its head is inside the green sweet spot to crack the chain. Three clean hits break each chain — break all three before the 90-second timer runs out.</p>
+    <p style="color:var(--muted);font-size:12px">Læding 40% window (1.0×) → Dromi 20% (1.4×) → Gleipnir 12% + drifts (1.8×). Hit the centre of the window for a perfect (+50). Miss = chain reforms +10%. You win by breaking all three chains before time expires.</p>
     <p style="color:var(--muted);font-size:12px">Keys: <b>Space</b> strike · <b>P</b>/<b>Esc</b> pause · <b>M</b> sound</p>
     <div class="lesson">✦ Models compliance guard-rails — quiet limits that actually hold.</div>
     <div class="row"><button class="btn" id="startBtn">Strike →</button></div></div>`;
