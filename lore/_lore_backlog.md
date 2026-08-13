@@ -1,1 +1,2 @@
 - [2026-08-11T21:39:41Z] backlog: expand saga entry for August — add a 3-line summary + 1 sourced fact (Poetic/Prose Edda).
+- [2026-08-13T03:04:40Z] backlog: expand saga entry for August — add a 3-line summary + 1 sourced fact (Poetic/Prose Edda).
