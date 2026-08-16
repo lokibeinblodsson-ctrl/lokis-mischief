@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Fun Stuff — Loki's Mischief</title>
+  <meta name="description" content="Interactive tools, calculators, and fun ways to see what your agency is really missing — Loki's Mischief.">
+<link rel="stylesheet" href="fonts.css">
+<style>
+  /* ===== Base utilities (from index.html design system) ===== */
+  :root {
+    --navy: #0a0a10;
+    --navy2: #0d0d14;
+    --card: #0d0d14;
+    --border: #1a1a24;
+    --gold: #f59e0b;
+    --gold2: #d97706;
+    --text: #e4e4e7;
+    --muted: #94a3b8;
+    --dim: #64748b;
+    --green: #22c55e;
+    --red: #ef4444;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--navy);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 5;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 18px;
+    background: linear-gradient(180deg, rgba(8,8,12,.95), transparent);
+  }
+  .topbar a { color: var(--dim); text-decoration: none; font-size: 13px; font-weight: 600; margin-left: 14px; }
+  .topbar a.brand { color: var(--gold); font-family: 'Cinzel', serif; font-weight: 900; font-size: 15px; margin-left: 0; }
+  .topbar a.back-link { color: #7dd3e0; border: 1px solid var(--border); border-radius: 8px; padding: 3px 9px; }
+  .topbar a.back-link:hover { border-color: #7dd3e0; color: #fff; }
+  .topbar a:hover { color: #7dd3e0; }
+
+  .wrap { position: relative; z-index: 2; max-width: 980px; margin: 0 auto; padding: 90px 18px 60px; }
+  h1 { font-family: 'Cinzel', serif; color: var(--gold); text-align: center; font-size: 34px; margin-bottom: 6px; }
+  .sub { text-align: center; color: var(--dim); margin-bottom: 30px; font-size: 14px; }
+
+  .btn {
+    display: inline-block; padding: 14px 32px; border-radius: 10px;
+    font-size: 15px; font-weight: 700; text-decoration: none; cursor: pointer;
+    border: none; transition: transform .15s, box-shadow .2s;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn-primary { background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #07070a; }
+  .btn-primary:hover { box-shadow: 0 4px 20px var(--gold); }
+  .btn-secondary { background: #161b2b; border: 1px solid #3a4566; color: #e8edf6; padding: 10px 24px; font-size: 14px; }
+  .btn-secondary:hover { border-color: var(--gold); box-shadow: 0 4px 18px #f59e0b33; }
+
+  .gold {
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .lore-promo {
+    display: flex; gap: 18px; align-items: center;
+    background: linear-gradient(160deg, #0d0d14, #0a0a10);
+    border: 1px solid #1a1a24; border-radius: 18px;
+    padding: 20px 22px; margin-bottom: 24px; flex-wrap: wrap;
+  }
+  .lore-promo .lp-title { font-family: 'Cinzel', serif; font-weight: 800; font-size: 18px; color: var(--gold); }
+  .lore-promo .lp-text { color: var(--muted); font-size: 13px; margin-top: 4px; }
+
+  /* ===== ENTERTAINMENT (from index.html #entertainment) ===== */
+  .ent-tabs { display: flex; gap: 8px; justify-content: center; margin-bottom: 32px; flex-wrap: wrap; }
+  .ent-tab {
+    background: #0d0d14; border: 1px solid #1a1a24; border-radius: 10px;
+    padding: 12px 20px; cursor: pointer; transition: all .2s;
+    font-size: 14px; font-weight: 600; color: #64748b; text-align: center; min-width: 140px;
+  }
+  .ent-tab:hover { border-color: #2a2a3a; color: #e4e4e7; }
+  .ent-tab.active { border-color: #f59e0b44; background: #f59e0b11; color: #f59e0b; }
+  .ent-tab .tab-icon { font-size: 24px; display: block; margin-bottom: 4px; }
+
+  .ent-panel { display: none; }
+  .ent-panel.active { display: block; }
+
+  .ent-card { background: #0d0d14; border: 1px solid #1a1a24; border-radius: 16px; padding: 32px; margin-bottom: 24px; }
+  .ent-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 16px; }
+  .ent-card h3 .gold {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+
+  /* ROI CALCULATOR */
+  .roi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .roi-inputs { display: flex; flex-direction: column; gap: 20px; }
+  .roi-field label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; color: #94a3b8; }
+  .roi-field .input-group {
+    display: flex; align-items: center; background: #07070a;
+    border: 1px solid #1a1a24; border-radius: 10px; overflow: hidden;
+  }
+  .roi-field .input-group .prefix { padding: 12px 14px; background: #0d0d14; color: #64748b; font-weight: 700; font-size: 15px; border-right: 1px solid #1a1a24; }
+  .roi-field input[type="number"], .roi-field input[type="range"] { width: 100%; border: none; background: transparent; padding: 12px 14px; color: #e4e4e7; font-size: 15px; font-weight: 600; outline: none; }
+  .roi-field input[type="range"] { padding: 0; }
+  .roi-field .range-value { font-size: 13px; color: #f59e0b; font-weight: 700; margin-top: 4px; }
+  .roi-results { display: flex; flex-direction: column; gap: 16px; }
+  .roi-result-card { background: #07070a; border: 1px solid #1a1a24; border-radius: 12px; padding: 20px; }
+  .roi-result-card .rr-label { font-size: 12px; color: #64748b; margin-bottom: 4px; }
+  .roi-result-card .rr-value { font-size: 28px; font-weight: 800; }
+  .roi-result-card .rr-sub { font-size: 12px; color: #475569; margin-top: 4px; }
+  .roi-highlight .rr-value { color: #22c55e; }
+  .roi-warning .rr-value { color: #f59e0b; }
+  .roi-savings-bar { margin-top: 20px; background: #0d0d14; border: 1px solid #1a1a24; border-radius: 12px; padding: 24px; text-align: center; }
+  .roi-savings-bar .roi-final { font-size: 48px; font-weight: 800; background: linear-gradient(135deg, #22c55e, #16a34a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .roi-savings-bar .roi-final-label { font-size: 14px; color: #94a3b8; }
+  .roi-savings-bar .roi-cta { margin-top: 16px; }
+
+  /* QUIZ */
+  .quiz-progress { display: flex; gap: 8px; justify-content: center; margin-bottom: 24px; }
+  .quiz-dot { width: 10px; height: 10px; border-radius: 50%; background: #1a1a24; border: 1px solid #2a2a3a; transition: all .3s; }
+  .quiz-dot.active { background: #f59e0b; border-color: #f59e0b; }
+  .quiz-dot.done { background: #22c55e; border-color: #22c55e; }
+  .quiz-question { display: none; }
+  .quiz-question.active { display: block; }
+  .quiz-question .q-text { font-size: 20px; font-weight: 700; margin-bottom: 20px; text-align: center; }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+  .quiz-opt { background: #07070a; border: 1px solid #1a1a24; border-radius: 12px; padding: 16px 20px; cursor: pointer; transition: all .2s; font-size: 15px; text-align: left; }
+  .quiz-opt:hover { border-color: #f59e0b44; background: #f59e0b08; }
+  .quiz-opt.selected { border-color: #f59e0b; background: #f59e0b11; }
+  .quiz-result { display: none; text-align: center; }
+  .quiz-result.active { display: block; }
+  .quiz-result .qr-icon { font-size: 64px; margin-bottom: 12px; }
+  .quiz-result h4 { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+  .quiz-result p { color: #94a3b8; margin-bottom: 16px; }
+  .quiz-result .qr-product { background: #07070a; border: 1px solid #f59e0b33; border-radius: 12px; padding: 20px; margin: 16px auto; max-width: 400px; }
+  .quiz-result .qr-product .qr-price { font-size: 20px; font-weight: 800; color: #f59e0b; }
+
+  /* HEALTH CHECK */
+  .health-items { display: flex; flex-direction: column; gap: 12px; }
+  .health-item { background: #07070a; border: 1px solid #1a1a24; border-radius: 12px; padding: 16px 20px; cursor: pointer; transition: all .2s; display: flex; align-items: center; gap: 12px; }
+  .health-item:hover { border-color: #2a2a3a; }
+  .health-item .h-check { width: 22px; height: 22px; border-radius: 6px; border: 2px solid #2a2a3a; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; transition: all .2s; }
+  .health-item.checked .h-check { background: #22c55e; border-color: #22c55e; color: #fff; }
+  .health-item .h-text { flex: 1; font-size: 14px; }
+  .health-item .h-cost { font-size: 13px; color: #ef4444; font-weight: 600; }
+  .health-item.checked .h-cost { color: #22c55e; }
+  .health-score { text-align: center; padding: 24px; margin-top: 16px; background: #07070a; border: 1px solid #1a1a24; border-radius: 12px; }
+  .health-score .hs-num { font-size: 48px; font-weight: 800; }
+  .health-score .hs-label { font-size: 14px; color: #94a3b8; }
+
+  /* MISCHIEF METER */
+  .meter-wrap { display: flex; align-items: center; justify-content: center; gap: 32px; flex-wrap: wrap; }
+  .meter-visual { width: 200px; height: 200px; position: relative; }
+  .meter-visual canvas { width: 100%; height: 100%; }
+  .meter-controls { flex: 1; min-width: 200px; }
+  .meter-controls .mc-label { font-size: 14px; color: #94a3b8; margin-bottom: 8px; }
+  .meter-controls input[type="range"] { width: 100%; margin: 12px 0; -webkit-appearance: none; background: #1a1a24; height: 6px; border-radius: 3px; outline: none; }
+  .meter-controls input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #f59e0b; cursor: pointer; }
+  .meter-value { font-size: 24px; font-weight: 800; color: #f59e0b; text-align: center; }
+
+  /* FACT CAROUSEL */
+  .fact-carousel { position: relative; min-height: 100px; }
+  .fact-slide { display: none; text-align: center; padding: 20px 40px; }
+  .fact-slide.active { display: block; }
+  .fact-slide .fact-icon { font-size: 40px; margin-bottom: 8px; }
+  .fact-slide .fact-text { font-size: 18px; color: #cbd5e1; font-weight: 600; }
+  .fact-slide .fact-source { font-size: 12px; color: #475569; margin-top: 8px; }
+  .fact-nav { display: flex; justify-content: center; gap: 8px; margin-top: 16px; }
+  .fact-nav button { width: 10px; height: 10px; border-radius: 50%; border: 1px solid #2a2a3a; background: transparent; cursor: pointer; transition: all .2s; padding: 0; }
+  .fact-nav button.active { background: #f59e0b; border-color: #f59e0b; }
+
+  .ent-card h3 { text-align: left; }
+
+  /* Responsive */
+  @media (max-width: 720px) {
+    .roi-grid { grid-template-columns: 1fr; }
+    .ent-tab { min-width: 100px; padding: 10px 14px; }
+    .ent-card { padding: 22px 18px; }
+  }
+</style>
+
+  <link rel="stylesheet" href="mobile.css">
+  <link rel="stylesheet" href="hamburger.css">
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html" class="brand">✦ LOKI'S MISCHIEF</a>
+  <div>
+    <a href="index.html" class="back-link">← Back</a>
+    <a href="directory.html">Directory</a>
+    <a href="services.html">Services</a>
+    <a href="lore.html">Lore</a>
+    <a href="products.html">🛒 Digital</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <h1>🎭 Let's Be <span class="gold">Mischievous</span></h1>
+  <p class="sub">Interactive tools, calculators, and fun ways to see what your agency is really missing.</p>
+
+  <!-- Loki's Lore promo (Elder Futhark + Sagas) -->
+  <div class="lore-promo">
+    <div style="font-size:44px">🪨</div>
+    <div style="flex:1;min-width:240px">
+      <div class="lp-title">The Elder Futhark &amp; The Sagas</div>
+      <div class="lp-text">All 24 runes, three ættir, and the great Norse sources — the Poetic Edda, Prose Edda, and the legendary sagas. Lore built from public-domain scholarship, with divinatory notes clearly marked.</div>
+    </div>
+    <a class="btn btn-primary" href="lore.html" style="white-space:nowrap">📜 Open the Lore →</a>
+  </div>
+
+  <!-- Tabs -->
+  <div class="ent-tabs">
+    <div class="ent-tab active" data-tab="roi"><span class="tab-icon">💰</span>ROI Calculator</div>
+    <div class="ent-tab" data-tab="quiz"><span class="tab-icon">🎯</span>Find Your Fit</div>
+    <div class="ent-tab" data-tab="health"><span class="tab-icon">🏥</span>Agency Health Check</div>
+    <div class="ent-tab" data-tab="meter"><span class="tab-icon">🌡️</span>Mischief Meter</div>
+  </div>
+
+  <!-- Panel: ROI Calculator -->
+  <div class="ent-panel active" id="panel-roi">
+    <div class="ent-card">
+      <h3>💰 The <span class="gold">"Stop Burning Money"</span> Calculator</h3>
+      <p style="color:#94a3b8;margin-bottom:24px;">Manual ops is eating your revenue. See exactly how much you could save each year by automating.</p>
+      <div class="roi-grid">
+        <div class="roi-inputs">
+          <div class="roi-field">
+            <label>Your effective hourly rate</label>
+            <div class="input-group">
+              <span class="prefix">$</span>
+              <input type="number" id="roi-rate" value="150" min="50" max="500" step="10">
+            </div>
+          </div>
+          <div class="roi-field">
+            <label>Hours per week on manual ops (emails, data entry, reporting, follow-ups)</label>
+            <div class="input-group">
+              <span class="prefix">⏱️</span>
+              <input type="range" id="roi-hours" min="5" max="40" value="20">
+            </div>
+            <div class="range-value"><span id="roi-hours-display">20</span> hrs/week</div>
+          </div>
+          <div class="roi-field">
+            <label>How many clients do you manage?</label>
+            <div class="input-group">
+              <span class="prefix">👥</span>
+              <input type="number" id="roi-clients" value="10" min="3" max="50">
+            </div>
+          </div>
+        </div>
+        <div class="roi-results">
+          <div class="roi-result-card roi-warning">
+            <div class="rr-label">Annual cost of manual ops</div>
+            <div class="rr-value" id="roi-annual-cost">$0</div>
+            <div class="rr-sub">That's what you're burning on admin work</div>
+          </div>
+          <div class="roi-result-card roi-highlight">
+            <div class="rr-label">Estimated savings with automation</div>
+            <div class="rr-value" id="roi-savings">$0</div>
+            <div class="rr-sub">Based on 75% automation coverage (industry avg)</div>
+          </div>
+          <div class="roi-result-card">
+            <div class="rr-label">Hours FREED UP per week</div>
+            <div class="rr-value" id="roi-hours-freed">0</div>
+            <div class="rr-sub">To spend on growth, clients, or —gasp— rest</div>
+          </div>
+        </div>
+      </div>
+      <div class="roi-savings-bar">
+        <div class="roi-final-label">You could be saving</div>
+        <div class="roi-final" id="roi-final">$0</div>
+        <div class="roi-final-label">per year — that's a full-time employee</div>
+        <div class="roi-cta"><a href="products.html" class="btn btn-primary">See Products →</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel: Quiz -->
+  <div class="ent-panel" id="panel-quiz">
+    <div class="ent-card">
+      <h3>🎯 <span class="gold">Which Mischief</span> Fits Your Agency?</h3>
+      <p style="color:#94a3b8;margin-bottom:24px;">Answer 3 quick questions and we'll recommend the perfect automation for you.</p>
+      <div class="quiz-progress" id="quiz-progress">
+        <div class="quiz-dot active"></div>
+        <div class="quiz-dot"></div>
+        <div class="quiz-dot"></div>
+      </div>
+      <div id="quiz-area">
+        <div class="quiz-question active" data-q="0">
+          <div class="q-text">What's your biggest ops headache right now?</div>
+          <div class="quiz-options">
+            <div class="quiz-opt" data-value="concierge">Client intake — keeping track of leads, scheduling, follow-ups</div>
+            <div class="quiz-opt" data-value="onboarding">Getting new clients set up — welcome emails, contracts, calendars</div>
+            <div class="quiz-opt" data-value="reporting">Pulling together client reports every month</div>
+            <div class="quiz-opt" data-value="invoicing">Chasing payments and sending reminders</div>
+          </div>
+        </div>
+        <div class="quiz-question" data-q="1">
+          <div class="q-text">How many clients do you manage?</div>
+          <div class="quiz-options">
+            <div class="quiz-opt" data-value="small">1-5 — Just starting, doing everything myself</div>
+            <div class="quiz-opt" data-value="medium">5-15 — Small team, but ops is getting messy</div>
+            <div class="quiz-opt" data-value="large">15+ — I need systems, not more hires</div>
+          </div>
+        </div>
+        <div class="quiz-question" data-q="2">
+          <div class="q-text">What's your automation comfort level?</div>
+          <div class="quiz-options">
+            <div class="quiz-opt" data-value="beginner">Never done this — I want something that just works</div>
+            <div class="quiz-opt" data-value="intermediate">Used Zapier/Make before — I can connect and configure</div>
+            <div class="quiz-opt" data-value="advanced">I build my own stuff — show me the most powerful option</div>
+          </div>
+        </div>
+      </div>
+      <div class="quiz-result" id="quiz-result">
+        <div class="qr-icon" id="qr-icon">🤖</div>
+        <h4 id="qr-title">Your Recommendation</h4>
+        <p id="qr-desc">Here's the perfect product for you.</p>
+        <div class="qr-product">
+          <div id="qr-product-name">AI Client Concierge System</div>
+          <div class="qr-price" id="qr-product-price">$97</div>
+          <div style="margin-top:12px;"><a id="qr-link" href="https://buy.stripe.com/test_dRm5kwf6e347dVq0LV9Zm06" class="btn btn-primary">Buy Now →</a></div>
+        </div>
+        <div style="margin-top:12px;"><button class="btn btn-secondary" onclick="resetQuiz()">Take Again</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel: Health Check -->
+  <div class="ent-panel" id="panel-health">
+    <div class="ent-card">
+      <h3>🏥 <span class="gold">Agency Health Check</span></h3>
+      <p style="color:#94a3b8;margin-bottom:24px;">Check which of these apply to you. Be honest — this is a safe space.</p>
+      <div class="health-items" id="health-items">
+        <div class="health-item" data-cost="7800"><div class="h-check">✓</div><div class="h-text">I spend 2+ hours/week manually formatting and sending client reports</div><div class="h-cost">$7,800/yr</div></div>
+        <div class="health-item" data-cost="5200"><div class="h-check">✓</div><div class="h-text">I hand-write welcome emails and onboarding materials for every new client</div><div class="h-cost">$5,200/yr</div></div>
+        <div class="health-item" data-cost="3900"><div class="h-check">✓</div><div class="h-text">I manually follow up on late invoices and payment reminders</div><div class="h-cost">$3,900/yr</div></div>
+        <div class="health-item" data-cost="6500"><div class="h-check">✓</div><div class="h-text">I copy-paste meeting notes into action items for each attendee</div><div class="h-cost">$6,500/yr</div></div>
+        <div class="health-item" data-cost="10400"><div class="h-check">✓</div><div class="h-text">I write RFP/proposal responses from scratch each time</div><div class="h-cost">$10,400/yr</div></div>
+        <div class="health-item" data-cost="9100"><div class="h-check">✓</div><div class="h-text">I spend 3+ hours/week qualifying leads and scheduling discovery calls</div><div class="h-cost">$9,100/yr</div></div>
+      </div>
+      <div class="health-score" id="health-score" style="display:none;">
+        <div style="font-size:14px;color:#94a3b8;margin-bottom:8px;">Your agency is leaking</div>
+        <div class="hs-num" id="health-loss">$0</div>
+        <div class="hs-label">per year on manual operations you could automate today</div>
+        <div style="margin-top:16px;"><a href="products.html" class="btn btn-primary">Fix These Now →</a></div>
+        <div style="margin-top:8px;font-size:12px;color:#475569;"><span id="health-items-checked">0</span>/6 items checked</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel: Mischief Meter -->
+  <div class="ent-panel" id="panel-meter">
+    <div class="ent-card">
+      <h3>🌡️ The <span class="gold">Mischief Meter</span></h3>
+      <p style="color:#94a3b8;margin-bottom:24px;">How much of your workweek is stolen by manual ops? Adjust the slider and watch the needle move.</p>
+      <div class="meter-wrap">
+        <div class="meter-visual"><canvas id="meter-canvas" width="200" height="200"></canvas></div>
+        <div class="meter-controls">
+          <div class="mc-label">Hours spent on manual ops per week</div>
+          <input type="range" id="meter-slider" min="5" max="40" value="20" step="1">
+          <div class="meter-value"><span id="meter-display">20</span> hrs/week</div>
+          <div style="margin-top:16px;padding:16px;background:#07070a;border-radius:10px;border:1px solid #1a1a24;">
+            <div style="font-size:13px;color:#64748b;">With Loki's Mischief automations:</div>
+            <div style="font-size:20px;font-weight:700;color:#22c55e;"><span id="meter-saved">15</span> hrs saved/week</div>
+            <div style="font-size:24px;font-weight:800;color:#f59e0b;">$<span id="meter-savings">54,000</span>/yr</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Did You Know Carousel -->
+  <div class="ent-card" style="margin-top:0;">
+    <h3 style="text-align:center;">🎭 <span class="gold">Did You Know?</span></h3>
+    <div class="fact-carousel" id="fact-carousel">
+      <div class="fact-slide active">
+        <div class="fact-icon">📊</div>
+        <div class="fact-text">"The average agency owner spends 21-34 hours per week on manual operations — nearly a full-time job on admin work alone."</div>
+        <div class="fact-source">Source: Hinge Marketing Agency Study, 2024</div>
+      </div>
+      <div class="fact-slide">
+        <div class="fact-icon">💰</div>
+        <div class="fact-text">"Agencies that systematize their operations see 3.2x higher profit margins than those that don't."</div>
+        <div class="fact-source">Source: Hinge Marketing Agency Study, 2024</div>
+      </div>
+      <div class="fact-slide">
+        <div class="fact-icon">🤖</div>
+        <div class="fact-text">"72% of manual agency operations can be automated without any custom development — using existing Make.com and n8n modules."</div>
+        <div class="fact-source">Source: Automation Industry Report, 2025</div>
+      </div>
+      <div class="fact-slide">
+        <div class="fact-icon">⏰</div>
+        <div class="fact-text">"Agencies using pre-built automation workflows reduce client onboarding time by 68% and cut reporting time by 73%."</div>
+        <div class="fact-source">Source: Agency Ops Benchmark Survey, 2025</div>
+      </div>
+      <div class="fact-slide">
+        <div class="fact-icon">🔥</div>
+        <div class="fact-text">"The #1 reason agency owners burn out in year 2? They built a client-facing business but never built the systems behind it."</div>
+        <div class="fact-source">Source: Agency Scaling Report, 2025</div>
+      </div>
+    </div>
+    <div class="fact-nav" id="fact-nav">
+      <button class="active"></button><button></button><button></button><button></button><button></button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== TABS =====
+const tabs = document.querySelectorAll('.ent-tab');
+const panels = {
+  roi: document.getElementById('panel-roi'),
+  quiz: document.getElementById('panel-quiz'),
+  health: document.getElementById('panel-health'),
+  meter: document.getElementById('panel-meter')
+};
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    Object.keys(panels).forEach(k => panels[k].classList.remove('active'));
+    panels[tab.dataset.tab].classList.add('active');
+    if (tab.dataset.tab === 'meter') drawMeter();
+  });
+});
+
+// ===== ROI CALCULATOR =====
+const roiRate = document.getElementById('roi-rate');
+const roiHours = document.getElementById('roi-hours');
+const roiClients = document.getElementById('roi-clients');
+const roiHoursDisplay = document.getElementById('roi-hours-display');
+const roiAnnualCost = document.getElementById('roi-annual-cost');
+const roiSavings = document.getElementById('roi-savings');
+const roiHoursFreed = document.getElementById('roi-hours-freed');
+const roiFinal = document.getElementById('roi-final');
+
+function calcROI() {
+  const rate = parseFloat(roiRate.value) || 150;
+  const hours = parseFloat(roiHours.value) || 20;
+  const clients = parseFloat(roiClients.value) || 10;
+  const weekly = rate * hours;
+  const annual = weekly * 48;
+  const savingsPerClient = Math.round(weekly * 0.75 * 48);
+  const totalSavings = Math.round(savingsPerClient * (1 + clients * 0.1));
+  const freed = Math.round(hours * 0.75);
+  roiHoursDisplay.textContent = hours;
+  roiAnnualCost.textContent = '$' + annual.toLocaleString();
+  roiSavings.textContent = '$' + totalSavings.toLocaleString();
+  roiHoursFreed.textContent = freed;
+  roiFinal.textContent = '$' + totalSavings.toLocaleString();
+}
+roiRate.addEventListener('input', calcROI);
+roiHours.addEventListener('input', calcROI);
+roiClients.addEventListener('input', calcROI);
+calcROI();
+
+// ===== QUIZ =====
+const quizData = {
+  concierge: { icon: '🤖', name: 'AI Client Concierge System', price: '$97', desc: '24/7 intake that qualifies, schedules, and communicates for you.', link: 'https://buy.stripe.com/test_dRm5kwf6e347dVq0LV9Zm06' },
+  onboarding: { icon: '🚀', name: 'Agency Client Onboarding Agent', price: '$39', desc: 'Automated 5-step kickoff that runs itself.', link: 'https://buy.stripe.com/test_28EaEQcY62034kQ0LV9Zm05' },
+  reporting: { icon: '📊', name: 'Monthly Report Builder', price: '$39', desc: 'AI-generated client reports in minutes, not hours.', link: 'https://buy.stripe.com/test_dRm4gs9LUeMP8B60LV9Zm01' },
+  rfp: { icon: '📝', name: 'RFP / RFI Response Drafter', price: '$39', desc: 'From RFP to draft in 5 minutes with AI.', link: 'https://buy.stripe.com/test_28E00c7DM347g3ybqz9Zm02' },
+  invoicing: { icon: '💰', name: 'Invoice Dunning & Reminder System', price: '$39', desc: 'Never chase a payment again — automated follow-ups.', link: 'https://buy.stripe.com/test_bJe4gs8HQ0VZaJe1PZ9Zm03' },
+  meeting: { icon: '🎯', name: 'Meeting-to-Action Tracker', price: '$39', desc: 'Transcripts become action items automatically.', link: 'https://buy.stripe.com/test_6oU8wI1fo8orcRm52b9Zm04' }
+};
+let quizStep = 0;
+let quizAnswers = [];
+document.querySelectorAll('.quiz-opt').forEach(opt => {
+  opt.addEventListener('click', () => {
+    const parent = opt.closest('.quiz-question');
+    parent.querySelectorAll('.quiz-opt').forEach(o => o.classList.remove('selected'));
+    opt.classList.add('selected');
+    const qIdx = parseInt(parent.dataset.q);
+    quizAnswers[qIdx] = opt.dataset.value;
+    setTimeout(() => {
+      const dots = document.querySelectorAll('.quiz-dot');
+      dots[qIdx].classList.remove('active');
+      dots[qIdx].classList.add('done');
+      if (qIdx < 2) {
+        document.querySelectorAll('.quiz-question').forEach(q => q.classList.remove('active'));
+        document.querySelector(`.quiz-question[data-q="${qIdx+1}"]`).classList.add('active');
+        dots[qIdx+1].classList.add('active');
+      } else {
+        showQuizResult();
+      }
+    }, 300);
+  });
+});
+function showQuizResult() {
+  document.getElementById('quiz-area').style.display = 'none';
+  const result = document.getElementById('quiz-result');
+  result.classList.add('active');
+  const pain = quizAnswers[0] || 'concierge';
+  const scale = quizAnswers[1] || 'medium';
+  const skill = quizAnswers[2] || 'intermediate';
+  let rec;
+  const painMap = { concierge: 'concierge', onboarding: 'onboarding', reporting: 'reporting', invoicing: 'invoicing' };
+  rec = quizData[painMap[pain] || 'concierge'];
+  if (!rec) rec = quizData.concierge;
+  document.getElementById('qr-icon').textContent = rec.icon;
+  document.getElementById('qr-title').textContent = 'Your Perfect Match: ' + rec.name;
+  document.getElementById('qr-desc').textContent = rec.desc;
+  document.getElementById('qr-product-name').textContent = rec.name;
+  document.getElementById('qr-product-price').textContent = rec.price;
+  document.getElementById('qr-link').href = rec.link;
+}
+function resetQuiz() {
+  quizStep = 0;
+  quizAnswers = [];
+  document.querySelectorAll('.quiz-question').forEach(q => q.classList.remove('active'));
+  document.querySelector('.quiz-question[data-q="0"]').classList.add('active');
+  document.querySelectorAll('.quiz-opt').forEach(o => o.classList.remove('selected'));
+  document.querySelectorAll('.quiz-dot').forEach(d => { d.classList.remove('active', 'done'); });
+  document.querySelectorAll('.quiz-dot')[0].classList.add('active');
+  document.getElementById('quiz-area').style.display = 'block';
+  document.getElementById('quiz-result').classList.remove('active');
+}
+
+// ===== HEALTH CHECK =====
+document.querySelectorAll('.health-item').forEach(item => {
+  item.addEventListener('click', () => {
+    item.classList.toggle('checked');
+    updateHealth();
+  });
+});
+function updateHealth() {
+  const checked = document.querySelectorAll('.health-item.checked');
+  const score = document.getElementById('health-score');
+  document.getElementById('health-items-checked').textContent = checked.length;
+  if (checked.length > 0) {
+    score.style.display = 'block';
+    let total = 0;
+    checked.forEach(c => { total += parseInt(c.dataset.cost); });
+    document.getElementById('health-loss').textContent = '$' + total.toLocaleString();
+  } else {
+    score.style.display = 'none';
+  }
+}
+
+// ===== MISCHIEF METER (canvas gauge) =====
+const meterSlider = document.getElementById('meter-slider');
+const meterDisplay = document.getElementById('meter-display');
+const meterSaved = document.getElementById('meter-saved');
+const meterSavings = document.getElementById('meter-savings');
+function drawMeter() {
+  const canvas = document.getElementById('meter-canvas');
+  const ctx = canvas.getContext('2d');
+  const hours = parseFloat(meterSlider.value) || 20;
+  const w = canvas.width, h = canvas.height;
+  const cx = w/2, cy = h/2, r = 80;
+  ctx.clearRect(0, 0, w, h);
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0.75 * Math.PI, 2.25 * Math.PI);
+  ctx.strokeStyle = '#1a1a24';
+  ctx.lineWidth = 20;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+  const frac = (hours - 5) / 35;
+  const endAngle = 0.75 * Math.PI + frac * 1.5 * Math.PI;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0.75 * Math.PI, endAngle);
+  const grad = ctx.createLinearGradient(0, 0, w, 0);
+  grad.addColorStop(0, '#22c55e');
+  grad.addColorStop(0.5, '#f59e0b');
+  grad.addColorStop(1, '#ef4444');
+  ctx.strokeStyle = grad;
+  ctx.lineWidth = 20;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+  ctx.fillStyle = '#e4e4e7';
+  ctx.font = 'bold 28px -apple-system, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(hours + 'h', cx, cy - 8);
+  ctx.fillStyle = '#64748b';
+  ctx.font = '12px -apple-system, sans-serif';
+  ctx.fillText('manual ops', cx, cy + 18);
+  ctx.fillStyle = '#475569';
+  ctx.font = '10px -apple-system, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('5h', 15, h - 10);
+  ctx.textAlign = 'right';
+  ctx.fillText('40h', w - 15, h - 10);
+}
+meterSlider.addEventListener('input', () => {
+  const hours = parseFloat(meterSlider.value);
+  meterDisplay.textContent = hours;
+  const saved = Math.round(hours * 0.75);
+  meterSaved.textContent = saved;
+  const annual = Math.round(hours * 150 * 48 * 0.75);
+  meterSavings.textContent = annual.toLocaleString();
+  drawMeter();
+});
+drawMeter();
+
+// ===== FACT CAROUSEL =====
+let factIdx = 0;
+const factSlides = document.querySelectorAll('.fact-slide');
+const factDots = document.querySelectorAll('.fact-nav button');
+function showFact(idx) {
+  factSlides.forEach(s => s.classList.remove('active'));
+  factDots.forEach(d => d.classList.remove('active'));
+  factSlides[idx].classList.add('active');
+  factDots[idx].classList.add('active');
+  factIdx = idx;
+}
+factDots.forEach((dot, i) => { dot.addEventListener('click', () => showFact(i)); });
+setInterval(() => { showFact((factIdx + 1) % factSlides.length); }, 6000);
+</script>
+</body>
+</html>
