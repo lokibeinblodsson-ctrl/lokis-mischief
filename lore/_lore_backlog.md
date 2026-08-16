@@ -3,3 +3,10 @@
 - [2026-08-13T03:12:55Z] backlog: expand saga entry for August — add a 3-line summary + 1 sourced fact (Poetic/Prose Edda).
 - [2026-08-13T06:00:19Z] backlog: expand saga entry for August — add a 3-line summary + 1 sourced fact (Poetic/Prose Edda).
 - [2026-08-13T12:00:30Z] backlog: expand saga entry for August — add a 3-line summary + 1 sourced fact (Poetic/Prose Edda).
+- [2026-08-14T00:00:31Z] backlog: expand saga entry for August — add a 3-line summary + 1 sourced fact (Poetic/Prose Edda).
+- [2026-08-14T12:00:57Z] backlog: expand saga entry for August — add a 3-line summary + 1 sourced fact (Poetic/Prose Edda).
+- [2026-08-14T18:05:25Z] backlog: expand saga entry for August — add a 3-line summary + 1 sourced fact (Poetic/Prose Edda).
+- [2026-08-15T00:05:23Z] backlog: expand saga entry for August — add a 3-line summary + 1 sourced fact (Poetic/Prose Edda).
+- [2026-08-15T12:05:26Z] backlog: expand saga entry for August — add a 3-line summary + 1 sourced fact (Poetic/Prose Edda).
+- [2026-08-15T18:05:21Z] backlog: expand saga entry for August — add a 3-line summary + 1 sourced fact (Poetic/Prose Edda).
+- [2026-08-16T00:05:24Z] backlog: expand saga entry for August — add a 3-line summary + 1 sourced fact (Poetic/Prose Edda).
