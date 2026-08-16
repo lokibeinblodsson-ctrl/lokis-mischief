@@ -2,7 +2,8 @@ Loki's Mischief — FEATURE TODO (agent-dispatcher working copy)
 ## Standing directive (owner 2026-08-16): ALL work refocused on this site, quality unparalleled.
 ## Full rationale + structure: MEMORY/TODO_LOKIS_MISCHIEF.md (canonical index).
 ## Dispatcher picks the FIRST '- [ ]' item not marked [USER]/[BLOCKED].
-## Done
+## (NOTE: do NOT add a '## Done' header above the pending items — the dispatcher
+##  loop breaks on '## Done' and would skip everything below it.)
 
 - [x] Phase 0A-0C: scaffold + mount six games + validation
 - [x] Phase 1A-1C: shell, lifecycle, cross-game mobile validation
