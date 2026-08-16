@@ -13,11 +13,19 @@
       "date": "2026-08-13",
       "file": "blog/the-decision-os-routing-every-request-to-the.html",
       "cites": 4
+    },
+    {
+      "slug": "runecasting-as-a-metaphor-for-reading-business-signals",
+      "title": "Rune-casting as a metaphor for reading business signals",
+      "date": "2026-08-15",
+      "file": "blog/runecasting-as-a-metaphor-for-reading-business-signals.html",
+      "cites": 4
     }
   ],
   "published": [],
   "ideasUsed": [
     "Windmill vs n8n vs Node-RED: which automation engine fits your team",
-    "The decision OS: routing every request to the right owner"
+    "The decision OS: routing every request to the right owner",
+    "Rune-casting as a metaphor for reading business signals"
   ]
 }
