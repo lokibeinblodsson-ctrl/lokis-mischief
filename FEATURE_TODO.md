@@ -12,7 +12,7 @@ Loki's Mischief — FEATURE TODO (agent-dispatcher working copy)
 - [x] Local production build + unit/smoke/Playwright tests
 
 ## P0 — STRUCTURE: split monolithic index into per-menu pages (owner mandate: each menu link its own page)
-- [ ] MENU-1 | Promote games.html to the standalone Games hub page (own nav + back link) from index.html nav
+- [x] MENU-1 | Promote games.html to the standalone Games hub page (own nav + back link) from index.html nav [DONE 2026-08-16: index nav now single clean 🎮 Games→games.html; games.html has ← Back + own nav]
 - [ ] MENU-2 | Create entertainment.html (Fun Stuff) standalone page from #entertainment section
 - [ ] MENU-3 | Ensure all menu "Products" links resolve to products.html (not #products anchor)
 - [ ] MENU-4 | Create pantheon.html standalone deity index (from #pantheon anchor)

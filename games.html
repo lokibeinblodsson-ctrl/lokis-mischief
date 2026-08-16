@@ -14,6 +14,8 @@
   .topbar{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;justify-content:space-between;padding:12px 18px;background:linear-gradient(180deg,rgba(8,12,18,.92),transparent)}
   .brand{font-family:'Cinzel',serif;font-weight:900;color:var(--gold);font-size:15px;text-decoration:none}
   .topbar a{color:#64748b;text-decoration:none;font-size:12px;font-weight:600;margin-left:14px}
+  .topbar a.back-link{color:var(--ice);border:1px solid var(--border);border-radius:8px;padding:3px 9px}
+  .topbar a.back-link:hover{border-color:var(--ice);color:#fff}
   .topbar a:hover{color:var(--ice)}
   .wrap{position:relative;z-index:2;max-width:980px;margin:0 auto;padding:90px 18px 60px}
   h1{font-family:'Cinzel',serif;color:var(--gold);text-align:center;font-size:34px;margin-bottom:6px}
@@ -35,7 +37,7 @@
 <body>
 <canvas id="bg"></canvas>
 <div class="topbar"><a href="index.html" class="brand">✦ LOKI'S MISCHIEF</a>
-  <div><a href="directory.html">Directory</a><a href="services.html">Services</a><a href="lore.html">Lore</a><a href="products.html">🛒 Digital</a></div></div>
+  <div><a href="index.html" class="back-link">← Back</a><a href="directory.html">Directory</a><a href="services.html">Services</a><a href="lore.html">Lore</a><a href="products.html">🛒 Digital</a></div></div>
 <div class="wrap">
   <h1>🎮 The Mischief Games</h1>
   <p class="sub">Five canvas micro-games. Each one is a business lesson in disguise. Best scores saved on this device.</p>
