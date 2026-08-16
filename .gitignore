@@ -13,3 +13,5 @@ free-tools-discovery/_gh.*
 free-tools-discovery/_hits*.txt
 free-tools-discovery/_raw.html
 free-tools-discovery/_nc_memory.md
+__pycache__/
+blog/_probe*.py

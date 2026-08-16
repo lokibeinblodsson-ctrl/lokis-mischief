@@ -1,0 +1,74 @@
+/* hamburger.css — Loki's Mischief global responsive nav.
+   Works with the EXISTING <nav> markup on every page (logo + .links).
+   Desktop: unchanged (links inline). Mobile (<=720px): .links collapses behind a
+   hamburger button into a slide-down panel. menu.js injects the button + toggles .open.
+   Loaded AFTER mobile.css so it can refine nav behavior without touching brand styling. */
+.hamburger {
+  display: none; /* hidden on desktop */
+  background: transparent;
+  border: 1px solid #2a2a38;
+  border-radius: 10px;
+  width: 44px; height: 44px;
+  cursor: pointer;
+  padding: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+.hamburger span {
+  display: block;
+  width: 22px; height: 2px;
+  background: #f59e0b;
+  border-radius: 2px;
+  transition: transform .25s ease, opacity .2s ease;
+}
+.hamburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.hamburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+@media (max-width: 720px) {
+  nav { position: fixed; }
+  .hamburger { display: flex; }            /* show on mobile */
+  /* Only collapse when JS has initialized the toggle (progressive enhancement:
+     without JS, links stay inline so the menu is never hidden/unreachable). */
+  nav.js-enabled .links {
+    position: absolute;
+    top: 60px; left: 0; right: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    background: #0a0a12f2;
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid #1a1a24;
+    padding: 8px 14px 16px;
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+    /* collapsed state */
+    display: none;
+    box-shadow: 0 18px 40px rgba(0,0,0,.55);
+  }
+  nav.js-enabled.open .links { display: flex; }
+  nav .links a, nav .links button, nav .links span {
+    width: 100%;
+    text-align: left;
+    padding: 13px 8px;
+    font-size: 15px;
+    border-bottom: 1px solid #16161f;
+    white-space: normal;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  nav .links a:last-child, nav .links span:last-child { border-bottom: none; }
+  /* keep the streak badge / mute button compact */
+  #streak-badge { font-size: 14px; }
+  #mute-btn { justify-content: flex-start; }
+  /* the primary CTA in nav should look like a button, not full-width text */
+  nav .links a.btn-nav {
+    background: #f59e0b; color: #0a0a12; border-radius: 10px;
+    justify-content: center; font-weight: 600; margin-top: 6px;
+  }
+  /* push page content below the fixed nav */
+  .wrap, #content-wrap { padding-top: 64px; }
+}

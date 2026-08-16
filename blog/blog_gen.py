@@ -13,15 +13,20 @@ BLOG = os.path.join(ROOT, "blog")
 IDX = os.path.join(BLOG, "index.json")
 SITE = "https://lokis-mischief.example"  # replace with real domain when known; internal links use relative paths
 
-# ---- load creds from local store (never echo) ----
+# ---- load Tavily cred from local store (never echo) ----
 ENV = {}
 for line in open("/root/.hermes/secrets/api_keys.env"):
     line = line.strip()
     if line and not line.startswith("#") and "=" in line:
         k, v = line.split("=", 1); ENV[k] = v
 TAVILY = ENV.get("TAVILY_FREETIER") or ENV.get("TAVILY_WILDJAZMINE_CA")
-GROQ = ENV.get("GROQ_LOKI_ALT") or ENV.get("GROQ_JAYSHERMANN")
-MISTRAL = ENV.get("MISTRAL_LOKI") or ENV.get("MISTRAL_WILDJAZMINE_CA")
+
+# Resilient multi-provider LLM client with automatic failover (Mistral -> Gemini -> Ollama/local).
+# See blog/llm_fallback.py for the chain + retry/backoff logic. No stub fallback lives here.
+import importlib.util
+_spec = importlib.util.spec_from_file_location("llm_fallback", os.path.join(BLOG, "llm_fallback.py"))
+_lf = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_lf)
+llm_chat = lambda system, user: _lf.llm_chat(system, user)[0]  # returns text or None
 
 def http_json(url, data=None, headers=None, method="GET", timeout=40):
     req = urllib.request.Request(url, data=data, headers=headers or {}, method=method)
@@ -43,24 +48,8 @@ def tavily_search(q):
                   method="POST")
     return j.get("results", []) if isinstance(j, dict) else []
 
-# NOTE: Groq is 403-blocked from this host, so Mistral is the primary model. We still try
-# Groq as a secondary only if a working key is present, but never fall back to a STUB.
-def llm_chat(system, user, model="mistral"):
-    # Primary = Mistral (verified working on this host). Secondary = Groq if available.
-    order = [("mistral", MISTRAL)] if model == "mistral" else [("groq", GROQ), ("mistral", MISTRAL)]
-    for name, key in order:
-        if not key:
-            continue
-        url = "https://api.mistral.ai/v1/chat/completions" if name == "mistral" else "https://api.groq.com/openai/v1/chat/completions"
-        mdl = "mistral-large-latest" if name == "mistral" else "llama-3.3-70b-versatile"
-        body = json.dumps({"model": mdl,
-                           "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
-                           "temperature": 0.7, "max_tokens": 1600}).encode()
-        j = http_json(url, data=body, headers={"Content-Type": "application/json",
-                      "Authorization": "Bearer " + key})
-        if isinstance(j, dict) and j.get("choices"):
-            return j["choices"][0]["message"]["content"]
-    return None
+# NOTE: llm_chat is now provided by the imported llm_fallback module (Mistral -> Gemini -> Ollama/local).
+# No stub fallback exists in this generator; a None return means "do not publish".
 
 def slugify(s):
     s = re.sub(r"[^a-z0-9 ]", "", s.lower()).strip()
@@ -133,19 +122,83 @@ def main():
     idea = d["ideas"].pop(0)
     save_ideas(d)
 
-    # Research
-    results = tavily_search(idea)
-    cites = [r.get("url") for r in results if r.get("url")][:4]
-    ctx = "\n".join(f"- {r.get('title','')}: {r.get('content','')[:240]}" for r in results[:4])
+    # ============ PHASED PIPELINE (plan -> research per phase -> write per phase -> assemble) ============
+    idea_clean = idea
+    sys_p_base = ("You write for 'Loki's Mischief' — a brand that teaches business automation and agency ops "
+                  "through Norse mythology. Voice: confident, plain-spoken, a little mischievous. Never fake data "
+                  "or sources. Write clean HTML fragments (h2/h3/p/ul only, NO outer <html> wrapper, NO markdown "
+                  "fences). If unsure, say 'consider' not 'proves'.")
 
-    # Draft
-    sys_p = ("You write for 'Loki's Mischief' — a brand that teaches business automation and agency ops through "
-             "Norse mythology. Voice: confident, plain-spoken, a little mischievous. Never fake data. If unsure, say "
-             "'consider' not 'proves'. Write clean HTML (h2/h3/p/ul), 350-500 words, NO outer <html> wrapper.")
-    usr = (f"Write a blog post titled: \"{idea}\".\nResearch context:\n{ctx}\n\n"
-           f"End with a 2-line takeaway tying it to a Norse figure. Use 1-2 Markdown-style internal references "
-           f"like (see our lore page) but we will link them. Keep it useful, not clickbait.")
-    html = llm_chat(sys_p, usr) or llm_chat(sys_p, usr, model="mistral")
+    # ---- PHASE 1: PLAN — ask the model to break the post into 3-4 concrete sections ----
+    plan_p = ("Given the blog-post title \"{t}\", propose a tight outline of EXACTLY 4 sections for a "
+              "350-500 word business-automation article. Return ONLY a JSON array of 4 objects, each "
+              "{{\"h2\": <section heading>, \"research\": <a specific web-search query that would source THIS section>}}. "
+              "Queries must be distinct and factual (no 'Loki mythology' fluff — think: automation, metrics, tools, "
+              "case studies). No prose, no markdown.").format(t=idea)
+    plan_txt = llm_chat(sys_p_base, plan_p)
+    phases = []
+    if plan_txt:
+        # extract JSON array defensively
+        m = re.search(r"\[.*\]", plan_txt, re.S)
+        if m:
+            try:
+                phases = json.loads(m.group(0))
+            except Exception:
+                phases = []
+    if not phases or not isinstance(phases, list):
+        # deterministic fallback plan so the pipeline still runs if planning fails
+        phases = [
+            {"h2": "Why this matters for agency ops", "research": f"{idea} business automation use case"},
+            {"h2": "The Norse parallel", "research": f"norse myth lesson about {idea}"},
+            {"h2": "How to implement it", "research": f"{idea} step by step workflow automation"},
+            {"h2": "Measuring success", "research": f"{idea} key metrics KPIs"},
+        ]
+    phases = phases[:4]
+
+    # ---- PHASE 2 + 3: RESEARCH EACH PHASE, THEN WRITE THAT PHASE FROM ITS OWN RESEARCH ----
+    sections_html = []
+    all_cites = []
+    for i, ph in enumerate(phases, 1):
+        h2 = ph.get("h2") or f"Section {i}"
+        q = ph.get("research") or idea
+        # PHASE 2: dedicated research for THIS section
+        res = tavily_search(q)
+        for r in res:
+            u = r.get("url")
+            if u and u not in all_cites:
+                all_cites.append(u)
+        ctx = "\n".join(f"- {r.get('title','')}: {r.get('content','')[:280]}" for r in res[:3])
+        # PHASE 3: write THIS section from ITS research only
+        sec_p = (f"Write ONE blog section titled \"{h2}\" for the article \"{idea}\". "
+                 f"Use the research below and write 90-140 words of clean HTML (an <h2> heading then <p>/<ul>). "
+                 f"Be specific and useful; tie it to agency ops / automation where natural. No outer wrapper, no fences.\n\n"
+                 f"Research for this section:\n{ctx}")
+        sec = llm_chat(sys_p_base, sec_p)
+        if not sec:
+            sec = f"<h2>{h2}</h2><p>Research pass unavailable this run; draft queued.</p>"
+        # strip fences
+        sec = sec.strip()
+        if sec.startswith("```"):
+            sec = re.sub(r"^```[a-zA-Z]*\n?", "", sec)
+            sec = re.sub(r"\n?```$", "", sec).strip()
+        sections_html.append(sec)
+        print(f"[{today}] phase {i}/4 written: {h2} (cites so far: {len(all_cites)})")
+
+    html = "\n\n".join(sections_html)
+    cites = all_cites[:4]
+
+    # PHASE 4: ASSEMBLE — prepend a lede + append a Norse takeaway, via the model
+    asm_p = (f"Assemble the article \"{idea}\" from these 4 sections. Add a 1-sentence <p> lede at the very "
+             f"start (no heading) and a final 2-line <p> takeaway tied to a Norse figure (no heading). "
+             f"Return the FULL HTML fragment (lede + 4 sections + takeaway), clean, no wrapper, no fences.")
+    assembled = llm_chat(sys_p_base, asm_p + "\n\n" + html)
+    if assembled:
+        assembled = assembled.strip()
+        if assembled.startswith("```"):
+            assembled = re.sub(r"^```[a-zA-Z]*\n?", "", assembled)
+            assembled = re.sub(r"\n?```$", "", assembled).strip()
+        html = assembled
+
     # QUALITY GATE: never publish a stub. If the draft failed OR is too thin OR lacks research,
     # bail out WITHOUT writing a file. The caller (blog_daily.sh) treats non-zero exit as "skip".
     STUB_MARKERS = ["unavailable this run", "draft queued", "consider tomorrow",
@@ -173,19 +226,19 @@ def main():
     for u in cites:
         ext += f'<li><a href="{u}" target="_blank" rel="noopener">{u}</a></li>'
 
-    slug = slugify(idea)
+    slug = slugify(idea_clean)
     out = os.path.join(BLOG, slug + ".html")
     page = f"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{idea} — Loki's Mischief</title>
+<title>{idea_clean} — Loki's Mischief</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <style>body{{font-family:Inter,system-ui,sans-serif;background:#05060b;color:#e4e4e7;line-height:1.7;max-width:760px;margin:0 auto;padding:24px 18px}}
 h1,h2,h3{{font-family:Cinzel,serif;color:#f59e0b}}a{{color:#f59e0b}}nav a{{margin-right:14px;font-size:13px;color:#94a3b8}}
 .meta{{color:#64748b;font-size:13px;margin:8px 0 20px}}ul{{padding-left:20px}}</style></head>
 <body>
 <nav><a href="../index.html">Home</a><a href="../directory.html">Directory</a><a href="../services.html">Services</a><a href="../blog.html">Blog</a></nav>
-<h1>{idea}</h1>
+<h1>{idea_clean}</h1>
 <div class="meta">Loki's Mischief · {today} · business automation research</div>
 {html}
 <hr style="border-color:#1a1a24;margin:28px 0">
@@ -194,13 +247,13 @@ h1,h2,h3{{font-family:Cinzel,serif;color:#f59e0b}}a{{color:#f59e0b}}nav a{{margi
 </body></html>"""
     open(out, "w").write(page)
 
-    idx.setdefault("posts", []).append({"slug": slug, "title": idea, "date": today,
+    idx.setdefault("posts", []).append({"slug": slug, "title": idea_clean, "date": today,
                                          "file": f"blog/{slug}.html", "cites": len(cites)})
-    idx.setdefault("ideasUsed", []).append(idea)
+    idx.setdefault("ideasUsed", []).append(idea_clean)
     save_index(idx)
     # refresh blog.html index
     render_index(idx)
-    print(f"[{today}] POSTED: {idea} -> blog/{slug}.html (cites={len(cites)})")
+    print(f"[{today}] POSTED: {idea_clean} -> blog/{slug}.html (phases=4 cites={len(cites)})")
 
 def render_index(idx):
     items = sorted(idx.get("posts", []), key=lambda p: p["date"], reverse=True)

@@ -30,6 +30,7 @@
 </style>
 
   <link rel="stylesheet" href="mobile.css">
+  <link rel="stylesheet" href="hamburger.css">
 </head>
 <body>
 <canvas id="bg"></canvas>
@@ -66,4 +67,5 @@ const ps=Array.from({length:60},()=>({x:Math.random()*innerWidth,y:Math.random()
  (function br(cx0,cy0,len,ang,d){if(d<=0||len<6)return;const x2=cx0+Math.cos(ang)*len,y2=cy0+Math.sin(ang)*len;x.beginPath();x.moveTo(cx0,cy0);x.lineTo(x2,y2);x.stroke();br(x2,y2,len*0.72,ang-0.35,d-1);br(x2,y2,len*0.72,ang+0.35,d-1);})(cv.width/2,cv.height,cv.height*0.34,-Math.PI/2,7);
  for(const p of ps){p.y+=p.vy;if(p.y<-5){p.y=cv.height+5;p.x=Math.random()*cv.width;}x.globalAlpha=p.a;x.fillStyle=Math.random()<0.5?'#7dd3e0':'#d4b778';x.beginPath();x.arc(p.x,p.y,p.r,0,7);x.fill();}x.globalAlpha=1;requestAnimationFrame(loop);})();
 </script>
+  <script src="menu.js"></script>
 </body></html>

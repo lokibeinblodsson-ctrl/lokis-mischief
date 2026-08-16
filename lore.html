@@ -55,6 +55,7 @@
   .play:hover{box-shadow:0 4px 18px rgba(245,158,11,.35)}
 </style>
   <link rel="stylesheet" href="mobile.css">
+  <link rel="stylesheet" href="hamburger.css">
 </head>
 <body>
 <nav>
@@ -129,5 +130,6 @@ fetch('runes-data.json').then(r=>r.json()).then(data=>{
   root.innerHTML = html;
 }).catch(e=>{ document.getElementById('runes').innerHTML = '<p style="color:#f87171">Could not load rune data: '+e.message+'</p>'; });
 </script>
+  <script src="menu.js"></script>
 </body>
 </html>
