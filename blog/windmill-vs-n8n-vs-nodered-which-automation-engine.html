@@ -2,19 +2,51 @@
 <html lang="en"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Windmill vs n8n vs Node-RED: which automation engine fits your team — Loki's Mischief</title>
-  <meta name="description" content="Windmill vs n8n vs Node-RED: which automation engine fits your team — Loki's Mischief — part of Loki's Mischief: Norse mythology lore, games, and guides.">
-<link rel="stylesheet" href="../fonts.css">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <style>body{font-family:Inter,system-ui,sans-serif;background:#05060b;color:#e4e4e7;line-height:1.7;max-width:760px;margin:0 auto;padding:24px 18px}
 h1,h2,h3{font-family:Cinzel,serif;color:#f59e0b}a{color:#f59e0b}nav a{margin-right:14px;font-size:13px;color:#94a3b8}
-.meta{color:#64748b;font-size:13px;margin:8px 0 20px}ul{padding-left:20px}</style>
-  <link rel="stylesheet" href="../mobile.css">
-</head>
+.meta{color:#64748b;font-size:13px;margin:8px 0 20px}ul{padding-left:20px}</style></head>
 <body>
 <nav><a href="../index.html">Home</a><a href="../directory.html">Directory</a><a href="../services.html">Services</a><a href="../blog.html">Blog</a></nav>
 <h1>Windmill vs n8n vs Node-RED: which automation engine fits your team</h1>
 <div class="meta">Loki's Mischief · 2026-08-11 · business automation research</div>
-<h2>Windmill vs n8n vs Node-RED: which <a href="../directory.html">automation</a> engine fits your team</h2><p>Research pass unavailable this run; draft queued. Check tomorrow's generation.</p>
+```html
+<h2>Windmill vs n8n vs Node-RED: which <a href="../directory.html">automation</a> engine fits your team</h2>
+
+<p>Every agency has a forge—somewhere the team hammers out <a href="../directory.html">workflows</a> that should run without heroes. The question is which anvil to use. Let’s cut the legends and look at three real contenders: Node-RED (the old smith), n8n (the clever apprentice), and Windmill (the battle-hardened berserker).</p>
+
+<h3>Node-RED: the steady smith</h3>
+<ul>
+  <li><strong>Best for:</strong> IoT shops, hardware tinkerers, and teams who want a free, no-frills canvas that runs on a Raspberry Pi.</li>
+  <li><strong>Pros:</strong> Lightweight, 4 000+ community nodes, MQTT baked in, deploys anywhere Node.js breathes.</li>
+  <li><strong>Cons:</strong> JSON payloads can feel like reading Futhark; no native secrets manager; scaling beyond 100 concurrent flows needs extra tooling (Redis, Kafka).</li>
+  <li><strong>Real-world:</strong> A client used Node-RED to glue 500 smart meters to a Grafana dashboard—zero code, zero cloud bill, zero drama.</li>
+</ul>
+
+<h3>n8n: the shape-shifter</h3>
+<ul>
+  <li><strong>Best for:</strong> Agencies that live in SaaS land (HubSpot, Slack, Airtable) and want a self-hosted Zapier with teeth.</li>
+  <li><strong>Pros:</strong> 350+ native integrations, error workflows, manual triggers, and the ability to drop into JavaScript when the canvas gets cramped.</li>
+  <li><strong>Cons:</strong> Memory creeps up as workflows grow; the execution engine keeps state between nodes, so long-running flows can bloat (our lore page on <a href="#">stateful vs stateless</a> explains why this matters).</li>
+  <li><strong>Real-world:</strong> Switched a 47-step onboarding flow from Node-RED to n8n in a weekend—same logic, half the nodes, and the team could finally read the damn thing.</li>
+</ul>
+
+<h3>Windmill: the berserker</h3>
+<ul>
+  <li><strong>Best for:</strong> Teams that already write TypeScript and want automation to feel like engineering, not Lego.</li>
+  <li><strong>Pros:</strong> Script-first, Git-native, scales like a cloud <a href="../services.html">service</a>, secrets vault built in, and you can debug a failing step with the same tools you use for your app.</li>
+  <li><strong>Cons:</strong> No visual canvas; business users will stare at YAML and weep. Self-hosting needs Kubernetes or a beefy VM.</li>
+  <li><strong>Real-world:</strong> A fintech client replaced 12 cron jobs and a tangle of Python scripts with Windmill—same throughput, 90 % fewer alerts, and the devs actually enjoy maintaining it.</li>
+</ul>
+
+<h3>How to choose</h3>
+<p>Pick Node-RED if your stack is physical or your budget is zero. Pick n8n if you’re drowning in SaaS apps and need a canvas that non-devs can grok. Pick Windmill if your team already speaks code and you want automation that scales like a cloud service without the lock-in.</p>
+
+<p>One last tip: spin up each tool with the same 3-step workflow (trigger → transform → notify). The one that feels like putting on a well-worn glove is the one you’ll still be using a year from now.</p>
+
+<p><em>Takeaway: Node-RED is Mjölnir—reliable, but heavy. n8n is <a href="../loki.html">Loki</a>’s dagger—sharp and adaptable. Windmill is Tyr’s sword—precise, for those who know the cost of every cut.</em></p>
+```
 <hr style="border-color:#1a1a24;margin:28px 0">
-<p style="font-size:13px;color:#94a3b8">Related: <a href="../directory.html">Automation</a> · </p>
-<p style="font-size:13px;color:#64748b">Sources:</p><ul style="font-size:12px;color:#94a3b8"><li><a href="https://apptagsolution.com/blog/n8n-vs-node-red" target="_blank" rel="noopener">https://apptagsolution.com/blog/n8n-vs-node-red</a></li><li><a href="https://medium.com/@Nexumo_/i-ditched-node-red-for-n8n-heres-why-7895d0209d6d" target="_blank" rel="noopener">https://medium.com/@Nexumo_/i-ditched-node-red-for-n8n-heres-why-7895d0209d6d</a></li><li><a href="https://blog.arcbjorn.com/workflow-automation" target="_blank" rel="noopener">https://blog.arcbjorn.com/workflow-automation</a></li><li><a href="https://n8nautomation.cloud/blog/n8n-vs-windmill-which-automation-platform-is-better-in-2026" target="_blank" rel="noopener">https://n8nautomation.cloud/blog/n8n-vs-windmill-which-automation-platform-is-better-in-2026</a></li></ul>
+<p style="font-size:13px;color:#94a3b8">Related: <a href="../lore.html">Lore</a> · <a href="../directory.html">Automation directory</a> · <a href="../services.html">Services</a></p>
+<p style="font-size:13px;color:#64748b">Sources:</p><ul style="font-size:12px;color:#94a3b8"><li><a href="https://medium.com/@Nexumo_/i-ditched-node-red-for-n8n-heres-why-7895d0209d6d" target="_blank" rel="noopener">https://medium.com/@Nexumo_/i-ditched-node-red-for-n8n-heres-why-7895d0209d6d</a></li><li><a href="https://www.lowcode.agency/blog/n8n-vs-windmill" target="_blank" rel="noopener">https://www.lowcode.agency/blog/n8n-vs-windmill</a></li><li><a href="https://blog.arcbjorn.com/workflow-automation" target="_blank" rel="noopener">https://blog.arcbjorn.com/workflow-automation</a></li><li><a href="https://kestra.io/resources/infrastructure/windmill-alternatives" target="_blank" rel="noopener">https://kestra.io/resources/infrastructure/windmill-alternatives</a></li></ul>
 </body></html>

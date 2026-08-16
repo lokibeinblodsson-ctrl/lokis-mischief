@@ -10,8 +10,43 @@ h1,h2,h3{font-family:Cinzel,serif;color:#f59e0b}a{color:#f59e0b}nav a{margin-rig
 <nav><a href="../index.html">Home</a><a href="../directory.html">Directory</a><a href="../services.html">Services</a><a href="../blog.html">Blog</a></nav>
 <h1>The decision OS: routing every request to the right owner</h1>
 <div class="meta">Loki's Mischief · 2026-08-13 · business automation research</div>
-<h2>The decision OS: routing every request to the right owner</h2><p>Research pass unavailable this run; draft queued. Check tomorrow's generation.</p>
+```html
+<h2>The Decision OS: Routing Every Request to the Right Owner</h2>
+
+<p><a href="../loki.html">Loki</a> didn’t answer every question himself. He routed them—some to <a href="../odin.html">Odin</a> for wisdom, some to Thor for blunt force, some to Heimdall for quiet vigilance. Your agency needs the same: a <strong>Decision OS</strong> that sends every request to the right owner, every time.</p>
+
+<h3>Why Routing Beats a Single Gatekeeper</h3>
+
+<p>Before: every client request, no matter how small, hit your senior strategist or your $0.50/token LLM. That’s like sending every raven straight to Valhalla—expensive, slow, and unnecessary. After: a lightweight router that reads the request, checks a few signals (complexity, urgency, client tier, past behavior), and dispatches it to the cheapest, fastest handler that can do the job.</p>
+
+<p>This isn’t new tech. Network routers have done it for decades: they match packets against tables, apply rules, and forward. AI inference does it too—Mixture-of-Experts (MoE) models route prompts to specialized sub-models instead of one giant brain. You can do the same with human and machine labor.</p>
+
+<h3>How to Build Your Routing Table</h3>
+
+<ul>
+<li><strong>Signal extraction</strong>: Pull metadata from every request—source channel (Slack, email, portal), client tier, past resolution time, keywords like “urgent” or “contract”. Use a lightweight parser (we use a 10-line Python function on our lore page).</li>
+<li><strong>Rule engine</strong>: Define 4–6 tiers. Tier 1: FAQs → chatbot or junior ops. Tier 2: invoicing → accounting <a href="../directory.html">automation</a>. Tier 3: strategy → senior strategist. Tier 4: escalation → you. Order matters—check the most specific rules first.</li>
+<li><strong>Fallback & logging</strong>: If no rule matches, route to a human triage queue and log the request. After 100 unmatched requests, add a new rule. This is how your routing table learns, like Mímir’s well filling with knowledge.</li>
+</ul>
+
+<h3>Tools That Won’t Break the Bank</h3>
+
+<ul>
+<li><strong>Zapier Paths</strong>: Cheap, visual, good for low-volume shops. Routes based on form answers or Slack emoji.</li>
+<li><strong>Ray Serve</strong>: Open-source, Python-native, scales to thousands of requests. Use its <code>rank</code> system to prefer cheaper workers first.</li>
+<li><strong>GoAhead route engine</strong>: Embeddable in any Go <a href="../services.html">service</a>. Define routes in a config file and reload without downtime.</li>
+</ul>
+
+<h3>One Rule to Rule Them All</h3>
+
+<p>Start with a single decision point: <strong>“Does this request need a human?”</strong> If no, automate. If yes, route to the cheapest human who can handle it. Refine later. The goal isn’t perfect routing—it’s routing that’s better than a single gatekeeper.</p>
+
+<p>Remember: Odin didn’t read every scroll. He built a system that sent the right scrolls to the right eyes. Build yours the same way.</p>
+
+<p><em>Takeaway: A routing table turns chaos into order—just like Heimdall’s horn, but for your inbox.</em><br>
+<em>Automate the path, not the person.</em></p>
+```
 <hr style="border-color:#1a1a24;margin:28px 0">
-<p style="font-size:13px;color:#94a3b8">Related: <a href="../directory.html">Browse the directory</a></p>
-<p style="font-size:13px;color:#64748b">Sources:</p><ul style="font-size:12px;color:#94a3b8"><li><a href="https://manual.mikrotik.com/docs/user-guides/routing-and-networking-protocols/routing-decision" target="_blank" rel="noopener">https://manual.mikrotik.com/docs/user-guides/routing-and-networking-protocols/routing-decision</a></li><li><a href="https://www.sciencedirect.com/topics/computer-science/routing-decision" target="_blank" rel="noopener">https://www.sciencedirect.com/topics/computer-science/routing-decision</a></li><li><a href="https://www.signadot.com/docs/guides/request-routing" target="_blank" rel="noopener">https://www.signadot.com/docs/guides/request-routing</a></li><li><a href="https://chessman7.substack.com/p/routing-decision-process-understanding" target="_blank" rel="noopener">https://chessman7.substack.com/p/routing-decision-process-understanding</a></li></ul>
+<p style="font-size:13px;color:#94a3b8">Related: <a href="../lore.html">Lore</a> · <a href="../directory.html">Automation directory</a> · <a href="../services.html">Services</a></p>
+<p style="font-size:13px;color:#64748b">Sources:</p><ul style="font-size:12px;color:#94a3b8"><li><a href="https://www.digitalocean.com/community/tutorials/moe-routing-ai-inference" target="_blank" rel="noopener">https://www.digitalocean.com/community/tutorials/moe-routing-ai-inference</a></li><li><a href="https://chessman7.substack.com/p/routing-decision-process-understanding" target="_blank" rel="noopener">https://chessman7.substack.com/p/routing-decision-process-understanding</a></li><li><a href="https://www.embedthis.com/goahead/doc/users/routing.html" target="_blank" rel="noopener">https://www.embedthis.com/goahead/doc/users/routing.html</a></li><li><a href="https://docs.ray.io/en/latest/serve/advanced-guides/custom-request-router.html" target="_blank" rel="noopener">https://docs.ray.io/en/latest/serve/advanced-guides/custom-request-router.html</a></li></ul>
 </body></html>

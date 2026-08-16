@@ -43,19 +43,23 @@ def tavily_search(q):
                   method="POST")
     return j.get("results", []) if isinstance(j, dict) else []
 
-def llm_chat(system, user, model="groq"):
-    # try Groq first, fall back to Mistral
-    key = GROQ if model == "groq" else MISTRAL
-    if not key:
-        return None
-    url = "https://api.groq.com/openai/v1/chat/completions" if model == "groq" else "https://api.mistral.ai/v1/chat/completions"
-    body = json.dumps({"model": "llama-3.3-70b-versatile" if model == "groq" else "mistral-large-latest",
-                       "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
-                       "temperature": 0.7, "max_tokens": 1400}).encode()
-    j = http_json(url, data=body, headers={"Content-Type": "application/json",
-                  "Authorization": "Bearer " + key})
-    if isinstance(j, dict) and j.get("choices"):
-        return j["choices"][0]["message"]["content"]
+# NOTE: Groq is 403-blocked from this host, so Mistral is the primary model. We still try
+# Groq as a secondary only if a working key is present, but never fall back to a STUB.
+def llm_chat(system, user, model="mistral"):
+    # Primary = Mistral (verified working on this host). Secondary = Groq if available.
+    order = [("mistral", MISTRAL)] if model == "mistral" else [("groq", GROQ), ("mistral", MISTRAL)]
+    for name, key in order:
+        if not key:
+            continue
+        url = "https://api.mistral.ai/v1/chat/completions" if name == "mistral" else "https://api.groq.com/openai/v1/chat/completions"
+        mdl = "mistral-large-latest" if name == "mistral" else "llama-3.3-70b-versatile"
+        body = json.dumps({"model": mdl,
+                           "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
+                           "temperature": 0.7, "max_tokens": 1600}).encode()
+        j = http_json(url, data=body, headers={"Content-Type": "application/json",
+                      "Authorization": "Bearer " + key})
+        if isinstance(j, dict) and j.get("choices"):
+            return j["choices"][0]["message"]["content"]
     return None
 
 def slugify(s):
@@ -142,16 +146,28 @@ def main():
            f"End with a 2-line takeaway tying it to a Norse figure. Use 1-2 Markdown-style internal references "
            f"like (see our lore page) but we will link them. Keep it useful, not clickbait.")
     html = llm_chat(sys_p, usr) or llm_chat(sys_p, usr, model="mistral")
-    if not html:
-        html = f"<h2>{idea}</h2><p>Research pass unavailable this run; draft queued. Check tomorrow's generation.</p>"
+    # QUALITY GATE: never publish a stub. If the draft failed OR is too thin OR lacks research,
+    # bail out WITHOUT writing a file. The caller (blog_daily.sh) treats non-zero exit as "skip".
+    STUB_MARKERS = ["unavailable this run", "draft queued", "consider tomorrow",
+                    "generation skipped", "lorem ipsum"]
+    words = len(re.findall(r"\b\w+\b", html or ""))
+    bad = any(m in (html or "").lower() for m in STUB_MARKERS)
+    if not html or bad or words < 280 or len(cites) == 0:
+        print(f"[{today}] QUALITY_GATE_FAIL words={words} cites={len(cites)} bad={bad} — NOT publishing, skipping")
+        sys.exit(2)
 
-    # Inject internal links
-    low = html.lower()
-    links_html = ""
+    # Inject internal links (body only; protect existing anchors so we never nest <a> in <a>)
+    protected = []
+    def _prot(m):
+        protected.append(m.group(0)); return f"\x00{len(protected)-1}\x00"
+    html_safe = re.sub(r"<a\b[^>]*>.*?</a>", _prot, html, flags=re.S)
     for kw, page in INTERNAL:
-        if kw in low:
-            html = re.sub(rf"\b({kw}[\w'-]*)", rf'<a href="../{page}">\1</a>', html, count=1, flags=re.I)
-            links_html += f'<a href="../{page}">{kw.title()}</a> · '
+        if kw in html_safe.lower():
+            html_safe = re.sub(rf"(\b{kw}[\w'-]*\b)(?![^<]*</a>)", rf'<a href="../{page}">\1</a>',
+                               html_safe, count=1, flags=re.I)
+    for i, p in enumerate(protected):
+        html_safe = html_safe.replace(f"\x00{i}\x00", p)
+    html = html_safe
     # External citations
     ext = ""
     for u in cites:
@@ -173,7 +189,7 @@ h1,h2,h3{{font-family:Cinzel,serif;color:#f59e0b}}a{{color:#f59e0b}}nav a{{margi
 <div class="meta">Loki's Mischief · {today} · business automation research</div>
 {html}
 <hr style="border-color:#1a1a24;margin:28px 0">
-<p style="font-size:13px;color:#94a3b8">Related: {links_html or '<a href="../directory.html">Browse the directory</a>'}</p>
+<p style="font-size:13px;color:#94a3b8">Related: <a href="../lore.html">Lore</a> · <a href="../directory.html">Automation directory</a> · <a href="../services.html">Services</a></p>
 <p style="font-size:13px;color:#64748b">Sources:</p><ul style="font-size:12px;color:#94a3b8">{ext or '<li>Internal research</li>'}</ul>
 </body></html>"""
     open(out, "w").write(page)
