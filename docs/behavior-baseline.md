@@ -29,5 +29,28 @@ Container `lokis-site` was **Up 5 days but `unhealthy`**, `FailingStreak: 565`.
 | `GET /runes-data.json` | 404 |
 | `GET /rune-cast.html` | 500 (rewrite cycle) |
 
-## C. Measured behavior — AFTER repair (filled in by 2B)
-_Completed and recorded in Micro-Phase 2 Report / behavior-baseline-after section during 2B._
+## C. Measured behavior — AFTER repair (2026-08-17T19:01Z)
+Root cause fixed: recreated container via the existing `docker-compose.yml`, which binds `/root/lokis-mischief:/usr/share/nginx/html:ro` (the live container had been bound to the host root filesystem `/dev/nvme0n1p1`, leaving the served root empty).
+
+Verified state:
+- Container `lokis-site`: **Up, healthy** (was `unhealthy`, streak 565 → 0).
+- Mount inside container now correctly sourced from `/root/lokis-mischief` (68 entries; `index.html` present, 219 KB).
+- Restart policy `unless-stopped` (matches compose).
+
+**Post-repair baseline tests vs `:8899` (all pass):**
+| Route | Result |
+|-------|--------|
+| `GET /` | 200 |
+| `GET /index.html` | 200 |
+| `GET /games.html` | 200 |
+| `GET /products.html` | 200 |
+| `GET /services.html` | 200 |
+| `GET /rune-cast.html` | 200 |
+| `GET /lore.html` | 200 |
+| `GET /runes-data.json` (local JSON fetch) | 200 |
+| `GET /lokis-assets/loki/loki-hero.png` (asset) | 200 |
+| `GET /lokis-assets/favicon/favicon.ico` (asset) | 200 |
+| `GET /games` (dir → 301 to /games/) | 301 |
+| healthcheck `wget http://127.0.0.1/` | healthy |
+
+Note: an early test probed `/lokis-assets/loki/loki.png` (404) — that filename does not exist; the real assets are `loki-generated.png` / `loki-hero.png` and both return 200. No real asset is missing.
